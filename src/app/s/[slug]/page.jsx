@@ -3,6 +3,7 @@ import logger from '@/lib/logger'
 
 
 import SingleListingsContent from "@/components/SingleListings/SingleListingsContent";
+import StructuredData from "@/components/SEO/StructuredData";
 
 import { getBusiness, getSubcategoriesByIDs } from "@/lib/actions";
 import { getVideo } from "@/lib/actions";
@@ -164,9 +165,35 @@ export default async function Page(props) {
         isFeatured = featuredRes.rows.length > 0;
     } catch (_) {}
 
+    const domain = site?.domain || site?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
+    const businessSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: data.title,
+        url: `https://${domain}/s/${data.slug || slug}`,
+        image: data.main_image || `${site.URL || `https://${domain}`}/api/og?title=${encodeURIComponent(data.title || 'Business')}`,
+        description: data.description || data.snippet || `${data.title} in ${data.city}, ${data.state}`,
+        telephone: data.phone || undefined,
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: data.address,
+            addressLocality: data.city,
+            addressRegion: data.state,
+            postalCode: data.zip,
+            addressCountry: 'US',
+        },
+        geo: data.latitude && data.longitude ? {
+            '@type': 'GeoCoordinates',
+            latitude: data.latitude,
+            longitude: data.longitude,
+        } : undefined,
+        areaServed: data.county || site.State || undefined,
+    };
+
     return (
-        <>
+        <div className="rd-detail-page rd-business-detail-page">
             <NavbarTwo />
+            <StructuredData data={businessSchema} />
             <SingleListingsContent
                 // isBot={isBot}
                 business={business}
@@ -181,7 +208,6 @@ export default async function Page(props) {
                     { name: ucwords(data.title) },
                 ]}
             />
-            
-        </>
+        </div>
     );
 }

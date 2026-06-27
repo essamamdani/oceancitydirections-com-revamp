@@ -172,34 +172,14 @@ function isNew(createdAt) {
 function BusinessInfo({ business }) {
   return (
     <div className="listings-content">
-      <ul className="listings-meta">
-        <li>
-          {business.categories?.name && (
-            <Link href={`/business/category/${business.categories?.name.toLowerCase()}`}>
-              <i className="flaticon-furniture-and-household"></i>
-              {business?.categories?.name}
-            </Link>
-          )}
-          {business.category && (
-            <Link href={`/business/category/${business.category.toLowerCase()}`}>
-              <i className="flaticon-furniture-and-household"></i>
-              {business?.category}
-            </Link>
-          )}
-        </li>
-        <li>
-          <Link href={`/business/location/${business?.county?.toLowerCase()}/${business?.city?.toLowerCase()}`}>
-            <i className="flaticon-pin"></i>
-            {business.address || `${ucwords(business?.city)}, ${ucwords(business?.state)}`}
-          </Link>
-        </li>
-        {business.phone && (
-          <li>
-            <i className="flaticon-phone-call"></i>
-            {business.phone}
-          </li>
-        )}
-      </ul>
+      <div className="rd-card-topline">
+        <span className="rd-card-category">
+          {business.categories?.name || business.category || "Local Business"}
+        </span>
+        <span className="rd-card-status">
+          {business.claimed_approval ? "Verified listing" : "Owner can claim"}
+        </span>
+      </div>
       <h3>
         <Link href={`/s/${business.update_slug || business.slug}`}>
           {business?.title}
@@ -212,20 +192,39 @@ function BusinessInfo({ business }) {
         </span>
       )}
 
-      {/* Rating hidden per client request */}
-      {/* {business?.rating?.value > 0 && (
-        <div className="rating d-flex align-items-center">
-          {renderStarRating(business?.rating?.value)}
-          <span className="rating-count m-2">
-            {business?.rating?.value}
-          </span>
-          {business?.rating?.count && (
-            <span className="rating-count m-2">
-              ({business?.rating?.count} reviews)
-            </span>
-          )}
-        </div>
-      )} */}
+      <ul className="rd-card-meta">
+        <li>
+          <i className="bx bx-map" aria-hidden="true"></i>
+          <Link href={`/business/location/${business?.county?.toLowerCase()}/${business?.city?.toLowerCase()}`}>
+            {business.address || `${ucwords(business?.city)}, ${ucwords(business?.state)}`}
+          </Link>
+        </li>
+        {business.phone && (
+          <li>
+            <i className="bx bx-phone" aria-hidden="true"></i>
+            <a href={`tel:${business.phone}`}>{business.phone.replace("+1", "")}</a>
+          </li>
+        )}
+        {business?.description && (
+          <li>
+            <i className="bx bx-message-square-detail" aria-hidden="true"></i>
+            <span>{business.description.slice(0, 145)}{business.description.length > 145 ? "..." : ""}</span>
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+function BusinessImageFallback({ business }) {
+  const title = business?.title || 'Local Business';
+  const category = business?.categories?.name || business?.category || 'Local Business';
+
+  return (
+    <div className="rd-business-photo-fallback" aria-hidden="true">
+      <span>{title.slice(0, 1).toUpperCase()}</span>
+      <strong>{category}</strong>
+      <small>{business?.city ? ucwords(business.city) : 'Local listing'}</small>
     </div>
   );
 }
@@ -235,8 +234,7 @@ const GridBlock = ({ businesses, featured_videos }) => {
   return (
     <>
       {featured_videos?.map((video) => (
-        <div className="col-xl-4 col-lg-4 col-md-4" key={video.video_id}>
-          <div className="single-listings-box">
+        <div className="single-listings-box rd-business-card" key={video.video_id}>
             <div className="listings-image">
               <Image
                 src={video.thumbnail}
@@ -261,12 +259,10 @@ const GridBlock = ({ businesses, featured_videos }) => {
             </div>
 
             <div className="listings-content">
-              <ul className="listings-meta">
-                <li>
-                  <i className="flaticon-video"></i>
-                  Featured Video
-                </li>
-              </ul>
+              <div className="rd-card-topline">
+                <span className="rd-card-category">Featured Video</span>
+                <span className="rd-card-status">Media placement</span>
+              </div>
               <h3>
                 <Link href={video.embeded_for === 'property'
                   ? `/realty/${video.p_id_b_slug}`
@@ -275,26 +271,26 @@ const GridBlock = ({ businesses, featured_videos }) => {
                 </Link>
               </h3>
             </div>
-          </div>
         </div>
       ))}
 
       {businesses?.filter((b) => !b?.deleted_at).map((business, index) => {
-        const listingImg = (business.claimed_approval && business.main_image)
-          ? business.main_image
-          : `/api/og?title=${encodeURIComponent(business?.title || 'Business')}`;
+        const listingImg = business.claimed_approval && business.main_image ? business.main_image : null;
         return (
-        <div className="col-xl-4 col-lg-4 col-md-4" key={business.id}>
-          <div className="single-listings-box">
+        <div className="single-listings-box rd-business-card" key={business.id}>
             <div className="listings-image">
-              <Image
-                src={listingImg}
-                alt={business?.title || "image"}
-                width={790}
-                height={200}
-                priority={index < 4}
-                style={{ objectFit: "cover", height: "200px" }}
-              />
+              {listingImg ? (
+                <Image
+                  src={listingImg}
+                  alt={business?.title || "image"}
+                  width={790}
+                  height={200}
+                  priority={index < 4}
+                  style={{ objectFit: "cover", height: "200px" }}
+                />
+              ) : (
+                <BusinessImageFallback business={business} />
+              )}
               <Link
                 href={`/s/${business.update_slug || business.slug}`}
                 className="link-btn"
@@ -310,7 +306,6 @@ const GridBlock = ({ businesses, featured_videos }) => {
 
             {/* Green: Full info with address + rating */}
             <BusinessInfo business={business} />
-          </div>
         </div>
         );
       })}

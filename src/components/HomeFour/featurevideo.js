@@ -162,7 +162,6 @@ import logger from '@/lib/logger'
 
 import Link from "next/link";
 import Image from "next/image";
-import { Modal } from "react-bootstrap"; // React-based Bootstrap modal
 
 const FeaturedVideo = ({ videos, single = false }) => {
   const [show, setShow] = useState(false);
@@ -233,51 +232,28 @@ const FeaturedVideo = ({ videos, single = false }) => {
         </div>
       </div>
 
-      {/* FULLY REACT BOOTSTRAP MODAL */}
-      <Modal
-      // z-index backdrop to 999999
-      backdropClassName="z-[999]"
-        show={show}
-        onHide={() => setShow(false)}
-        size="xl"
-        centered
-        dialogClassName="video-modal"
-        contentClassName="bg-black p-0 border-0"
-      >
-        <button
-          type="button"
-          onClick={() => setShow(false)}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            zIndex: 9999,
-            background: 'rgba(0,0,0,0.7)',
-            border: '2px solid rgba(255,255,255,0.8)',
-            borderRadius: '50%',
-            width: '36px',
-            height: '36px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: '#fff',
-            fontSize: '20px',
-            lineHeight: 1,
-          }}
-          aria-label="Close video"
-        >&#x2715;</button>
-
-        <div className="ratio ratio-16x9">
-          {selectedVideoUrl && (
-            <iframe
-              src={selectedVideoUrl}
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            ></iframe>
-          )}
+      {show && (
+        <div className="rd-video-modal" role="dialog" aria-modal="true" aria-label="Featured video">
+          <button
+            type="button"
+            onClick={() => setShow(false)}
+            className="rd-video-modal-close"
+            aria-label="Close video"
+          >
+            &#x2715;
+          </button>
+          <div className="rd-video-modal-frame">
+            {selectedVideoUrl && (
+              <iframe
+                src={selectedVideoUrl}
+                title="Featured video"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+              ></iframe>
+            )}
+          </div>
         </div>
-      </Modal>
+      )}
     </>
   );
 };

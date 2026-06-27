@@ -1,15 +1,9 @@
-import { Suspense, cache } from 'react';
+import { cache } from 'react';
 import { redirect } from 'next/navigation';
 
-import ListingAreaTwo from '@/components/Common/ListingAreaTwo';
-import CategoryTwo from '@/components/Common/CategoryTwo';
-import HowItWorks from '@/components/Common/HowItWorks';
-import Banner from '@/components/HomeFour/Banner';
-import Destinations from '@/components/HomeFour/Destination';
-import HomepageListings from '@/components/HomeFour/HomepageListings';
-import ContactInfo from '@/components/Contact/ContactInfo';
-import FeaturedVideo from '@/components/HomeFour/featurevideo';
 import Navbar from '@/components/Layouts/Navbar';
+import HomeRevamp from '@/components/Revamp/HomeRevamp';
+import StructuredData from '@/components/SEO/StructuredData';
 
 import { getBestRatedBusiness } from '@/lib/actions';
 import { fetchSiteData, getSiteStatus } from '@/lib/site-config';
@@ -19,20 +13,16 @@ import { query } from '@/lib/db';
 // Deduplicate fetchSiteData across generateMetadata + Page within the same request
 const getSiteDataOnce = cache(fetchSiteData);
 
-// ─── Featured Videos Section ───────────────────────────────────────────────────
-// Fetches featured videos directly from auth database for the current site
-async function FeaturedVideosSection({ site }) {
+async function getFeaturedVideosForSite(site) {
   try {
-    // Get site ID from live_sites table
     const siteRes = await query(
       'SELECT id FROM live_sites WHERE slug = $1 OR url ILIKE $2 LIMIT 1',
       [site?.slug, `%${site?.domain || site?.URL}%`]
     );
     
     const siteId = siteRes?.rows?.[0]?.id;
-    if (!siteId) return null;
+    if (!siteId) return [];
     
-    // Fetch featured videos for this site from auth DB
     const videosRes = await query(
       `SELECT 
         v.id,
@@ -56,10 +46,9 @@ async function FeaturedVideosSection({ site }) {
     );
     
     const videos = videosRes?.rows || [];
-    if (!videos.length) return null;
+    if (!videos.length) return [];
     
-    // Format videos for FeaturedVideo component
-    const formattedVideos = videos.map(v => ({
+    return videos.map(v => ({
       video_id: v.video_id,
       title: v.title || 'Untitled',
       description: v.description,
@@ -69,34 +58,10 @@ async function FeaturedVideosSection({ site }) {
       mls_id: v.mls_id,
       embeded_for: v.embeded_for
     }));
-    
-    return (
-      <div className="blog-area bg-f9f9f9 ptb-100">
-        <FeaturedVideo videos={formattedVideos} />
-      </div>
-    );
   } catch (err) {
-    console.error('[FeaturedVideosSection] Error fetching videos:', err);
-    return null;
+    console.error('[getFeaturedVideosForSite] Error fetching videos:', err);
+    return [];
   }
-}
-
-// ─── Per-request server component: best-rated restaurants ────────────────────
-// getBestRatedBusiness calls getSupabaseAdmin() which reads request headers,
-// so it cannot use 'use cache'. It runs per-request but is a fast DB query (~50ms).
-// Wrapped in Suspense so it doesn't block the page shell.
-async function RestaurantsSection({ site }) {
-  const businesses = await getBestRatedBusiness(site, 'restaurant');
-  if (!businesses?.length) return null;
-  return (
-    <div className="pb-100">
-      <ListingAreaTwo
-        businesses={businesses}
-        categoryLink="/business/category/restaurant"
-        title="Restaurants: Top Listings"
-      />
-    </div>
-  );
 }
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -116,13 +81,20 @@ export async function generateMetadata() {
   }
 
   const state = site?.state || 'your city';
-  const description = `${siteName} - Find businesses, real estate, and local attractions in ${state}.`;
+  const description = `${siteName} helps people search homes, local businesses, videos, services, and neighborhood information in ${state}.`;
 
   return {
-    title: `${siteName} - Home`,
+    title: `${siteName} | Homes, Businesses, Local Videos & Neighborhood Guide`,
     description,
+    keywords: [
+      `${siteName} real estate`,
+      `${siteName} businesses`,
+      `${state} homes for sale`,
+      `${state} local directory`,
+      'Realty Directions',
+    ],
     openGraph: {
-      title: `${siteName} - Home`,
+      title: `${siteName} | Homes, Businesses, Local Videos & Neighborhood Guide`,
       description,
       url: `https://${site?.domain || 'oceancitydirections.com'}`,
       siteName,
@@ -159,35 +131,54 @@ export default async function Page() {
   if (siteStatus === 'offline') redirect('/offline');
 
   const showRealty = !!site?.IncludeRealty;
+  const [featuredVideos, topBusinesses] = await Promise.all([
+    getFeaturedVideosForSite(site),
+    getBestRatedBusiness(site, 'restaurant').catch(() => []),
+  ]);
+
+  const siteName = ucwords(site?.site_name || site?.slug || 'Realty Directions');
+  const domain = site?.domain || site?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
+  const homeSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `https://${domain}/#website`,
+        name: siteName,
+        url: `https://${domain}`,
+        potentialAction: [
+          {
+            '@type': 'SearchAction',
+            target: `https://${domain}/business?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+          },
+          showRealty ? {
+            '@type': 'SearchAction',
+            target: `https://${domain}/realty?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+          } : null,
+        ].filter(Boolean),
+      },
+      {
+        '@type': 'RealEstateAgent',
+        '@id': `https://${domain}/#realty-directions`,
+        name: 'Realty Directions',
+        url: 'https://www.realtydirections.com/',
+        areaServed: site?.State || site?.state || 'United States',
+      },
+    ],
+  };
 
   return (
     <>
       <Navbar />
-      <Banner />
-
-      {showRealty && <Destinations titleTwo={true} />}
-
-      {/* Featured Videos from VideoHomes API */}
-      <Suspense fallback={<div className="pb-100" style={{ minHeight: '300px' }}></div>}>
-        <FeaturedVideosSection site={site} />
-      </Suspense>
-
-      {/* MLS listings: fetched client-side on page load */}
-      {showRealty && <HomepageListings />}
-
-      <div className="bg-f9f9f9" style={{ minHeight: '600px' }}>
-        <CategoryTwo titleTwo={true} />
-      </div>
-
-      {/* Restaurants: fast per-request Supabase query, doesn't block page shell */}
-      <Suspense fallback={<div className="pb-100" style={{ minHeight: '300px' }}></div>}>
-        <RestaurantsSection site={site} />
-      </Suspense>
-
-      <div style={{ minHeight: '400px' }}>
-        <HowItWorks bgColor="bg-f9f9f9" />
-      </div>
-      <ContactInfo />
+      <StructuredData data={homeSchema} />
+      <HomeRevamp
+        site={site}
+        topBusinesses={topBusinesses || []}
+        featuredVideos={featuredVideos || []}
+        showRealty={showRealty}
+      />
     </>
   );
 }

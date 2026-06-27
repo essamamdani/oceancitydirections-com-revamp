@@ -18,72 +18,55 @@ export default function PropertyListing({ properties }) {
   return (
     <section className="listings-area pt-100">
       <div className="container">
-        <div className="section-title text-left">
-          <h2>Property Listing</h2>
+        <div className="rd-section-head">
+          <div>
+            <span className="rd-kicker">Featured homes</span>
+            <h2>Homes worth a closer look</h2>
+          </div>
           <Link href={"/realty"} className="link-btn">
-            Show All <i className="flaticon-right-chevron"></i>
+            View all homes
           </Link>
         </div>
-        <div className="row">
+        <div className="rd-property-grid">
           {properties.value && properties.value.map((property) => (
-            // <li key={index}>{property.UnparsedAddress || 'Address not available'}</li>
-            <div className="col-xl-4 col-lg-4 col-md-4" key={property.ListingId}>
               <Link
                 href={realtySlug(property)}
-                className="link-btn"
+                className="single-listings-box rd-property-card"
+                key={property.ListingId}
               >
-                <div className="single-listings-box">
                   <div className="listings-image">
 
                     <Image
                       src={property?.ListPictureURL || "https://picsum.photos/seed/picsum/790/200"}
-                      alt="image"
+                      alt={property.FullStreetAddress || property?.UnparsedAddress || "Property listing"}
                       width={395}
                       height={200}
                       style={{ objectFit: "cover", height: "200px" }}
                     />
-
-                    {/* <button type="button" className="bookmark-save" aria-label="Save bookmark">
-                                <i className="flaticon-heart"></i>
-                            </button>
-                            <button type="button" className="category" aria-label="Category">
-                                <i className="flaticon-cooking"></i>
-                            </button> */}
+                    <span className="rd-property-price">
+                      ${property.ListPrice?.toLocaleString()}
+                    </span>
                   </div>
 
                   <div className="listings-content">
-                    <div className="author">
-                      <div className="d-flex align-items-center">
-                        <span>Price: ${property.ListPrice.toLocaleString()}</span>
-                      </div>
+                    <div className="rd-card-topline">
+                      <span className="rd-card-category">{property.StandardStatus || "Active"}</span>
+                      <span className="rd-card-status">MLS {property.ListingId}</span>
                     </div>
-
-
 
                     {property.FullStreetAddress ?
                       <h3>{property.FullStreetAddress}, {property.City}, {defaultShortState},  {property.PostalCode}</h3>
                       : <h3>{property?.UnparsedAddress.replace(/,/g, ", ").trim()}</h3>}
 
-
-                    <ul className="listings-meta">
-                      <li>
-                        {/* <Link href={`/property/category/${property.
-                                    categories?.name.toLowerCase()}`}> */}
-                        <i className="flaticon-furniture-and-household"></i>
-                        Beds {property.BedroomsTotal} | Bath {property.BathroomsFull}.{property.BathroomsHalf} |        {property.AreaTotal} Sq. ft
-                        {/* </Link>  */}
-
-                      </li>
-                      <li>
-                        <i className="flaticon-cooking"></i>
-                        Courtesy of: {property.ListOfficeName}
-                      </li>
-                    </ul>
+                    <div className="rd-property-specs">
+                      <span>{property.BedroomsTotal || 0} beds</span>
+                      <span>{property.BathroomsFull || 0}.{property.BathroomsHalf || 0} baths</span>
+                      <span>{property.AreaTotal || property.LivingArea || 0} sqft</span>
+                    </div>
+                    <p className="rd-card-office">Courtesy of {property.ListOfficeName || "Bright MLS"}</p>
 
                   </div>
-                </div>
               </Link>
-            </div>
           ))}
         </div>
       </div>

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import logger from '@/lib/logger'
 
-import { Form } from "react-bootstrap";
 import CarouselComponent from "./silder";
 import { postData } from "@/lib/server-actions";
 import { GoogleMapsEmbed } from '@next/third-parties/google'
@@ -452,7 +451,7 @@ const SinglePropertyListingsContent = ({ property, breadcrumbs, video, nearbyPro
                 <div className="listings-widget book_listings">
                   <h3>Contact Agent</h3>
                   {!submitted ? (
-                    <Form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmit}>
                       {error && (
                         <div className="alert alert-danger mb-3">
                           <strong>Error:</strong> {error}
@@ -568,7 +567,7 @@ const SinglePropertyListingsContent = ({ property, breadcrumbs, video, nearbyPro
                         </div>
                       </div>
 
-                    </Form>
+                    </form>
                   ) : (
                     <div className="text-success">
                       <h4>Thank you for submitting your details!</h4>

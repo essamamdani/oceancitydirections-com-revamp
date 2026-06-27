@@ -1,4 +1,3 @@
-import "../../styles/bootstrap.min.css";
 import logger from '@/lib/logger'
 
 import "../../styles/animate.min.css";
@@ -11,10 +10,8 @@ import "swiper/css";
 import "swiper/css/bundle";
 
 // Global Style
-import "../../styles/style.css";
-import "../../styles/responsive.css";
-import "../../styles/custom-navbar.css";
-import { Work_Sans } from "next/font/google";
+import "../../styles/revamp.css";
+import { Sora, Source_Serif_4 } from "next/font/google";
 import GoTop from "@/components/Shared/GoTop";
 import Script from "next/script";
 import Analytics from "./analytics";
@@ -23,7 +20,17 @@ import { Providers } from "@/components/Providers";
 import { fetchSiteConfigByDomain, getSiteStatus } from "@/lib/site-config";
 import { headers } from 'next/headers';
 
-const work_sans = Work_Sans({ subsets: ["latin"] });
+const rdSans = Sora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-rd-sans",
+});
+
+const rdSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-rd-serif",
+});
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -90,7 +97,7 @@ export default async function RootLayout({ children }) {
           strategy="beforeInteractive"
         />
       </head>
-      <body className={work_sans.className} suppressHydrationWarning={true}>
+      <body className={`${rdSans.variable} ${rdSerif.variable}`} suppressHydrationWarning={true}>
         <Providers siteData={siteData}>
           {!isSimplePage && <Analytics />}
           <main>

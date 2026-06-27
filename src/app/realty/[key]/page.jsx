@@ -5,6 +5,7 @@ import { fetchSiteData, getSiteStatus } from "@/lib/site-config";
 
 import NavbarTwo from "@/components/Layouts/NavbarTwo";
 import SinglePropertyListingsContent from "@/components/SinglePropertyListings/SinglePropertyListingsContent";
+import StructuredData from "@/components/SEO/StructuredData";
 import { notFound, redirect } from "next/navigation";
 
 import NotFound from "@/components/NotFound";
@@ -124,10 +125,35 @@ export default async function Page(props) {
         long: data.Longitude
     })
 
+    const displayAddress = getDisplayAddress(data);
+    const domain = site?.domain || site?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
+    const listingSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'RealEstateListing',
+        name: `${displayAddress} - MLS ${data.ListingId}`,
+        url: `https://${domain}/realty/${params.key}`,
+        image: [data.ListPictureURL, data.ListPicture2URL, data.ListPicture3URL].filter(Boolean),
+        description: data.PublicRemarks || `${displayAddress} listed by ${data.ListOfficeName || 'Bright MLS'}`,
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: data.FullStreetAddress,
+            addressLocality: data.City,
+            addressRegion: data.StateOrProvince || site.ShortState?.toUpperCase(),
+            postalCode: data.PostalCode,
+            addressCountry: 'US',
+        },
+        offers: {
+            '@type': 'Offer',
+            price: data.ListPrice,
+            priceCurrency: 'USD',
+            availability: data.StandardStatus === 'Active' ? 'https://schema.org/InStock' : 'https://schema.org/LimitedAvailability',
+        },
+    };
+
     return (
-        <div>
-            
+        <div className="rd-detail-page rd-property-detail-page">
             <NavbarTwo />
+            <StructuredData data={listingSchema} />
             
             <SinglePropertyListingsContent 
                 video={video} 

@@ -83,7 +83,7 @@ const MainGridPage = ({ businesses, totalRecords, location, params, searchParams
                 </div>
             </div>
 
-            <div className="row">
+            <div className="rd-results-list">
                 <GridBlock businesses={businesses} featured_videos={featured_videos} />
                 <Pagination totalRecords={totalRecords} searchParams={searchParams} />
             </div>
@@ -92,5 +92,4 @@ const MainGridPage = ({ businesses, totalRecords, location, params, searchParams
 };
 
 export default MainGridPage;
-
 

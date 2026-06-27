@@ -2,7 +2,6 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Button } from "react-bootstrap";
 import { toast, Toaster } from "react-hot-toast";
 import Turnstile from "../Common/Turnstile";
 import { useSites } from "@/contexts/SitesContext";
@@ -145,9 +144,9 @@ const ContactForm = () => {
                     </div>
 
                     <div className="col-lg-12 col-md-12">
-                      <Button type="submit" className="default-btn" disabled={loading}>
+                      <button type="submit" className="default-btn" disabled={loading}>
                         {loading ? "Sending..." : "Send Message"}
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </form>

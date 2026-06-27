@@ -25,9 +25,7 @@
     "@turf/bbox": "^7.3.1",
     "@types/mapbox-gl": "^3.4.1",
     "ai": "5.0.107",
-    "autoprefixer": "10.4.27",
     "better-auth": "^1.5.5",
-    "bootstrap": "^5.3.8",
     "caniuse-lite": "^1.0.30001763",
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
@@ -43,8 +41,6 @@
     "pg": "^8.16.3",
     "postcss": "8.5.8",
     "react": "19.2.5",
-    "react-bootstrap": "^2.10.10",
-    "react-bootstrap-typeahead": "^6.4.1",
     "react-dom": "19.2.5",
     "react-dropzone": "^14.3.8",
     "react-google-autocomplete": "^2.7.5",
@@ -57,7 +53,6 @@
     "slug": "11.0.1",
     "slugify": "^1.6.9",
     "swiper": "12.0.3",
-    "tailwindcss": "3.4.19",
     "use-places-autocomplete": "^4.0.1",
     "zod": "4.1.13"
   },
@@ -65,12 +60,13 @@
     "eslint-visitor-keys": "4.2.0"
   },
   "devDependencies": {
-    "@types/bootstrap": "^5.2.10",
+    "@tailwindcss/postcss": "^4.3.1",
     "dotenv": "^17.3.1",
     "eslint": "9.39.1",
     "eslint-config-next": "16.2.3",
     "next-sitemap": "^4.2.3",
     "puppeteer": "^24.35.0",
+    "tailwindcss": "^4.3.1",
     "tsx": "^4.21.0",
     "typescript": "5.9.3"
   },

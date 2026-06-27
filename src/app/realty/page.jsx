@@ -1,15 +1,13 @@
 import NavbarTwo from "@/components/Layouts/NavbarTwo";
 import logger from '@/lib/logger'
 
-import Footer from "@/components/Layouts/Footer";
-
-import PageHeaderWithMap from "@/components/Listings/PageHeaderWithMap";
 import MainPropertiesGridPage from "@/components/CustomComponents/MainPropertiesGridPage";
 import NoRecordFound from "../no-records";
 import NotFound from "../not-found";
 import { fetchListings, getLocationNew } from "@/lib/actions";
 import Link from "next/link";
 import RealtySidebar from "@/components/Listings/RealtySidebar";
+import MapPanel from "@/components/Revamp/MapPanel";
 
 import { headers } from "next/headers";
 import { fetchSiteData, getSiteStatus } from "@/lib/site-config";
@@ -69,57 +67,52 @@ export default async function Page(props) {
     const geoJson = data?.geoJson || null;
     const properties = data.value || [];
     const featured_videos = data.featured_videos || [];
-    const breadcrumbs = [{ name: "Real Estate" }];
     if (data?.category) {
         searchParams.category = data.category;
     }
-    // logger.log(JSON.stringify(properties[0],null,2))
+
     return (
         <>
             <NavbarTwo />
-            <PageHeaderWithMap geoJson={geoJson} />
-            <div className="listings-area pt-1">
-                <div className="container-fluid">
-                    <div className="row mt-3">
-                        <div className="col-xl-12 col-lg-12 col-md-12">
-                            <div className="breadcrumb-area my-2">
-                                <ol className="breadcrumb p-0">
-                                    <li className="item">
-                                        <Link style={{
-                                            color: "var(--mainColor)",
-                                        }} href="/">Home</Link></li>
-                                    {breadcrumbs?.length > 0 && breadcrumbs.map((item, index) => (
-                                        <li className="item" key={index}>
-                                            {item.link ? <Link style={{
-                                                color: "var(--mainColor)",
-                                            }} href={item.link}>{item.name}</Link> : item.name}
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
+            <div className="rd-search-layout rd-property-layout">
+                <MapPanel
+                    geoJson={geoJson}
+                    eyebrow="Real estate map"
+                    title={`${totalRecords || 0} homes`}
+                />
+                <section className="rd-results-pane">
+                    <div className="rd-results-hero">
+                        <span className="rd-kicker">Homes and real estate</span>
+                        <h1>{getSiteName(site)} homes for sale and real estate</h1>
+                        <p>
+                            Search active IDX listings, compare neighborhoods, and connect with Realty Directions for property guidance.
+                        </p>
+                        <div className="rd-filter-chips">
+                            <Link href="/realty?category=sale">For Sale</Link>
+                            <Link href="/realty?category=rent">For Rent</Link>
+                            <Link href="/realty?orderBy=price_asc">Lowest Price</Link>
+                            <Link href="/sell">Sell Your Home</Link>
                         </div>
                     </div>
-                    <div className="row m-0">
-                        <div className="col-xl-12 col-lg-12 col-md-12 p-0">
-                            <div className="row d-flex">
-                                <div className="col-lg-3 col-md-12">
-                                    <RealtySidebar link="realty" location={location} categories={[]} params={[]} />
-                                </div>
 
-                                {totalRecords > 0 ? <MainPropertiesGridPage
+                    <div className="rd-search-results-grid">
+                        <RealtySidebar link="realty" location={location} categories={[]} params={[]} />
+                        <div className="rd-results-column">
+                            {totalRecords > 0 ? (
+                                <MainPropertiesGridPage
                                     searchParams={searchParams}
                                     location={location}
                                     properties={properties}
                                     totalRecords={totalRecords}
                                     featured_videos={featured_videos}
-                                /> : <NoRecordFound params={params} site={site} />}
-
-                            </div>
+                                />
+                            ) : (
+                                <NoRecordFound params={params} site={site} />
+                            )}
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
-            
         </>
     );
 

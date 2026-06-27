@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { postData } from "@/lib/server-actions";
 import { useSites } from "@/contexts/SitesContext";
 import { getSiteName } from "@/lib/helper";
@@ -112,25 +111,26 @@ export default function Page() {
     return (
         <>
            
-            <section className="hero py-5 py-lg-7">
-                <Container className="">
+            <section className="hero py-5 py-lg-7 rd-sell-page">
+                <div className="container">
                     <h1 className="text-center hero-heading mb-4">{data.title}</h1>
                     <p className="text-center lead mb-5">{displayContent}</p>
-                    <Row>
-                        <Col md={6} className="mx-auto">
+                    <div className="row">
+                        <div className="col-md-6 mx-auto">
                             {!submitted ? (
-                                <Form className="p-4 border rounded" action={'https://www.valuedirections.com'} >
-                                    <Form.Group>
-                                        <Form.Label>
+                                <form className="rd-sell-form" action={'https://www.valuedirections.com'} >
+                                    <div className="form-group">
+                                        <label>
                                             
                                             <strong>
                                                 <span className="text-primary">*</span> What is your
                                                 address?
                                             </strong>
                                             
-                                        </Form.Label>
+                                        </label>
                                         <input type="hidden" name="referrer" value={`www.${site?.slug || 'oceancity'}directions`} />
-                                        <Form.Control
+                                        <input
+                                            className="form-control"
                                             placeholder="Enter your address *"
                                             name={'address'}
                                             onChange={(e) => handleAddressInput(e.target.value)}
@@ -151,39 +151,39 @@ export default function Page() {
                                                 ))}
                                             </div>
                                         )}
-                                    </Form.Group>
+                                    </div>
 
-                                    <Form.Group className="mt-3">
-                                        <Button type="submit" className="w-100">
+                                    <div className="form-group mt-3">
+                                        <button type="submit" className="default-btn w-100">
                                             Submit
-                                        </Button>
-                                    </Form.Group>
-                                </Form>
+                                        </button>
+                                    </div>
+                                </form>
                             ) : (
                                 <div className="text-success">
                                     <h4>Thank you for submitting your details!</h4>
                                 </div>
                             )}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl="8" className="mx-auto">
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-xl-8 mx-auto">
                             <div id="sell_widget" className="w-100 overflow-y-auto" />
-                        </Col>
-                    </Row>
-                </Container>
+                        </div>
+                    </div>
+                </div>
             </section>
             <section className="py-6">
-                <Container>
+                <div className="container">
                     {data.questionGroups &&
                         data.questionGroups.map((group) => {
                             const groupedQuestions = groupByN(2, group.questions || []);
                             return (
                                 <div key={group.title} className="py-4">
                                     <h2 className="mb-5 text-primary">{group.title}</h2>
-                                    <Row>
+                                    <div className="row">
                                         {groupedQuestions.map((questions, index) => (
-                                            <Col md="6" key={index}>
+                                            <div className="col-md-6" key={index}>
                                                 {questions.map((question) => (
                                                     <React.Fragment key={question.title}>
                                                         <h5>{question.title}</h5>
@@ -192,13 +192,13 @@ export default function Page() {
                                                         </p>
                                                     </React.Fragment>
                                                 ))}
-                                            </Col>
+                                            </div>
                                         ))}
-                                    </Row>
+                                    </div>
                                 </div>
                             );
                         })}
-                </Container>
+                </div>
             </section>
         </>
     );
