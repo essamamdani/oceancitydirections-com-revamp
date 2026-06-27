@@ -4,26 +4,68 @@ import { authClient } from "@/lib/auth-client";
 const authListeners = new Set();
 let lastSession = null;
 
+function getStoredAuthToken() {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const localToken = localStorage.getItem('auth-token');
+    if (localToken) return localToken;
+
+    const match = document.cookie.match(new RegExp('(^| )auth-token=([^;]+)'));
+    return match?.[2] || null;
+  } catch {
+    return null;
+  }
+}
+
+function clearStoredAuth() {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.removeItem('auth-user');
+    localStorage.removeItem('auth-token');
+  } catch {
+    // Ignore storage access failures.
+  }
+}
+
+function getLocalSessionFallback() {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const token = getStoredAuthToken();
+    if (!token) {
+      clearStoredAuth();
+      return null;
+    }
+
+    const userStr = localStorage.getItem('auth-user');
+    return userStr ? { user: JSON.parse(userStr) } : null;
+  } catch {
+    return null;
+  }
+}
+
+async function readClientSession() {
+  const localSession = getLocalSessionFallback();
+
+  // Avoid cross-origin auth calls for anonymous local users. The public site
+  // should render as signed-out instead of surfacing a fetch/CORS console error.
+  if (!getStoredAuthToken()) return null;
+
+  try {
+    const { data } = await authClient.getSession();
+    return data || localSession;
+  } catch {
+    return localSession;
+  }
+}
+
 // Internal function to check session and notify listeners if changed
 async function checkAndNotify() {
   try {
-    const { data } = await authClient.getSession();
-    let currentSession = data || null;
-    
-    // If no session from Better Auth, try local storage fallback (app uses this pattern)
-    if (!currentSession && typeof window !== 'undefined') {
-      try {
-        if (document.cookie.includes('auth-token=')) {
-          const userStr = localStorage.getItem('auth-user');
-          if (userStr) {
-            currentSession = { user: JSON.parse(userStr) };
-          }
-        }
-      } catch (e) {
-        // Ignore fallback errors
-      }
-    }
-    
+    const currentSession = await readClientSession();
+
     // Check if user changed (login/logout)
     const lastUserId = lastSession?.user?.id;
     const currentUserId = currentSession?.user?.id;
@@ -39,38 +81,15 @@ async function checkAndNotify() {
         }
       });
     }
-  } catch (err) {
-    console.error('Session check error:', err);
+  } catch {
+    // Treat auth-service failures as signed-out state on public pages.
   }
 }
 
 // Get current user from Better Auth or local fallback
 export async function getClientUser() {
-  try {
-    const { data } = await authClient.getSession();
-    if (data?.user) return { user: data.user };
-  } catch (err) {
-    console.error('getSession error:', err);
-  }
-  
-  // Fallback to local storage (app uses this pattern heavily due to cross-domain auth)
-  if (typeof window !== 'undefined') {
-    try {
-      if (!document.cookie.includes('auth-token=')) {
-        localStorage.removeItem('auth-user');
-        localStorage.removeItem('auth-token');
-        return { user: null };
-      }
-      const userStr = localStorage.getItem('auth-user');
-      if (userStr) {
-        return { user: JSON.parse(userStr) };
-      }
-    } catch (e) {
-      return { user: null };
-    }
-  }
-  
-  return { user: null };
+  const session = await readClientSession();
+  return { user: session?.user ?? null };
 }
 
 // Subscribe to auth state changes with automatic polling
