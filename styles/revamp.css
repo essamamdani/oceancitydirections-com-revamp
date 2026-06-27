@@ -1363,6 +1363,352 @@ textarea.form-control {
   border-color: var(--rd-coral);
 }
 
+.rd-home-app {
+  min-height: 100vh;
+  background: #f6f7f9;
+  color: var(--rd-ink);
+}
+
+.rd-command-center {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 340px;
+  gap: 18px;
+  align-items: start;
+  padding: 24px 0 56px;
+}
+
+.rd-home-rail,
+.rd-welcome-panel,
+.rd-home-app .rd-module,
+.rd-side-card {
+  background: #fff;
+  border: 1px solid #e2e7ee;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(16, 36, 62, 0.06);
+}
+
+.rd-home-rail {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+}
+
+.rd-home-rail a {
+  min-height: 62px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  color: #536278;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.rd-home-rail a:hover {
+  background: #eef8f7;
+  color: var(--rd-ocean-dark);
+}
+
+.rd-home-rail i {
+  font-size: 20px;
+}
+
+.rd-home-main,
+.rd-home-side {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.rd-home-side {
+  position: sticky;
+  top: 96px;
+}
+
+.rd-welcome-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 28px;
+}
+
+.rd-welcome-panel h1 {
+  margin: 8px 0 10px;
+  color: var(--rd-ink);
+  font-size: clamp(36px, 4vw, 54px);
+  line-height: 1;
+}
+
+.rd-welcome-panel p {
+  max-width: 700px;
+  margin: 0;
+  color: #5d6a7f;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.rd-dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(98px, 1fr));
+  gap: 10px;
+}
+
+.rd-dashboard-stats div {
+  min-width: 0;
+  padding: 14px;
+  background: #f8fafc;
+  border: 1px solid #e6ebf1;
+  border-radius: 8px;
+}
+
+.rd-dashboard-stats strong {
+  display: block;
+  color: var(--rd-ink);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.rd-dashboard-stats span {
+  display: block;
+  margin-top: 6px;
+  color: #718096;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.rd-home-app .rd-search-console {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e2e7ee;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(16, 36, 62, 0.06);
+}
+
+.rd-home-app .rd-search-row + .rd-search-row {
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+}
+
+.rd-home-app .rd-search-row div {
+  min-height: 52px;
+  border-color: #d8e0ea;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.rd-home-app .rd-search-row input::placeholder {
+  color: #98a2b3;
+}
+
+.rd-home-app .rd-search-row button {
+  min-height: 40px;
+  border-radius: 7px;
+  padding: 10px 14px;
+}
+
+.rd-home-app .rd-module,
+.rd-side-card {
+  padding: 20px;
+}
+
+.rd-module-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.rd-module-head h2,
+.rd-side-card h2 {
+  margin: 6px 0 0;
+  color: var(--rd-ink);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.rd-module-head > a {
+  color: var(--rd-ocean-dark);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.rd-home-app .rd-intent-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 0;
+  position: static;
+  z-index: auto;
+}
+
+.rd-home-app .rd-intent-card {
+  min-height: 104px;
+  padding: 16px;
+  box-shadow: none;
+  border-radius: 8px;
+}
+
+.rd-home-app .rd-intent-card:hover,
+.rd-business-mini:hover,
+.rd-video-row:hover,
+.rd-network-map a:hover,
+.rd-county-list a:hover {
+  border-color: rgba(8, 115, 138, 0.34);
+  transform: translateY(-1px);
+}
+
+.rd-home-app .rd-home-listings {
+  padding: 0;
+}
+
+.rd-home-app .rd-home-listings .listings-area {
+  padding: 0 !important;
+  background: transparent;
+}
+
+.rd-home-app .rd-home-listings .container {
+  width: 100%;
+}
+
+.rd-home-app .rd-home-listings .rd-section-head {
+  margin-bottom: 16px;
+}
+
+.rd-home-app .rd-home-listings .rd-section-head h2 {
+  font-size: 24px;
+}
+
+.rd-home-app .rd-business-band {
+  padding: 20px;
+  background: #fff;
+  color: var(--rd-ink);
+}
+
+.rd-home-app .rd-business-band h2,
+.rd-home-app .rd-business-band .rd-kicker {
+  color: var(--rd-ink);
+}
+
+.rd-home-app .rd-business-strip {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rd-home-app .rd-business-mini {
+  min-height: 132px;
+  background: #fff;
+  border: 1px solid #e2e7ee;
+  border-radius: 8px;
+}
+
+.rd-home-app .rd-business-mini span,
+.rd-home-app .rd-business-mini small {
+  color: #69778d;
+}
+
+.rd-home-app .rd-business-mini strong {
+  color: var(--rd-ink);
+  font-size: 17px;
+}
+
+.rd-home-app .rd-lead-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 22px;
+  background: #eef8f7;
+}
+
+.rd-home-app .rd-lead-band h2 {
+  margin: 6px 0 0;
+  color: var(--rd-ink);
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.rd-home-app .rd-lead-actions a {
+  border-radius: 8px;
+}
+
+.rd-side-card {
+  overflow: hidden;
+}
+
+.rd-city-card {
+  padding: 0;
+}
+
+.rd-city-card > div:not(.rd-city-photo) {
+  padding: 18px;
+}
+
+.rd-city-card p {
+  margin: 10px 0 0;
+  color: #627086;
+  line-height: 1.6;
+}
+
+.rd-city-photo {
+  position: relative;
+  height: 178px;
+  overflow: hidden;
+  background: #dfe8ef;
+}
+
+.rd-home-app .rd-video-list {
+  margin-top: 0;
+}
+
+.rd-home-app .rd-video-row {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.rd-home-app .rd-video-row span {
+  background: #eef8f7;
+  color: var(--rd-ocean-dark);
+}
+
+.rd-home-app .rd-network {
+  padding: 20px;
+  background: #fff;
+}
+
+.rd-home-app .rd-network .rd-county-list {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.rd-home-app .rd-network .rd-county-list div {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rd-home-app .rd-network .rd-county-list a,
+.rd-home-app .rd-network .rd-network-map a {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.rd-home-app .rd-network .rd-network-map {
+  min-height: auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
 .rd-search-layout {
   display: grid;
   grid-template-columns: minmax(480px, 1fr) minmax(420px, 42vw);
@@ -1919,6 +2265,20 @@ textarea.form-control {
 }
 
 @media (max-width: 1180px) {
+  .rd-command-center {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+
+  .rd-home-side {
+    position: static;
+    grid-column: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rd-home-side .rd-network {
+    grid-column: 1 / -1;
+  }
+
   .rd-hero-grid,
   .rd-search-layout,
   .rd-property-layout,
@@ -1942,6 +2302,55 @@ textarea.form-control {
 }
 
 @media (max-width: 900px) {
+  .custom-navbar {
+    padding: 0;
+  }
+
+  .miran-responsive-menu img {
+    max-width: 236px;
+  }
+
+  .rd-command-center {
+    display: block;
+    padding: 16px 0 36px;
+  }
+
+  .rd-home-rail {
+    position: relative;
+    top: auto;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+  }
+
+  .rd-home-rail a {
+    min-width: 82px;
+  }
+
+  .rd-home-main,
+  .rd-home-side {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .rd-home-side {
+    margin-top: 14px;
+  }
+
+  .rd-welcome-panel,
+  .rd-home-app .rd-search-console,
+  .rd-home-app .rd-lead-band {
+    grid-template-columns: 1fr;
+  }
+
+  .rd-dashboard-stats,
+  .rd-home-app .rd-intent-grid,
+  .rd-home-app .rd-business-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .col-6,
   .col-md-4,
   .col-md-6,
@@ -2006,6 +2415,24 @@ textarea.form-control {
 @media (max-width: 640px) {
   .rd-shell {
     width: min(100% - 24px, 1180px);
+  }
+
+  .rd-welcome-panel,
+  .rd-home-app .rd-module,
+  .rd-side-card {
+    padding: 16px;
+  }
+
+  .rd-welcome-panel h1 {
+    font-size: 36px;
+  }
+
+  .rd-dashboard-stats,
+  .rd-home-app .rd-intent-grid,
+  .rd-home-app .rd-business-strip,
+  .rd-home-app .rd-network .rd-county-list div,
+  .rd-home-app .rd-network .rd-network-map {
+    grid-template-columns: 1fr;
   }
 
   .rd-search-row div {
