@@ -1,0 +1,117 @@
+"use client";
+
+import React from "react";
+import Image from "next/image";
+
+const GalleryContent = () => {
+  return (
+    <>
+      <div className="gallery-area bg-f9f9f9 pt-100 pb-70">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery1.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery4.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery5.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery6.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery2.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery7.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery8.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery9.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6">
+              <div className="single-gallery-item">
+                <Image
+                  src="/images/gallery/gallery3.jpg"
+                  alt="image"
+                  width={750}
+                  height={500}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default GalleryContent;

@@ -1,0 +1,22 @@
+{
+    "cities": [
+        {
+            "worcester": "img/photo/photo-worcester.jpg"
+        },
+        {
+            "wicomico": "img/photo/photo-wicomico.jpg"
+        },
+        {
+            "somerset": "img/photo/photo-somerset.jpg"
+        },
+        {
+            "dorchester": "img/photo/photo-dorchester.jpg"
+        },
+        {
+            "talbot": "img/photo/photo-talbot.jpg"
+        },
+        {
+            "caroline": "img/photo/photo-caroline.jpg"
+        }
+    ]
+}

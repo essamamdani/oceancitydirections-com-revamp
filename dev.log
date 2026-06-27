@@ -1,0 +1,23 @@
+
+> realty@1.4.0 dev
+> next dev
+
+⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+▲ Next.js 16.1.7 (Turbopack)
+- Local:         http://localhost:3002
+- Network:       http://172.50.25.5:3002
+- Environments: .env.local
+
+✓ Starting...
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /tmp/next-panic-1dff8639338c3503efbf7fc73432105e.log.
+
+To help make Turbopack better, report this error by clicking here: https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Too%20many%20open%20files%20%28os%20error%2024%29&body=Turbopack%20version%3A%20%608227f85d%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0ATurbopack%20Error%3A%20Too%20many%20open%20files%20%28os%20error%2024%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace
+-----
+
+Error [TurbopackInternalError]: Too many open files (os error 24)
+    at <unknown> (TurbopackInternalError: Too many open files (os error 24)) {
+  location: undefined
+}
+[?25h

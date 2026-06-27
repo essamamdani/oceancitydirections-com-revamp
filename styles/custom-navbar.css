@@ -1,0 +1,158 @@
+/* Custom Navbar Styles */
+.custom-nav-item {
+    display: inline-block;
+    margin-left: 15px;
+    margin-right: 15px;
+    position: relative;
+}
+
+.custom-nav-link {
+    color: var(--blackColor);
+    font-size: 16px;
+    font-weight: 500;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: inline-block;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+}
+
+.custom-nav-link-1 {
+    color: #fff;
+}
+
+.custom-nav-link:hover {
+    color: var(--mainColor);
+}
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.custom-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 10px 0;
+    min-width: 180px;
+    z-index: 1000;
+    list-style: none;
+    border-top: 3px solid var(--mainColor);
+}
+
+.custom-dropdown-item {
+    display: block;
+    padding: 8px 20px;
+    color: var(--blackColor);
+    font-size: 15px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.custom-dropdown-item:hover {
+    color: var(--mainColor);
+    background-color: #f9f9f9;
+}
+
+/* Navbar Layout */
+.custom-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    width: 100%;
+}
+
+.custom-navbar-nav-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.custom-navbar-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+@media only screen and (max-width: 991px) {
+    .custom-navbar-nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
+    }
+
+    .miran-nav.show .custom-navbar-nav {
+        display: flex;
+    }
+
+    .custom-navbar-nav-container {
+        width: 100%;
+    }
+
+    .custom-navbar {
+        flex-wrap: wrap;
+    }
+
+    .custom-nav-item {
+        display: block;
+        margin: 0;
+        width: 100%;
+    }
+
+    .custom-nav-link {
+        display: block;
+        padding: 10px 20px;
+        width: 100%;
+        color: var(--blackColor) !important;
+    }
+
+    .custom-dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border-top: none;
+        padding-left: 20px;
+        display: none;
+    }
+
+    .custom-dropdown:hover .custom-dropdown-menu {
+        display: block;
+    }
+
+    /* Ensure the user menu dropdown works on click/hover in mobile if needed, 
+       or rely on the state-based toggle in UserMenu.jsx which renders it.
+       Since UserMenu.jsx uses conditional rendering {isOpen && ...}, 
+       we just need to make sure it's visible when rendered. */
+    .custom-dropdown-menu {
+        display: block;
+        /* It's controlled by React state */
+        position: static;
+        box-shadow: none;
+        border: none;
+        padding-left: 20px;
+        width: 100%;
+    }
+}

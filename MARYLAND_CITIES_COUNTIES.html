@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maryland Cities and Counties Reference</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Maryland Cities & Counties Reference</h1>
+        <div class="note">
+            <strong>Note:</strong> Baltimore City is an independent city and does not belong to any county. Other cities are located within specific counties as listed below.
+        </div>
+        
+        <h2>List of Cities and Their Counties</h2>
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for city or county..." style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 4px;">
+        
+        <table id="cityTable">
+            <thead>
+                <tr>
+                    <th>City/Town</th>
+                    <th>County</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Aberdeen</td><td>Harford County</td><td>City</td></tr>
+                <tr><td>Accident</td><td>Garrett County</td><td>Town</td></tr>
+                <tr><td>Annapolis</td><td>Anne Arundel County</td><td>City (State Capital)</td></tr>
+                <tr><td>Baltimore</td><td>Baltimore City</td><td>Independent City</td></tr>
+                <tr><td>Barclay</td><td>Queen Anne's County</td><td>Town</td></tr>
+                <tr><td>Barnesville</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Barton</td><td>Allegany County</td><td>Town</td></tr>
+                <tr><td>Bel Air</td><td>Harford County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Berlin</td><td>Worcester County</td><td>Town</td></tr>
+                <tr><td>Berwyn Heights</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Betterton</td><td>Kent County</td><td>Town</td></tr>
+                <tr><td>Bladensburg</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Boonsboro</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Bowie</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Brentwood</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Brookeville</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Brookview</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Brunswick</td><td>Frederick County</td><td>City</td></tr>
+                <tr><td>Burkittsville</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>Cambridge</td><td>Dorchester County</td><td>City (County Seat)</td></tr>
+                <tr><td>Capitol Heights</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Cecilton</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Centreville</td><td>Queen Anne's County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Charlestown</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Chesapeake Beach</td><td>Calvert County</td><td>Town</td></tr>
+                <tr><td>Chesapeake City</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Chestertown</td><td>Kent County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Cheverly</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Chevy Chase</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Chevy Chase Section Three</td><td>Montgomery County</td><td>Village</td></tr>
+                <tr><td>Chevy Chase Section Five</td><td>Montgomery County</td><td>Village</td></tr>
+                <tr><td>Chevy Chase View</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Chevy Chase Village</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Church Creek</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Church Hill</td><td>Queen Anne's County</td><td>Town</td></tr>
+                <tr><td>Clear Spring</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>College Park</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Colmar Manor</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Cottage City</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Crisfield</td><td>Somerset County</td><td>City</td></tr>
+                <tr><td>Cumberland</td><td>Allegany County</td><td>City (County Seat)</td></tr>
+                <tr><td>Delmar</td><td>Wicomico County</td><td>Town</td></tr>
+                <tr><td>Denton</td><td>Caroline County</td><td>Town (County Seat)</td></tr>
+                <tr><td>District Heights</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Eagle Harbor</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>East New Market</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Easton</td><td>Talbot County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Edmonston</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Eldorado</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Elkton</td><td>Cecil County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Emmitsburg</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>Fairmount Heights</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Federalsburg</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Forest Heights</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Frederick</td><td>Frederick County</td><td>City (County Seat)</td></tr>
+                <tr><td>Friendsville</td><td>Garrett County</td><td>Town</td></tr>
+                <tr><td>Frostburg</td><td>Allegany County</td><td>City</td></tr>
+                <tr><td>Fruitland</td><td>Wicomico County</td><td>City</td></tr>
+                <tr><td>Funkstown</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Gaithersburg</td><td>Montgomery County</td><td>City</td></tr>
+                <tr><td>Galena</td><td>Kent County</td><td>Town</td></tr>
+                <tr><td>Galestown</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Garrett Park</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Glenarden</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Glen Echo</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Goldsboro</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Grantsville</td><td>Garrett County</td><td>Town</td></tr>
+                <tr><td>Greenbelt</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Greensboro</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Hagerstown</td><td>Washington County</td><td>City (County Seat)</td></tr>
+                <tr><td>Hampstead</td><td>Carroll County</td><td>Town</td></tr>
+                <tr><td>Hancock</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Havre de Grace</td><td>Harford County</td><td>City</td></tr>
+                <tr><td>Hebron</td><td>Wicomico County</td><td>Town</td></tr>
+                <tr><td>Henderson</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Highland Beach</td><td>Anne Arundel County</td><td>Town</td></tr>
+                <tr><td>Hillsboro</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Hurlock</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Hyattsville</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Indian Head</td><td>Charles County</td><td>Town</td></tr>
+                <tr><td>Keedysville</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Kensington</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Kitzmiller</td><td>Garrett County</td><td>Town</td></tr>
+                <tr><td>Landover Hills</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>La Plata</td><td>Charles County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Laurel</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Laytonsville</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Leonardtown</td><td>St. Mary's County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Loch Lynn Heights</td><td>Garrett County</td><td>Town</td></tr>
+                <tr><td>Lonaconing</td><td>Allegany County</td><td>Town</td></tr>
+                <tr><td>Luke</td><td>Allegany County</td><td>Town</td></tr>
+                <tr><td>Manchester</td><td>Carroll County</td><td>Town</td></tr>
+                <tr><td>Mardela Springs</td><td>Wicomico County</td><td>Town</td></tr>
+                <tr><td>Martin's Additions</td><td>Montgomery County</td><td>Village</td></tr>
+                <tr><td>Marydel</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Middletown</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>Midland</td><td>Allegany County</td><td>Town</td></tr>
+                <tr><td>Millington</td><td>Kent County & Queen Anne's County</td><td>Town</td></tr>
+                <tr><td>Morningside</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Mountain Lake Park</td><td>Garrett County</td><td>Town</td></tr>
+                <tr><td>Mount Airy</td><td>Carroll County & Frederick County</td><td>Town</td></tr>
+                <tr><td>Mount Rainier</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Myersville</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>New Carrollton</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>New Market</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>New Windsor</td><td>Carroll County</td><td>Town</td></tr>
+                <tr><td>North Beach</td><td>Calvert County</td><td>Town</td></tr>
+                <tr><td>North Brentwood</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>North Chevy Chase</td><td>Montgomery County</td><td>Village</td></tr>
+                <tr><td>North East</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Oakland</td><td>Garrett County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Ocean City</td><td>Worcester County</td><td>Town</td></tr>
+                <tr><td>Oxford</td><td>Talbot County</td><td>Town</td></tr>
+                <tr><td>Perryville</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Pittsville</td><td>Wicomico County</td><td>Town</td></tr>
+                <tr><td>Pocomoke City</td><td>Worcester County</td><td>City</td></tr>
+                <tr><td>Poolesville</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Port Deposit</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Port Tobacco</td><td>Charles County</td><td>Town</td></tr>
+                <tr><td>Preston</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Princess Anne</td><td>Somerset County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Queen Anne</td><td>Queen Anne's County & Talbot County</td><td>Town</td></tr>
+                <tr><td>Queenstown</td><td>Queen Anne's County</td><td>Town</td></tr>
+                <tr><td>Ridgely</td><td>Caroline County</td><td>Town</td></tr>
+                <tr><td>Rising Sun</td><td>Cecil County</td><td>Town</td></tr>
+                <tr><td>Riverdale Park</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Rock Hall</td><td>Kent County</td><td>Town</td></tr>
+                <tr><td>Rockville</td><td>Montgomery County</td><td>City (County Seat)</td></tr>
+                <tr><td>Rosemont</td><td>Frederick County</td><td>Village</td></tr>
+                <tr><td>Salisbury</td><td>Wicomico County</td><td>City (County Seat)</td></tr>
+                <tr><td>Seat Pleasant</td><td>Prince George's County</td><td>City</td></tr>
+                <tr><td>Secretary</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Sharpsburg</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Sharptown</td><td>Wicomico County</td><td>Town</td></tr>
+                <tr><td>Smithsburg</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Snow Hill</td><td>Worcester County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Somerset</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>St. Michaels</td><td>Talbot County</td><td>Town</td></tr>
+                <tr><td>Sudlersville</td><td>Queen Anne's County</td><td>Town</td></tr>
+                <tr><td>Sykesville</td><td>Carroll County</td><td>Town</td></tr>
+                <tr><td>Takoma Park</td><td>Montgomery County</td><td>City</td></tr>
+                <tr><td>Taneytown</td><td>Carroll County</td><td>City</td></tr>
+                <tr><td>Templeville</td><td>Caroline County & Queen Anne's County</td><td>Town</td></tr>
+                <tr><td>Thurmont</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>Trappe</td><td>Talbot County</td><td>Town</td></tr>
+                <tr><td>Union Bridge</td><td>Carroll County</td><td>Town</td></tr>
+                <tr><td>University Park</td><td>Prince George's County</td><td>Town</td></tr>
+                <tr><td>Upper Marlboro</td><td>Prince George's County</td><td>Town (County Seat)</td></tr>
+                <tr><td>Vienna</td><td>Dorchester County</td><td>Town</td></tr>
+                <tr><td>Walkersville</td><td>Frederick County</td><td>Town</td></tr>
+                <tr><td>Washington Grove</td><td>Montgomery County</td><td>Town</td></tr>
+                <tr><td>Westernport</td><td>Allegany County</td><td>Town</td></tr>
+                <tr><td>Westminster</td><td>Carroll County</td><td>City (County Seat)</td></tr>
+                <tr><td>Willards</td><td>Wicomico County</td><td>Town</td></tr>
+                <tr><td>Williamsport</td><td>Washington County</td><td>Town</td></tr>
+                <tr><td>Woodsboro</td><td>Frederick County</td><td>Town</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function searchTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("cityTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                tdCity = tr[i].getElementsByTagName("td")[0];
+                tdCounty = tr[i].getElementsByTagName("td")[1];
+                if (tdCity || tdCounty) {
+                    txtValueCity = tdCity.textContent || tdCity.innerText;
+                    txtValueCounty = tdCounty.textContent || tdCounty.innerText;
+                    if (txtValueCity.toUpperCase().indexOf(filter) > -1 || txtValueCounty.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+    </script>
+</body>
+</html>

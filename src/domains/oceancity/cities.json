@@ -1,0 +1,54 @@
+[
+  {
+    "value": "Berlin MD",
+    "label": "Berlin"
+  },
+  {
+    "value": "Bishopville MD",
+    "label": "Bishopville"
+  },
+  {
+    "value": "Crisfield MD",
+    "label": "Crisfield"
+  },
+  {
+    "value": "Delmar MD",
+    "label": "Delmar"
+  },
+  {
+    "value": "Fenwick Island DE",
+    "label": "Fenwick Island"
+  },
+  {
+    "value": "Fruitland MD",
+    "label": "Fruitland"
+  },
+  {
+    "value": "Ocean City MD",
+    "label": "Ocean CIty"
+  },
+  {
+    "value": "Ocean Pines MD",
+    "label": "Ocean Pines"
+  },
+  {
+    "value": "Pocomoke City MD",
+    "label": "Pocomoke City"
+  },
+  {
+    "value": "Princess Anne MD",
+    "label": "Princess Anne"
+  },
+  {
+    "value": "Salisbury MD",
+    "label": "Salisbury"
+  },
+  {
+    "value": "Snow Hill MD",
+    "label": "Snow Hill"
+  },
+  {
+    "value": "West Ocean City MD",
+    "label": "West Ocean CIty"
+  }
+]

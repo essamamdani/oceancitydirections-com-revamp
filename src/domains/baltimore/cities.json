@@ -1,0 +1,175 @@
+[
+    {
+        "value": "Aberdeen MD",
+        "label": "Aberdeen"
+    },
+    {
+        "value": "Baltimore MD",
+        "label": "Baltimore"
+    },
+    {
+        "value": "Bel Air MD",
+        "label": "Bel Air"
+    },
+    {
+        "value": "Canton MD",
+        "label": "Canton"
+    },
+    {
+        "value": "Catonsville MD",
+        "label": "Catonsville"
+    },
+    {
+        "value": "Charles Village MD",
+        "label": "Charles Village"
+    },
+    {
+        "value": "Columbia MD",
+        "label": "Columbia"
+    },
+    {
+        "value": "Crofton MD",
+        "label": "Crofton"
+    },
+    {
+        "value": "Crownsville MD",
+        "label": "Crownsville"
+    },
+   
+    {
+        "value": "Dundalk MD",
+        "label": "Dundalk"
+    },
+    {
+        "value": "Edgewood MD",
+        "label": "Edgewood"
+    },
+    {
+        "value": "Eldersburg MD",
+        "label": "Eldersburg"
+    },
+    {
+        "value": "Elkridge MD",
+        "label": "Elkridge"
+    },
+    {
+        "value": "Elkton MD",
+        "label": "Elkton"
+    },
+    {
+        "value": "Ellicott City MD",
+        "label": "Ellicott City"
+    },
+    {
+        "value": "Essex MD",
+        "label": "Essex"
+    },
+    {
+        "value": "Fallston MD",
+        "label": "Fallston"
+    },
+    {
+        "value": "Glen Burnie MD",
+        "label": "Glen Burnie"
+    },
+    {
+        "value": "Highlandtown MD",
+        "label": "Highlandtown"
+    },
+    {
+        "value": "Laurel MD",
+        "label": "Laurel"
+    },
+    {
+        "value": "Linthicum MD",
+        "label": "Linthicum"
+    },
+    {
+        "value": "Little Italy MD",
+        "label": "Little Italy"
+    },
+    {
+        "value": "Locust Point MD",
+        "label": "Locust Point"
+    },
+    {
+        "value": "Millersville MD",
+        "label": "Millersville"
+    },
+    {
+        "value": "Mount Vernon MD",
+        "label": "Mount Vernon"
+    },
+    {
+        "value": "Odenton MD",
+        "label": "Odenton"
+    },
+    {
+        "value": "Owings Mills MD",
+        "label": "Owings Mills"
+    }, 
+    {
+        "value": "Parkville MD",
+        "label": "Parkville"
+    },
+    {
+        "value": "Pasadena MD",
+        "label": "Pasadena"
+    },  
+    {
+        "value": "Patterson Park MD",
+        "label": "Patterson Park"
+    },
+    {
+        "value": "Perryville MD",
+        "label": "Perryville"
+    },
+    {
+        "value": "Pikesville MD",
+        "label": "Pikesville"
+    },
+    {
+        "value": "Port Deposit MD",
+        "label": "Port Deposit"
+    },
+    {
+        "value": "Reisterstown MD",
+        "label": "Reisterstown"
+    },
+    {
+        "value": "Severn MD",
+        "label": "Severn"
+    },
+    {
+        "value": "Severna Park MD",
+        "label": "Severna Park"
+    },
+    {
+        "value": "Sykesville MD",
+        "label": "Sykesville"
+    },
+    {
+        "value": "Timonium MD",
+        "label": "Timonium"
+    },
+    {
+        "value": "Towson MD",
+        "label": "Towson"
+    },
+    {
+        "value": "Washington Village MD",
+        "label": "Washington Village"
+    },
+    {
+        "value": "Westminster MD",
+        "label": "Westminster"
+    },
+    {
+        "value": "White Marsh MD",
+        "label": "White Marsh"
+    },
+    {
+        "value": "Woodstock MD",
+        "label": "Woodstock"
+    }
+]

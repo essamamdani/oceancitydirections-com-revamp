@@ -1,0 +1,31 @@
+{
+    "cities": [
+        {
+            "anne-arundle": "img/photo/photo-anne-arundle.jpg"
+        },
+        {
+            "saint-marys": "img/photo/photo-saint-marys.jpg"
+        },
+        {
+            "charles": "img/photo/photo-charles.jpg"
+        },
+        {
+            "prince-georges": "img/photo/photo-prince-georges.jpg"
+        },
+        {
+            "calvert": "img/photo/photo-calvert.jpg"
+        },
+        {
+            "kent": "img/photo/photo-kent.jpg"
+        },
+        {
+            "queen-annes": "img/photo/photo-queen-annes.jpg"
+        },
+        {
+            "talbot": "img/photo/photo-talbot.jpg"
+        },
+        {
+            "caroline": "img/photo/photo-caroline.jpg"
+        }
+    ]
+}

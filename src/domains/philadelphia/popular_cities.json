@@ -1,0 +1,37 @@
+{
+    "cities": [
+        {
+            "berks": "img/photo/photo-county.jpg"
+        },
+        {
+            "bucks": "img/photo/photo-county.jpg"
+        },
+        {
+            "chester": "img/photo/photo-county.jpg"
+        },
+        {
+            "delaware": "img/photo/photo-county.jpg"
+        },
+        {
+            "lancaster": "img/photo/photo-county.jpg"
+        },
+        {
+            "lehigh": "img/photo/photo-county.jpg"
+        },
+        {
+            "lebanon": "img/photo/photo-county.jpg"
+        },
+        {
+            "philadelphia": "img/photo/photo-county.jpg"
+        },
+        {
+            "montgomery": "img/photo/photo-county.jpg"
+        },
+        {
+            "northampton": "img/photo/photo-county.jpg"
+        },
+        {
+            "york": "img/photo/photo-county.jpg"
+        }
+    ]
+}

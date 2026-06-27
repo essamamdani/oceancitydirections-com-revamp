@@ -1,0 +1,22 @@
+{
+    "cities": [
+        {
+            "frederick": "img/photo/photo-frederick.jpg"
+        },
+        {
+            "montgomery": "img/photo/photo-montgomery.jpg"
+        },
+        {
+            "carroll": "img/photo/photo-carroll.jpg"
+        },
+        {
+            "washington": "img/photo/photo-washington.jpg"
+        },
+        {
+            "allegany": "img/photo/photo-allegany.jpg"
+        },
+        {
+            "garrett": "img/photo/photo-garrett.jpg"
+        }
+    ]
+}

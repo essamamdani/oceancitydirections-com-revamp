@@ -1,0 +1,25 @@
+{
+    "cities": [
+        {
+            "anne-arundle": "img/photo/photo-anne-arundle.jpg"
+        },
+        {
+            "worcester": "img/photo/photo-worcester.jpg"
+        },
+        {
+            "baltimore-county": "img/photo/photo-baltimore-county.jpg"
+        },
+        {
+            "carroll": "img/photo/photo-carroll.jpg"
+        },
+        {
+            "cecil": "img/photo/photo-cecil.jpg"
+        },
+        {
+            "harford": "img/photo/photo-harford.jpg"
+        },
+        {
+            "howard": "img/photo/photo-howard.jpg"
+        }
+    ]
+}
