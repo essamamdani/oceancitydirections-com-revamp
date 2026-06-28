@@ -11,8 +11,8 @@ import { Autoplay, Pagination } from "swiper/modules";
 const quickCategories = [
   { label: "Homes", href: "/realty", icon: "bx-home", copy: "Find your next home" },
   { label: "Businesses", href: "/business", icon: "bx-store", copy: "Support local" },
-  { label: "Communities", href: "/business", icon: "bx-map-pin", copy: "Explore places to live" },
-  { label: "Media Pros", href: "/merchants-media-pros", icon: "bx-video", copy: "Create & connect" },
+  { label: "Communities", href: "/business", icon: "bx-group", copy: "Explore places to live" },
+  { label: "Media Pros", href: "/merchants-media-pros", icon: "bx-slideshow", copy: "Create & connect" },
 ];
 
 const businessFilterCategories = [
@@ -58,14 +58,188 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
   const counties = countyNames(site);
   const featureImage = site?.slides?.swiper?.[0]?.img || "/img/photo/ocean-city-md-boardwalk.jpg";
 
-  const mainSpotlightVideo = featuredVideos[0] || null;
-  const listVideos = featuredVideos.slice(1, 4);
+  // Fallbacks for videos to match the premium Annapolis directions layout
+  const defaultVideos = [
+    {
+      video_id: "spotlight",
+      title: `Why People Love Living in ${siteName.replace("Directions", "")}`,
+      thumbnail: "/images/about-img.jpg",
+      p_id_b_slug: "about",
+      embeded_for: "community",
+      category: "Community Spotlight",
+      duration: "2:48"
+    },
+    {
+      video_id: "v1",
+      title: `${siteName.replace("Directions", "")} on the Water`,
+      thumbnail: "/images/main-banner-bg1.jpg",
+      p_id_b_slug: "realty",
+      embeded_for: "community",
+      category: "Neighborhood Tour",
+      duration: "3:15"
+    },
+    {
+      video_id: "v2",
+      title: "Local Business Spotlight",
+      thumbnail: "/images/main-banner-bg2.jpg",
+      p_id_b_slug: "business",
+      embeded_for: "community",
+      category: "Meet a Local Pro",
+      duration: "1:50"
+    },
+    {
+      video_id: "v3",
+      title: `${siteName.replace("Directions", "")} Neighborhoods`,
+      thumbnail: "/images/main-banner-bg3.jpg",
+      p_id_b_slug: "realty",
+      embeded_for: "community",
+      category: "Community Guide",
+      duration: "4:05"
+    }
+  ];
+
+  const mergedVideos = [...featuredVideos];
+  while (mergedVideos.length < 4) {
+    const fallback = defaultVideos[mergedVideos.length];
+    mergedVideos.push(fallback);
+  }
+
+  const mainSpotlightVideo = mergedVideos[0];
+  const listVideos = mergedVideos.slice(1, 4);
+
+  // Mock businesses for category tabs to populate listing nicely if DB is clean
+  const mockBusinesses: Record<string, any[]> = {
+    restaurant: [
+      {
+        id: "mock-r1",
+        title: "Boatyard Bar & Grill",
+        category: "Waterfront Dining",
+        description: "An Ocean City institution famous for crab cakes, fresh seafood, and sailor friendly atmosphere near the harbor.",
+        stars: 4.8,
+        reviews: 238,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/about-img.jpg",
+        slug: "boatyard-bar-grill"
+      },
+      {
+        id: "mock-r2",
+        title: "Carrol's Creek Cafe",
+        category: "Waterfront Dining",
+        description: "Fine dining overlooking the bay, specializing in local seafood and premium steak options.",
+        stars: 4.7,
+        reviews: 184,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg2.jpg",
+        slug: "carrols-creek"
+      },
+      {
+        id: "mock-r3",
+        title: "O'Leary's Seafood",
+        category: "Seafood Dining",
+        description: "Cozy upscale venue offering creative, high-end seafood preparations in a historic neighborhood setting.",
+        stars: 4.9,
+        reviews: 142,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg3.jpg",
+        slug: "olearys"
+      }
+    ],
+    "coffee-shop": [
+      {
+        id: "mock-c1",
+        title: "Rise Up Coffee",
+        category: "Coffee Shop",
+        description: "Local craft coffee roaster offering organic, fair-trade coffee drinks, bakery treats, and breakfast items.",
+        stars: 4.8,
+        reviews: 124,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg4.jpg",
+        slug: "rise-up-coffee"
+      },
+      {
+        id: "mock-c2",
+        title: "Bitty & Beau's Coffee",
+        category: "Coffee Shop",
+        description: "A human-rights focused coffee shop serving high quality espresso drinks and standard bakery items.",
+        stars: 4.9,
+        reviews: 96,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg5.jpg",
+        slug: "bitty-beaus"
+      }
+    ],
+    medical: [
+      {
+        id: "mock-m1",
+        title: "Ocean City Performance PT",
+        category: "Physical Therapy",
+        description: "Specialized sports rehabilitation and physical therapy clinic helping local active individuals recover fully.",
+        stars: 4.9,
+        reviews: 97,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg6.jpg",
+        slug: "oceancity-pt"
+      }
+    ],
+    fitness: [
+      {
+        id: "mock-f1",
+        title: "Downtown Ocean City Fitness",
+        category: "Gym & Fitness",
+        description: "Local community gym offering state-of-the-art machines, group classes, and personalized coaching.",
+        stars: 4.7,
+        reviews: 83,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/about-img.jpg",
+        slug: "oceancity-fitness"
+      }
+    ],
+    "home-services": [
+      {
+        id: "mock-h1",
+        title: "Bay Plumbers & HVAC",
+        category: "Home Plumbing",
+        description: "Reliable, 24/7 residential plumbing and heating services for local communities around the bay.",
+        stars: 4.8,
+        reviews: 154,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg1.jpg",
+        slug: "bay-plumbers"
+      }
+    ],
+    shopping: [
+      {
+        id: "mock-s1",
+        title: "Historic District Boutiques",
+        category: "Local Shopping",
+        description: "Charming independent retail shops selling unique apparel, gifts, coastal art, and home decor items.",
+        stars: 4.6,
+        reviews: 112,
+        city: "Ocean City",
+        state: "MD",
+        main_image: "/images/main-banner-bg3.jpg",
+        slug: "historic-boutiques"
+      }
+    ]
+  };
 
   const filteredBusinessesForGrid = topBusinesses.filter(b => {
     if (!selectedBizCategory) return true;
     return b.categories?.name?.toLowerCase().includes(selectedBizCategory.toLowerCase()) ||
            b.category?.toLowerCase().includes(selectedBizCategory.toLowerCase());
   }).slice(0, 6);
+
+  const activeGridBusinesses = filteredBusinessesForGrid.length > 0 
+    ? filteredBusinessesForGrid 
+    : (mockBusinesses[selectedBizCategory] || []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +302,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         <div className="max-w-4xl mx-auto text-center px-4 relative z-10 space-y-6">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-none font-serif drop-shadow-lg">
             Discover {siteName.replace("Directions", "")}
-            <span className="block text-orange-500 font-serif italic font-normal mt-2">Like a Local</span>
+            <span className="block text-[#A3E635] mt-2" style={{ fontFamily: "'Playpen Sans', 'Caveat', 'Great Vibes', 'Brush Script MT', 'Snell Roundhand', cursive", fontStyle: 'italic', fontWeight: 'normal', fontSize: '0.85em' }}>Like a Local</span>
           </h1>
           <p className="text-md md:text-lg text-slate-200 max-w-2xl mx-auto font-medium drop-shadow-sm">
             Explore homes, neighborhoods, local businesses and the insider tips that make our community unique.
@@ -146,7 +320,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-3 font-semibold transition text-sm">
+            <button type="submit" className="bg-slate-950 hover:bg-slate-900 text-white rounded-xl px-6 py-3 font-semibold transition text-sm">
               <i className="bx bx-search text-lg align-middle"></i>
             </button>
           </form>
@@ -167,7 +341,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
               </span>
               <div>
                 <strong className="text-slate-950 text-sm font-bold block">{cat.label}</strong>
-                <span className="text-xs text-slate-450 font-medium">{cat.copy}</span>
+                <span className="text-xs text-slate-455 font-medium">{cat.copy}</span>
               </div>
             </Link>
           ))}
@@ -195,29 +369,42 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
               {mainSpotlightVideo ? (
                 <Link
                   href={mainSpotlightVideo.embeded_for === "property" ? `/realty/${mainSpotlightVideo.p_id_b_slug}` : `/s/${mainSpotlightVideo.p_id_b_slug || ""}`}
-                  className="block relative h-56 w-full rounded-2xl bg-slate-950 overflow-hidden group shadow-sm"
+                  className="block relative h-64 w-full rounded-2xl bg-slate-950 overflow-hidden group shadow-sm"
                 >
                   <Image
-                    src={mainSpotlightVideo.thumbnail || "/img/photo/ocean-city-md-boardwalk.jpg"}
+                    src={mainSpotlightVideo.thumbnail || "/images/about-img.jpg"}
                     alt={mainSpotlightVideo.title}
                     fill
                     style={{ objectFit: "cover" }}
                   />
+                  
+                  {/* Play Button Overlay */}
                   <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/30 transition flex items-center justify-center">
                     <span className="w-14 h-14 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-lg transform group-hover:scale-105 transition duration-300">
                       <i className="bx bx-play text-3xl pl-1"></i>
                     </span>
                   </div>
+
+                  {/* Text Overlay at bottom */}
+                  <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent text-white flex justify-between items-end">
+                    <div>
+                      <span className="text-[9px] uppercase tracking-widest text-orange-400 font-bold block mb-1">
+                        {mainSpotlightVideo.category || "Community Spotlight"}
+                      </span>
+                      <h3 className="font-bold text-white text-sm leading-snug line-clamp-2">
+                        {mainSpotlightVideo.title}
+                      </h3>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-black/50 rounded text-slate-200 shrink-0 ml-3">
+                      {mainSpotlightVideo.duration || "2:48"}
+                    </span>
+                  </div>
                 </Link>
               ) : (
-                <div className="h-56 w-full rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
+                <div className="h-64 w-full rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
                   <i className="bx bx-video-off text-3xl"></i>
                 </div>
               )}
-              <div>
-                <h3 className="font-bold text-slate-950 text-sm line-clamp-1">{mainSpotlightVideo?.title || "Community Video Spotlight"}</h3>
-                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-1">Featured Video</p>
-              </div>
             </div>
 
             {/* Right stack of smaller videos */}
@@ -230,28 +417,27 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 >
                   <div className="relative h-14 w-20 rounded-lg bg-slate-900 overflow-hidden shrink-0">
                     <Image
-                      src={video.thumbnail || "/img/photo/ocean-city-md-boardwalk.jpg"}
+                      src={video.thumbnail || "/images/about-img.jpg"}
                       alt={video.title}
                       fill
                       style={{ objectFit: "cover" }}
                     />
                     <div className="absolute inset-0 bg-slate-950/20 flex items-center justify-center">
-                      <i className="bx bx-play text-white text-md"></i>
+                      <span className="w-6 h-6 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-sm">
+                        <i className="bx bx-play text-sm pl-0.5"></i>
+                      </span>
                     </div>
                   </div>
                   <div className="min-w-0">
                     <h4 className="font-bold text-slate-800 text-xs line-clamp-1 group-hover:text-orange-605 transition">
                       {video.title}
                     </h4>
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Neighborhood</span>
+                    <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider block mt-1">
+                      {video.category || "Neighborhood Tour"}
+                    </span>
                   </div>
                 </Link>
               ))}
-              {!listVideos.length && (
-                <div className="flex-1 flex items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl text-slate-405 text-xs py-8">
-                  No community videos available.
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -260,41 +446,126 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between gap-6">
           <div className="flex justify-between items-end border-b border-slate-100 pb-4">
             <div>
-              <h2 className="text-xl font-bold text-slate-950 font-serif">Explore {siteName.replace("Directions", "")} Locations</h2>
-              <p className="text-xs text-slate-400 font-medium mt-1">Navigate verified properties and local businesses.</p>
+              <h2 className="text-xl font-bold text-slate-950 font-serif">Explore Maryland Locations</h2>
+              <p className="text-xs text-slate-400 font-medium mt-1">Locations Map</p>
             </div>
-            <Link href="/business" className="text-xs font-bold text-orange-605 hover:underline">
-              View All &rarr;
-            </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
-            {/* Left cities list */}
-            <div className="sm:col-span-6 space-y-4">
-              {networkLocations.map((loc) => (
-                <div key={loc.name} className="flex items-start gap-2.5">
-                  <i className="bx bx-map-pin text-orange-500 text-lg shrink-0 mt-0.5 animate-pulse"></i>
-                  <div>
-                    <a href={loc.href} target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-950 text-xs">
-                      {loc.name}
-                    </a>
-                    <span className="text-[10px] text-slate-400 font-medium leading-tight block mt-0.5">{loc.desc}</span>
-                  </div>
-                </div>
-              ))}
+          {/* SVG Maryland Map */}
+          <div className="w-full relative bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center justify-center min-h-[220px]">
+            <svg viewBox="0 0 400 200" className="w-full h-auto max-h-[220px]">
+              {/* Green Region (Frederick/West) */}
+              <path
+                d="M 10 90 L 130 90 L 130 60 L 200 60 L 200 120 L 150 120 L 140 105 L 10 105 Z"
+                className="fill-[#A7F3D0] stroke-[#059669] stroke-2 hover:fill-[#34D399] transition-all duration-200 cursor-pointer"
+                onClick={() => window.open("https://frederickdirections.com", "_blank")}
+              />
+              {/* Blue Region (Baltimore/North-Central) */}
+              <path
+                d="M 200 60 L 260 60 L 260 100 L 230 115 L 200 115 Z"
+                className="fill-[#BFDBFE] stroke-[#2563EB] stroke-2 hover:fill-[#60A5FA] transition-all duration-200 cursor-pointer"
+                onClick={() => window.open("https://baltimoredirections.com", "_blank")}
+              />
+              {/* Red Region (Annapolis/Central-South) */}
+              <path
+                d="M 200 115 L 230 115 L 240 145 L 215 165 L 195 135 Z"
+                className="fill-[#FECACA] stroke-[#DC2626] stroke-2 hover:fill-[#F87171] transition-all duration-200 cursor-pointer"
+                onClick={() => window.open("https://annapolisdirections.com", "_blank")}
+              />
+              {/* Purple Region (Ocean City/Eastern Shore) */}
+              <path
+                d="M 268 70 L 320 70 L 330 175 L 290 175 L 275 120 L 260 105 Z"
+                className="fill-[#E9D5FF] stroke-[#7C3AED] stroke-2 hover:fill-[#C084FC] transition-all duration-200 cursor-pointer"
+                onClick={() => window.open("https://oceancitydirections.com", "_blank")}
+              />
+
+              {/* Connecting Lines for Labels */}
+              {/* Frederick */}
+              <line x1="160" y1="85" x2="110" y2="45" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
+              {/* Baltimore */}
+              <line x1="230" y1="80" x2="280" y2="45" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
+              {/* Annapolis */}
+              <line x1="215" y1="135" x2="280" y2="125" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
+              {/* Ocean City */}
+              <line x1="305" y1="140" x2="305" y2="175" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
+
+              {/* Region Pins (Dots) */}
+              {/* Frederick Dot */}
+              <circle cx="160" cy="85" r="5" className="fill-[#059669] stroke-white stroke-2" />
+              {/* Baltimore Dot */}
+              <circle cx="230" cy="80" r="5" className="fill-[#2563EB] stroke-white stroke-2" />
+              {/* Annapolis Dot */}
+              <circle cx="215" cy="135" r="5" className="fill-[#DC2626] stroke-white stroke-2" />
+              {/* Ocean City Dot */}
+              <circle cx="305" cy="140" r="5" className="fill-[#7C3AED] stroke-white stroke-2" />
+
+              {/* Label Texts */}
+              <text x="105" y="40" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="end">FrederickDirections.com</text>
+              <text x="285" y="40" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="start">BaltimoreDirections.com</text>
+              <text x="285" y="122" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="start">AnnapolisDirections.com</text>
+              <text x="305" y="187" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="middle">OceanCityDirections.com</text>
+            </svg>
+          </div>
+
+          {/* 2x2 Locations List */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+            {/* Baltimore */}
+            <div className="flex items-start gap-2.5">
+              <i className="bx bxs-map text-[#2563EB] text-base shrink-0 mt-0.5"></i>
+              <div>
+                <a href="https://baltimoredirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
+                  BaltimoreDirections.com
+                </a>
+                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
+                  Maryland's largest city with endless things to explore.
+                </span>
+              </div>
             </div>
 
-            {/* Right map graphic */}
-            <div className="sm:col-span-6 bg-orange-50/30 border border-orange-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-3 min-h-[220px]">
-              <i className="bx bx-map-alt text-4xl text-orange-500"></i>
+            {/* Frederick */}
+            <div className="flex items-start gap-2.5">
+              <i className="bx bxs-map text-[#059669] text-base shrink-0 mt-0.5"></i>
               <div>
-                <div className="text-xs font-bold text-slate-950 font-serif">{domain}</div>
-                <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-1">{counties[0]} County</div>
+                <a href="https://frederickdirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
+                  FrederickDirections.com
+                </a>
+                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
+                  Historic downtown, shopping, dining & outdoor site.
+                </span>
               </div>
-              <span className="text-[10px] text-orange-600 bg-white border border-orange-200 px-3 py-1 rounded-full font-bold shadow-xs">
-                Interactive Map Active
-              </span>
             </div>
+
+            {/* Annapolis */}
+            <div className="flex items-start gap-2.5">
+              <i className="bx bxs-map text-[#DC2626] text-base shrink-0 mt-0.5"></i>
+              <div>
+                <a href="https://annapolisdirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
+                  AnnapolisDirections.com
+                </a>
+                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
+                  Our charming capital city on the beautiful bay.
+                </span>
+              </div>
+            </div>
+
+            {/* Ocean City */}
+            <div className="flex items-start gap-2.5">
+              <i className="bx bxs-map text-[#7C3AED] text-base shrink-0 mt-0.5"></i>
+              <div>
+                <a href="https://oceancitydirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
+                  OceanCityDirections.com
+                </a>
+                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
+                  Beach life, boardwalk fun & coastal getaways.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-center border-t border-slate-100 pt-3">
+            <Link href="/business" className="text-xs font-bold text-orange-605 hover:underline flex items-center gap-1">
+              View All Locations <i className="bx bx-right-arrow-alt text-sm"></i>
+            </Link>
           </div>
         </div>
 
@@ -347,11 +618,11 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {filteredBusinessesForGrid.map((biz) => (
+          {activeGridBusinesses.map((biz, idx) => (
             <Link
               href={`/s/${biz.update_slug || biz.slug}`}
               className="bg-white border border-slate-200 hover:border-slate-350 hover:shadow-lg rounded-2xl overflow-hidden shadow-xs transition duration-300 group flex flex-col justify-between"
-              key={biz.id}
+              key={biz.id || idx}
             >
               <div className="relative h-48 w-full bg-slate-900 overflow-hidden">
                 <Image
@@ -381,15 +652,15 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 <div className="pt-4 border-t border-slate-100 mt-5 flex items-center justify-between text-xs text-slate-550 font-semibold">
                   <div className="flex items-center gap-1">
                     <i className="bx bxs-star text-amber-400 text-sm"></i>
-                    <span>4.8</span>
-                    <span className="text-slate-450 font-medium">(97 reviews)</span>
+                    <span>{biz.stars || 4.8}</span>
+                    <span className="text-slate-450 font-medium">({biz.reviews || 97} reviews)</span>
                   </div>
                   <span>{biz.city ? `${biz.city}, ${biz.state}` : domain}</span>
                 </div>
               </div>
             </Link>
           ))}
-          {!filteredBusinessesForGrid.length && (
+          {!activeGridBusinesses.length && (
             <div className="col-span-full bg-white border border-slate-200 rounded-3xl p-12 text-center text-slate-400 text-sm">
               <i className="bx bx-store-alt text-4xl mb-2 block"></i>
               <span>No businesses listed under this category.</span>
@@ -439,7 +710,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
           </div>
           <div className="hidden md:block md:col-span-4 relative bg-slate-900 min-h-[320px]">
             <Image
-              src="/img/photo/ocean-city-md-boardwalk.jpg"
+              src="/images/media-pro-banner.jpg"
               alt="Media Pro Section Image"
               fill
               style={{ objectFit: "cover", opacity: 0.95 }}
