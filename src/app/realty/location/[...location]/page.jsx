@@ -1,7 +1,7 @@
 
 import { ucwords, getSiteName } from "@/lib/helper";
 import { fetchSiteData, getSiteStatus } from "@/lib/site-config";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import { redirect } from "next/navigation";
 
 import NotFound from "@/components/NotFound";
@@ -71,7 +71,7 @@ const properties = data.value || [];
 const locationTitle = [zip, city && ucwords(city, true), county && `${ucwords(county, true)} County`].filter(Boolean).join(", ");
 return (
     <>
-        <NavbarTwo />
+        <Navbar />
         <div className="rd-search-layout rd-property-layout">
             <MapPanel
                 geoJson={geoJson}
@@ -91,16 +91,25 @@ return (
                         <Link href="/realty?category=rent">For Rent</Link>
                         <Link href="/sell">Sell Your Home</Link>
                     </div>
+                    {/* Horizontal location quick filters */}
+                    {location?.length > 0 && (
+                        <div className="flex items-center gap-2 flex-wrap border-t border-slate-100 pt-4 mt-4">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 font-sans">Sub-Locations:</span>
+                            {location.slice(0, 8).map((loc, idx) => (
+                                <Link
+                                    key={idx}
+                                    href={`/realty/location/${params.location.join("/")}/${encodeURIComponent(loc.name?.toLowerCase())}`}
+                                    className="bg-white border border-slate-200 hover:border-orange-500 hover:text-orange-755 text-xs font-bold px-3.5 py-1.5 rounded-xl transition font-sans"
+                                >
+                                    {ucwords(loc.name)} {loc.total_records ? `(${loc.total_records})` : ''}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div className="rd-search-results-grid">
-                    <RealtySidebar
-                        link="realty"
-                        location={location}
-                        categories={[]}
-                        params={params}
-                    />
-                    <div className="rd-results-column">
+                    <div className="rd-results-column w-full">
                         {totalRecords > 0 ? (
                             <MainPropertiesGridPage
                                 searchParams={searchParams}

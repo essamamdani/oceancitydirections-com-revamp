@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
   if (loading) {
     return (
       <>
-        <NavbarTwo />
+        <Navbar />
         <div className="pt-100 pb-100 text-center">
           <div className="container">
             <div className="spinner-border text-primary"></div>
@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <>
-      <NavbarTwo />
+      <Navbar />
       <div className="pt-100 pb-100">
         <div className="container">
           <div className="row justify-content-center">

@@ -1,4 +1,4 @@
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import Footer from "@/components/Layouts/Footer";
 import Sell from "@/components/Sell";
 import { redirect } from "next/dist/server/api-utils";
@@ -33,7 +33,7 @@ export default function Page() {
 
   return (
     <>
-      <NavbarTwo />
+      <Navbar />
       <div className="listings-area py-10">
         <Sell />
         

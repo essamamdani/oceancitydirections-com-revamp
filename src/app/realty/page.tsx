@@ -1,4 +1,4 @@
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import logger from '@/lib/logger'
 
 import MainPropertiesGridPage from "@/components/CustomComponents/MainPropertiesGridPage";
@@ -11,7 +11,7 @@ import MapPanel from "@/components/Revamp/MapPanel";
 
 import { headers } from "next/headers";
 import { fetchSiteData, getSiteStatus } from "@/lib/site-config";
-import { getSiteName } from "@/lib/helper";
+import { getSiteName, ucwords } from "@/lib/helper";
 import { redirect } from "next/navigation";
 
 
@@ -37,6 +37,8 @@ export async function generateMetadata() {
   };
 }
 
+import RealtySplitLayout from "@/components/CustomComponents/RealtySplitLayout";
+
 export default async function Page(props) {
     const searchParams = await props.searchParams;
     const params = await props.params;
@@ -50,7 +52,7 @@ export default async function Page(props) {
         redirect('/offline');
     }
     
-    const RealtyPage = site.IncludeRealty;
+    const RealtyPage = (site as any).IncludeRealty;
     if (!RealtyPage) return <NotFound />;
     const headerList = await headers();
     const userAgent = headerList.get("user-agent") || "";
@@ -73,46 +75,17 @@ export default async function Page(props) {
 
     return (
         <>
-            <NavbarTwo />
-            <div className="rd-search-layout rd-property-layout">
-                <MapPanel
-                    geoJson={geoJson}
-                    eyebrow="Real estate map"
-                    title={`${totalRecords || 0} homes`}
-                />
-                <section className="rd-results-pane">
-                    <div className="rd-results-hero">
-                        <span className="rd-kicker">Homes and real estate</span>
-                        <h1>{getSiteName(site)} homes for sale and real estate</h1>
-                        <p>
-                            Search active IDX listings, compare neighborhoods, and connect with Realty Directions for property guidance.
-                        </p>
-                        <div className="rd-filter-chips">
-                            <Link href="/realty?category=sale">For Sale</Link>
-                            <Link href="/realty?category=rent">For Rent</Link>
-                            <Link href="/realty?orderBy=price_asc">Lowest Price</Link>
-                            <Link href="/sell">Sell Your Home</Link>
-                        </div>
-                    </div>
-
-                    <div className="rd-search-results-grid">
-                        <RealtySidebar link="realty" location={location} categories={[]} params={[]} />
-                        <div className="rd-results-column">
-                            {totalRecords > 0 ? (
-                                <MainPropertiesGridPage
-                                    searchParams={searchParams}
-                                    location={location}
-                                    properties={properties}
-                                    totalRecords={totalRecords}
-                                    featured_videos={featured_videos}
-                                />
-                            ) : (
-                                <NoRecordFound params={params} site={site} />
-                            )}
-                        </div>
-                    </div>
-                </section>
-            </div>
+            <Navbar />
+            <RealtySplitLayout
+                site={site}
+                searchParams={searchParams}
+                location={location}
+                properties={properties}
+                totalRecords={totalRecords}
+                featured_videos={featured_videos}
+                geoJson={geoJson}
+                params={params}
+            />
         </>
     );
 

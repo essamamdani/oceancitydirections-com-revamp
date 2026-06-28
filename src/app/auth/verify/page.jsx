@@ -1,4 +1,4 @@
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import Footer from "@/components/Layouts/Footer";
 import Link from "next/link";
 import ManualVerifyForm from "@/components/Auth/ManualVerifyForm";
@@ -10,7 +10,7 @@ export default async function VerifyPage(props) {
 
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <div className="pt-100 pb-100">
                 <div className="container">
                     <div className="row justify-content-center">

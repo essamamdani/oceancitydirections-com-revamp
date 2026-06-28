@@ -174,6 +174,7 @@ export async function fetchSiteConfigByDomain(domain) {
       Slug: site.slug,
       URL: site.url,
       Status: site.status,
+      local_test: site.local_test,
       Counties: countiesList.join(', '),
       State: state,
       ShortState: shortState?.toLowerCase() || '',

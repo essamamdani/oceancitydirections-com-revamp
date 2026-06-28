@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
-import Footer from "@/components/Layouts/Footer";
+import Navbar from "@/components/Layouts/Navbar";
 import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 
@@ -56,7 +55,7 @@ export default function RemovalRequestPage({ business }) {
 
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <div className="pt-100 pb-100">
                 <div className="container">
                     <div className="row justify-content-center">
@@ -128,9 +127,7 @@ export default function RemovalRequestPage({ business }) {
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
-            <Footer />
         </>
     );
 }

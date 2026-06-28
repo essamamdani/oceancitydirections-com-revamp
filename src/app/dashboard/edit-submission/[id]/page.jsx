@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import logger from '@/lib/logger'
 import toast from 'react-hot-toast';
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import { useRouter, useParams } from "next/navigation";
 import AddressAutocomplete from "@/components/Form/AddressAutocomplete";
 import Image from "next/image";
@@ -161,7 +161,7 @@ export default function EditSubmissionPage() {
     if (loading) {
         return (
             <>
-                <NavbarTwo />
+                <Navbar />
                 <div className="text-center pt-100 pb-100">
                     <div className="spinner-border text-primary"></div>
                     <p className="mt-3">Loading...</p>
@@ -183,7 +183,7 @@ export default function EditSubmissionPage() {
 
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <section className="dashboard-area ptb-100 bg-f9f9f9">
                 <div className="container">
                     <div className="row">

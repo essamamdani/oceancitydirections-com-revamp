@@ -1,4 +1,4 @@
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import Footer from "@/components/Layouts/Footer";
 import { getListingLinks } from "@/lib/actions";
 import NotFound from "../not-found";
@@ -10,7 +10,7 @@ export default async function Page(props) {
     if (data.length < 1) return <NotFound />;
 
     return <>
-        <NavbarTwo />
+        <Navbar />
         <div className="widget-area">
             <section className="widget widget_tag_cloud">
                 <h3 className="widget-title">Listings</h3>

@@ -8,7 +8,7 @@ const nextConfig = {
   generateBuildId: async () => {
     return 'build-' + Date.now()
   },
-  output: 'standalone',
+//   output: 'standalone',
   images: {
     localPatterns: [
       // Allow /api/og with any query string (dynamic OG placeholder images for businesses)

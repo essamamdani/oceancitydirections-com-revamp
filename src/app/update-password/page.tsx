@@ -4,8 +4,7 @@ import { useState, Suspense, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { authClient } from '@/lib/auth-client'
-import NavbarTwo from '@/components/Layouts/NavbarTwo'
-import Footer from '@/components/Layouts/Footer'
+import Navbar from "@/components/Layouts/Navbar";
 import { useAuth } from '@/contexts/AuthContext'
 
 function UpdatePasswordForm() {
@@ -66,7 +65,7 @@ function UpdatePasswordForm() {
 
   return (
     <>
-      <NavbarTwo />
+      <Navbar />
       <div className="pt-100 pb-100">
         <div className="container">
           <div className="row justify-content-center">
@@ -101,7 +100,6 @@ function UpdatePasswordForm() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   )
 }
@@ -110,7 +108,7 @@ export default function UpdatePassword() {
   return (
     <Suspense fallback={
       <>
-        <NavbarTwo />
+        <Navbar />
         <div className="pt-100 pb-100 text-center">Loading...</div>
       </>
     }>

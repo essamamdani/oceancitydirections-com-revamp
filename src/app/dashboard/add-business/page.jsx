@@ -4,7 +4,7 @@ import logger from '@/lib/logger'
 import { getClientUser } from "@/utils/auth/session";
 
 import toast from 'react-hot-toast';
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import Footer from "@/components/Layouts/Footer";
 import { useRouter } from "next/navigation";
 import AddressAutocomplete from "@/components/Form/AddressAutocomplete";
@@ -185,7 +185,7 @@ export default function AddBusinessPage() {
 
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <section className="dashboard-area ptb-100 bg-f9f9f9">
                 <div className="container">
                     <div className="row">

@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
-import Footer from "@/components/Layouts/Footer";
+import Navbar from "@/components/Layouts/Navbar";
 import { getSession } from "@/lib/auth-client";
 
 const ProfilePage = () => {
@@ -85,7 +84,7 @@ const ProfilePage = () => {
 
     return (
         <>
-        <NavbarTwo/>
+        <Navbar />
         <section className="user-area-all-style ptb-100">
             <div className="container">
                 <div className="section-title">
@@ -153,9 +152,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
-        <Footer/>
         </>
     );
 };

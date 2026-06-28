@@ -1,11 +1,11 @@
 import { cache } from 'react';
 import { redirect } from 'next/navigation';
 
-import Navbar from '@/components/Layouts/Navbar';
+import Navbar from "@/components/Layouts/Navbar";
 import HomeRevamp from '@/components/Revamp/HomeRevamp';
 import StructuredData from '@/components/SEO/StructuredData';
 
-import { getBestRatedBusiness } from '@/lib/actions';
+import { getBestRatedBusiness, getVerifiedBusinesses } from '@/lib/actions';
 import { fetchSiteData, getSiteStatus } from '@/lib/site-config';
 import { ucwords } from '@/lib/helper';
 import { query } from '@/lib/db';
@@ -133,7 +133,7 @@ export default async function Page() {
   const showRealty = !!site?.IncludeRealty;
   const [featuredVideos, topBusinesses] = await Promise.all([
     getFeaturedVideosForSite(site),
-    getBestRatedBusiness(site, 'restaurant').catch(() => []),
+    getVerifiedBusinesses(site, 30).catch(() => []),
   ]);
 
   const siteName = ucwords(site?.site_name || site?.slug || 'Realty Directions');
@@ -171,7 +171,7 @@ export default async function Page() {
 
   return (
     <>
-      <Navbar />
+      <Navbar variant="home" />
       <StructuredData data={homeSchema} />
       <HomeRevamp
         site={site}

@@ -1,4 +1,4 @@
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import logger from '@/lib/logger'
 
 
@@ -122,9 +122,13 @@ export default async function Page(props) {
                 const currentDomain = (site.domain || site.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]) || '';
                 
                 if (realDomain && currentDomain && realDomain !== currentDomain) {
-                    const targetSlug = data.slug;
-                    crossSiteRedirectUrl = `https://${realDomain}/s/${targetSlug}`;
-                    logger.log(`[Cross-Site Redirect] Business ${data.slug} belongs to ${realDomain} (County: ${data.county}), redirecting from ${currentDomain}...`);
+                    if (process.env.LOCAL === 'true' && site.local_test === 'yes') {
+                        logger.log(`[Local Test Mode] Bypassing Cross-Site Redirect for Business ${data.slug} (belongs to ${realDomain}, current ${currentDomain})`);
+                    } else {
+                        const targetSlug = data.slug;
+                        crossSiteRedirectUrl = `https://${realDomain}/s/${targetSlug}`;
+                        logger.log(`[Cross-Site Redirect] Business ${data.slug} belongs to ${realDomain} (County: ${data.county}), redirecting from ${currentDomain}...`);
+                    }
                 }
             }
         } catch (err) {
@@ -192,7 +196,7 @@ export default async function Page(props) {
 
     return (
         <div className="rd-detail-page rd-business-detail-page">
-            <NavbarTwo />
+            <Navbar />
             <StructuredData data={businessSchema} />
             <SingleListingsContent
                 // isBot={isBot}

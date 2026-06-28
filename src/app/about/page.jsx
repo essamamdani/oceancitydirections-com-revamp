@@ -1,6 +1,6 @@
 import React from "react";
 import PageBanner from "@/components/Common/PageBanner";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import Footer from "@/components/Layouts/Footer";
 
 import { fetchSiteData } from "@/lib/site-config";
@@ -30,7 +30,7 @@ export async function generateMetadata() {
 export default function Page() {
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <main className="flex flex-col items-center justify-center min-h-screen">
                 {/* <PageBanner pageTitle="Blog" pageName="Blog" /> */}
                 <h1 className="text-center">Coming Soon</h1>

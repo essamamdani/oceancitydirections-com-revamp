@@ -2228,6 +2228,13 @@ textarea.form-control {
   padding-top: 54px !important;
 }
 
+.footer-area .single-footer-widget {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
 .footer-area a,
 .footer-area p,
 .footer-area strong {
@@ -2454,3 +2461,146 @@ textarea.form-control {
     font-size: 30px;
   }
 }
+
+/* Split Layout for Realty and Business (Compass & Yelp style) */
+@media (min-width: 1024px) {
+  .rd-split-layout {
+    display: grid !important;
+    grid-template-columns: minmax(420px, 44vw) minmax(500px, 1fr) !important; /* Realty: map left, list right */
+    height: calc(100vh - 76px) !important;
+    overflow: hidden !important;
+  }
+  
+  .rd-business-split-layout {
+    grid-template-columns: minmax(500px, 1.2fr) minmax(420px, 0.8fr) !important; /* Business: list left, map right */
+  }
+
+  .rd-split-scrollable-pane {
+    height: 100% !important;
+    overflow-y: auto !important;
+    padding: 28px !important;
+  }
+
+  .rd-split-map-pane {
+    height: 100% !important;
+    position: relative !important;
+  }
+  
+  /* Hide global footer on split screens */
+  body:has(.rd-split-layout) footer.footer-area {
+    display: none !important;
+  }
+  
+  body:has(.rd-split-layout) .go-top {
+    display: none !important;
+  }
+}
+
+/* Mobile responsive view toggle for map and list */
+@media (max-width: 1023px) {
+  .rd-split-layout {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: calc(100vh - 76px);
+  }
+
+  .rd-split-scrollable-pane {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .rd-split-map-pane {
+    width: 100%;
+    height: 400px;
+    position: relative;
+  }
+
+  /* When map view is toggled off on mobile */
+  .rd-split-layout.hide-map .rd-split-map-pane {
+    display: none !important;
+  }
+  
+  /* When list view is toggled off on mobile */
+  .rd-split-layout.hide-list .rd-split-scrollable-pane {
+    display: none !important;
+  }
+
+  .rd-split-layout.hide-list .rd-split-map-pane {
+    height: calc(100vh - 76px) !important;
+  }
+  
+  /* Fixed toggle button on mobile */
+  .rd-mobile-toggle-btn {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background-color: #172033;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .rd-mobile-toggle-btn:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+}
+
+/* Yelp single business hero banner style */
+.rd-yelp-hero {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+.rd-yelp-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 40px 24px;
+}
+
+.rd-yelp-hero-content {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* Other Sites list of links in footer */
+.other-sites-links {
+  margin: 15px auto;
+  max-width: 1000px;
+}
+
+.other-sites-link-item {
+  color: var(--rd-muted);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.other-sites-link-item:hover {
+  color: var(--rd-ocean) !important;
+}
+
+.other-sites-separator {
+  color: #d9e1e7;
+  user-select: none;
+}
+

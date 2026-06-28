@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import DashboardSidebar from "@/components/Dashboard/DashboardSidebar";
 import { authClient } from "@/lib/auth-client";
 
@@ -130,7 +130,7 @@ export default function ProfilePage() {
     if (authLoading) {
         return (
             <>
-                <NavbarTwo />
+                <Navbar />
                 <div className="pt-100 pb-100 text-center">
                     <div className="container">
                         <div className="spinner-border text-primary"></div>
@@ -147,7 +147,7 @@ export default function ProfilePage() {
 
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <div className="pt-100 pb-100">
                 <div className="container">
                     <div className="row">

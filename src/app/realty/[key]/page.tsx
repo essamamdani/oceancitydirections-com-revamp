@@ -3,7 +3,7 @@ import logger from '@/lib/logger'
 
 import { fetchSiteData, getSiteStatus } from "@/lib/site-config";
 
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import SinglePropertyListingsContent from "@/components/SinglePropertyListings/SinglePropertyListingsContent";
 import StructuredData from "@/components/SEO/StructuredData";
 import { notFound, redirect } from "next/navigation";
@@ -98,8 +98,12 @@ export default async function Page(props) {
                 const currentDomain = (site.domain || site.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]) || '';
                 
                 if (realDomain && currentDomain && realDomain !== currentDomain) {
-                    crossSiteRedirectUrl = `https://${realDomain}/realty/${params.key}`;
-                    logger.log(`[Cross-Site Redirect] Realty ${params.key} belongs to ${realDomain} (County: ${county}), redirecting from ${currentDomain}...`);
+                    if (process.env.LOCAL === 'true' && site.local_test === 'yes') {
+                        logger.log(`[Local Test Mode] Bypassing Cross-Site Redirect for Realty ${params.key} (belongs to ${realDomain}, current ${currentDomain})`);
+                    } else {
+                        crossSiteRedirectUrl = `https://${realDomain}/realty/${params.key}`;
+                        logger.log(`[Cross-Site Redirect] Realty ${params.key} belongs to ${realDomain} (County: ${county}), redirecting from ${currentDomain}...`);
+                    }
                 }
             }
         } catch (err) {
@@ -152,7 +156,7 @@ export default async function Page(props) {
 
     return (
         <div className="rd-detail-page rd-property-detail-page">
-            <NavbarTwo />
+            <Navbar />
             <StructuredData data={listingSchema} />
             
             <SinglePropertyListingsContent 

@@ -1,4 +1,4 @@
-import { getBusinessesNew, getCategoriesNew, getLocationNew, toGeoJSONPoints } from "@/lib/actions";
+import { getBusinessesNew, getCategoriesNew, getLocationNew } from "@/lib/actions";
 import BusinessPage from "@/components/Template/BusinessPage";
 import { headers } from "next/headers";
 import { fetchSiteData, getSiteStatus } from "@/lib/site-config";

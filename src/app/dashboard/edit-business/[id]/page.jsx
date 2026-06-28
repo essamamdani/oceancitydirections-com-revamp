@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import logger from '@/lib/logger'
 
 import toast from 'react-hot-toast';
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import Footer from "@/components/Layouts/Footer";
 import DashboardSidebar from "@/components/Dashboard/DashboardSidebar";
 import { useRouter } from "next/navigation";
@@ -305,7 +305,7 @@ export default function EditBusinessPage({ params }) {
 
     if (loading) return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <div className="text-center pt-100">Loading...</div>
         </>
     );
@@ -319,7 +319,7 @@ export default function EditBusinessPage({ params }) {
 
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <section className="dashboard-area ptb-100 bg-f9f9f9">
                 <div className="container">
                     <div className="row">

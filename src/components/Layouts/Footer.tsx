@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSites } from '@/contexts/SitesContext';
@@ -76,32 +76,32 @@ const Footer = ({ bgColor }) => {
             </div>
           </div>
 
-          {/* Display other site logos with URLs */}
+          {/* Display other site links with separators */}
           <div className="row">
-            <div className="col-12 text-center mt-3">
-              <p>
-                <strong>Our Other Sites</strong>
+            <div className="col-12 text-center mt-4">
+              <p className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-3">
+                Our Other Sites
               </p>
-              <div className="other-logos d-flex justify-content-center flex-wrap">
-                {site.sites.map(({ slug, Slug, url, logo }, index) => {
+              <div className="other-sites-links d-flex justify-content-center flex-wrap align-items-center gap-y-2">
+                {site.sites.map(({ slug, Slug, url }, index) => {
                   const siteSlug = slug || Slug || `site-${index}`;
+                  const displayName = siteSlug
+                    .replace('directions.com', ' Directions')
+                    .replace('-', ' ')
+                    .replace(/\b\w/g, c => c.toUpperCase());
                   return (
-                  <div
-                    key={siteSlug}
-                    className="site-logo-item"
-                    style={{ margin: '10px' }}
-                  >
-                    <Link href={url || '#'}>
-                      <Image
-                        src={logo || '/images/logo.png'}
-                        alt={siteSlug}
-                        width={150}
-                        height={50}
-                        style={{ display: 'block', margin: '0 auto', width: '150px', height: 'auto' }}
-                      />
-                    </Link>
-                  </div>
-                )})}
+                    <React.Fragment key={siteSlug}>
+                      {index > 0 && <span className="other-sites-separator mx-2 text-slate-300">|</span>}
+                      <Link
+                        href={url || '#'}
+                        className="other-sites-link-item mx-1 text-slate-600 hover:text-orange-600 transition font-medium"
+                        style={{ fontSize: '13px' }}
+                      >
+                        {displayName}
+                      </Link>
+                    </React.Fragment>
+                  );
+                })}
               </div>
             </div>
           </div>

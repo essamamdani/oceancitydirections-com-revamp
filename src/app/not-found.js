@@ -1,10 +1,10 @@
 import ErrorContent from "../components/404Error/ErrorContent";
-import NavbarTwo from "../components/Layouts/NavbarTwo";
+import Navbar from "../components/Layouts/Navbar";
 
 export default function NotFound() {
   return (
     <>
-      <NavbarTwo />
+      <Navbar />
       <ErrorContent />
     </>
   );

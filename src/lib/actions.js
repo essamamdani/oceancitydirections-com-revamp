@@ -330,6 +330,60 @@ export const getBusiness = async (site, slug) => {
     return data;
 };
 
+export const getVerifiedBusinesses = async (site, limit = 6) => {
+    try {
+        const { query } = await import('@/lib/db');
+        const claimRes = await query(`
+            SELECT business_id 
+            FROM claim_businesses 
+            WHERE status = 'approved'
+        `);
+        const approvedIds = claimRes.rows.map(r => r.business_id).filter(Boolean);
+        
+        const adminClient = await (await import('@/utils/supabase/admin')).getSupabaseAdmin();
+        let queryBuilder = adminClient
+            .from('businesses')
+            .select('*, categories(name)')
+            .eq('state_lower', site.StateLowerCase)
+            .in('county_lower', site.DefaultCounties);
+
+        if (approvedIds.length > 0) {
+            queryBuilder = queryBuilder.in('id', approvedIds);
+        } else {
+            // Force empty results if no verified businesses exist so backfill triggers
+            queryBuilder = queryBuilder.eq('id', -1);
+        }
+
+        const { data, error } = await queryBuilder.limit(limit);
+
+        if (error) throw error;
+
+        let formattedData = data.map(item => ({
+             ...item,
+             categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : []
+        }));
+
+        formattedData.forEach(b => {
+            b.is_claimed = true;
+            b.claimed_approval = true;
+        });
+
+        if (formattedData.length < limit) {
+            const extraLimit = limit - formattedData.length;
+            const topRated = await getBestRatedBusiness(site, false);
+            const existingIds = new Set(formattedData.map(b => b.id));
+            const extra = topRated.filter(b => !existingIds.has(b.id)).slice(0, extraLimit);
+            formattedData = [...formattedData, ...extra];
+        }
+
+        logger.log('getVerifiedBusinesses Executed at:', new Date().toISOString());
+        return formattedData;
+    } catch (err) {
+        console.error('Error fetching verified businesses:', err);
+        return getBestRatedBusiness(site, false);
+    }
+};
+
 export const getBestRatedBusiness = async (site, cat_name = false, rating_value = "4.8") => {
     try {
         const adminClient = await (await import('@/utils/supabase/admin')).getSupabaseAdmin();

@@ -1,4 +1,4 @@
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
+import Navbar from "@/components/Layouts/Navbar";
 import MainPropertiesGridPage from "@/components/CustomComponents/MainPropertiesGridPage";
 
 import { fetchListings, getLocationNew,getRealtyObjectFromDB } from "@/lib/actions";
@@ -58,7 +58,7 @@ export default async function Page(props) {
     }
     return (
         <>
-            <NavbarTwo />
+            <Navbar />
             <div className="rd-search-layout rd-property-layout">
                 <MapPanel
                     geoJson={geoJson}

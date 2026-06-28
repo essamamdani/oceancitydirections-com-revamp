@@ -2,8 +2,7 @@ import PageBanner from "@/components/Common/PageBanner";
 import BlogDetailsContent from "@/components/BlogDetails/BlogDetailsContent";
 import { getSingleBlogPost } from "@/lib/actions";
 import { fetchSiteData, getSiteStatus } from "@/lib/site-config";
-import NavbarTwo from "@/components/Layouts/NavbarTwo";
-import Footer from "@/components/Layouts/Footer";
+import Navbar from "@/components/Layouts/Navbar";
 import NotFound from "@/components/NotFound";
 import { redirect } from 'next/navigation';
 
@@ -52,11 +51,10 @@ export default async function Page(props) {
 	}
 	return (
 		<>
-		<NavbarTwo />
+		<Navbar />
 			<PageBanner pageTitle={post.title} pageName={post.title} />
 
 			<BlogDetailsContent post={post} />
-			<Footer />
 		</>
 	);
 }
