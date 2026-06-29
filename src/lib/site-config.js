@@ -59,19 +59,12 @@ export async function fetchSiteConfigByDomain(domain) {
     // Remove www. prefix for consistency
     let cleanDomain = domain.replace(/^www\./, '');
 
-    // ── Priority 1: Explicit env override (set this in Coolify per deployment) ──
-    // e.g.  SITE_DOMAIN=oceancitydirections.com
-    if (process.env.SITE_DOMAIN) {
-      cleanDomain = process.env.SITE_DOMAIN.replace(/^www\./, '').toLowerCase().trim();
-    }
-    // ── Priority 2: localhost / 127.0.0.1 → local dev only, won't affect live sites ──
-    else if (cleanDomain.includes('localhost') || cleanDomain.includes('127.0.0.1')) {
+    // localhost / 127.0.0.1 → local dev only, does NOT affect any live site
+    if (cleanDomain.includes('localhost') || cleanDomain.includes('127.0.0.1')) {
       cleanDomain = 'annapolisdirections.com';
     }
-    // ── Priority 3: Coolify staging preview domains (.bk.videohomes.name) ──
-    else if (cleanDomain.includes('.bk.videohomes.name')) {
-      cleanDomain = 'oceancitydirections.com';
-    }
+    // All other domains (including staging .bk.videohomes.name) are looked up
+    // directly from live_sites table — no overrides needed.
     
     // DIRECT DB QUERY (Replaces API Call)
     let site = null;
