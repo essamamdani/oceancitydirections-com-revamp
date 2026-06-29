@@ -301,15 +301,28 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
     ]
   };
 
+  const isCdnDomain = !!(
+    domain?.includes("cdn.") || 
+    site?.domain?.includes("cdn.") || 
+    site?.URL?.includes("cdn.")
+  );
+
   const filteredBusinessesForGrid = topBusinesses.filter(b => {
+    if (isCdnDomain) return true;
     if (!selectedBizCategory) return true;
     return b.categories?.name?.toLowerCase().includes(selectedBizCategory.toLowerCase()) ||
            b.category?.toLowerCase().includes(selectedBizCategory.toLowerCase());
-  }).slice(0, 6);
+  }).slice(0, isCdnDomain ? 12 : 6);
+
+  const allMockBusinesses = [
+    ...(mockBusinesses.restaurant || []),
+    ...(mockBusinesses.services || []),
+    ...(mockBusinesses.shopping || [])
+  ];
 
   const activeGridBusinesses = filteredBusinessesForGrid.length > 0 
     ? filteredBusinessesForGrid 
-    : (mockBusinesses[selectedBizCategory] || []);
+    : (isCdnDomain ? allMockBusinesses.slice(0, 12) : (mockBusinesses[selectedBizCategory] || []));
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -580,22 +593,24 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
           </div>
           
           {/* Category tabs */}
-          <div className="flex flex-wrap gap-2">
-            {businessFilterCategories.map((cat) => (
-              <button
-                key={cat.path}
-                onClick={() => setSelectedBizCategory(cat.path)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition duration-200 ${
-                  selectedBizCategory === cat.path
-                    ? "bg-slate-950 text-white border-slate-950 shadow-xs"
-                    : "bg-white text-slate-600 border-slate-200 hover:border-slate-355"
-                }`}
-              >
-                <i className={`bx ${cat.icon} text-sm`}></i>
-                {cat.label}
-              </button>
-            ))}
-          </div>
+          {!isCdnDomain && (
+            <div className="flex flex-wrap gap-2">
+              {businessFilterCategories.map((cat) => (
+                <button
+                  key={cat.path}
+                  onClick={() => setSelectedBizCategory(cat.path)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition duration-200 ${
+                    selectedBizCategory === cat.path
+                      ? "bg-slate-950 text-white border-slate-950 shadow-xs"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-355"
+                  }`}
+                >
+                  <i className={`bx ${cat.icon} text-sm`}></i>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -613,11 +628,13 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                   sizes="(max-width: 768px) 100vw, 360px"
                   style={{ objectFit: "cover" }}
                 />
-                <div className="absolute top-3 left-3">
-                  <span className="text-[10px] font-bold text-orange-700 bg-white px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-orange-100">
-                    {biz.categories?.name || biz.category || "Local"}
-                  </span>
-                </div>
+                {!isCdnDomain && (
+                  <div className="absolute top-3 left-3">
+                    <span className="text-[10px] font-bold text-orange-700 bg-white px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-orange-100">
+                      {biz.categories?.name || biz.category || "Local"}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="p-6 flex-1 flex flex-col justify-between">

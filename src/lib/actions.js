@@ -368,19 +368,11 @@ export const getVerifiedBusinesses = async (site, limit = 6) => {
             b.claimed_approval = true;
         });
 
-        if (formattedData.length < limit) {
-            const extraLimit = limit - formattedData.length;
-            const topRated = await getBestRatedBusiness(site, false);
-            const existingIds = new Set(formattedData.map(b => b.id));
-            const extra = topRated.filter(b => !existingIds.has(b.id)).slice(0, extraLimit);
-            formattedData = [...formattedData, ...extra];
-        }
-
         logger.log('getVerifiedBusinesses Executed at:', new Date().toISOString());
         return formattedData;
     } catch (err) {
         console.error('Error fetching verified businesses:', err);
-        return getBestRatedBusiness(site, false);
+        return [];
     }
 };
 
