@@ -277,17 +277,17 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                 </ul>
 
                 <div className="others-option d-lg-flex align-items-center">
-                  <ul className="custom-navbar-nav flex items-center gap-4 list-none m-0 p-0">
+                  <ul className="flex items-center flex-nowrap gap-3 md:gap-4 list-none m-0 p-0 whitespace-nowrap">
                     <li className="custom-nav-item">
                       <Link href="/realty" className={`custom-nav-link flex items-center gap-1.5 font-bold ${linkColorClass}`}>
                         <i className="bx bx-heart text-xl"></i>
                         <span>Saved</span>
                       </Link>
                     </li>
-                    <li className="custom-nav-item" style={{ marginLeft: '8px' }}>
+                    <li className="custom-nav-item" style={{ marginLeft: '4px' }}>
                       <Link 
                         href="/dashboard/add-business" 
-                        className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-5 py-2.5 font-bold transition text-xs tracking-wide shadow-sm"
+                        className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-4 py-2 font-bold transition text-[11px] md:text-xs tracking-wide shadow-sm"
                         style={{ display: 'inline-block' }}
                       >
                         List My Business
