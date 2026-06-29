@@ -20,7 +20,7 @@ export async function generateMetadata(props) {
 		return { title: 'Blog Post Not Found' };
 	}
 
-	const siteName = site?.site_name || 'Realty Directions';
+	const siteName = (site as any)?.site_name || 'Realty Directions';
 	const excerpt = post.excerpt || post.content?.substring(0, 160) || post.title;
 	
 	return {
@@ -32,7 +32,7 @@ export async function generateMetadata(props) {
 			images: post.featured_image ? [{ url: post.featured_image }] : [],
 		},
 		alternates: {
-			canonical: `${site?.URL || 'https://oceancitydirections.com'}/blog/${slug}`,
+			canonical: `${(site as any)?.URL || 'https://oceancitydirections.com'}/blog/${slug}`,
 		},
 	};
 }
@@ -52,7 +52,7 @@ export default async function Page(props) {
 	return (
 		<>
 		<Navbar />
-			<PageBanner pageTitle={post.title} pageName={post.title} />
+			<PageBanner pageTitle={post.title} pageName={post.title} parentPage="Blog" parentUrl="/blog" />
 
 			<BlogDetailsContent post={post} />
 		</>

@@ -59,10 +59,10 @@ export async function generateMetadata(props) {
             title: ucwords(title) + " - " + getSiteName(site),
             description,
             openGraph: {
-                images: `${site.URL || 'https://oceancitydirections.com'}/api/og?title=${encodeURIComponent(title)}`,
+                images: `${(site as any).URL || 'https://oceancitydirections.com'}/api/og?title=${encodeURIComponent(title)}`,
             },
             alternates: {
-                canonical: `${site.URL || 'https://oceancitydirections.com'}/s/${params.slug}`,
+                canonical: `${(site as any).URL || 'https://oceancitydirections.com'}/s/${params.slug}`,
             },
         };
     } catch {
@@ -97,13 +97,13 @@ export default async function Page(props) {
             const { query } = await import('@/lib/db');
             
             // Determine state code (e.g. 'MD' from 'maryland')
-            const stateLower = (data.state || site.StateLowerCase || '').toLowerCase();
+            const stateLower = (data.state || (site as any).StateLowerCase || '').toLowerCase();
             const stateMap = {
                 'maryland': 'MD', 'florida': 'FL', 'pennsylvania': 'PA', 'virginia': 'VA',
                 'delaware': 'DE', 'new york': 'NY', 'new jersey': 'NJ', 'north carolina': 'NC',
                 'south carolina': 'SC', 'georgia': 'GA', 'texas': 'TX', 'california': 'CA'
             };
-            const stateCode = stateMap[stateLower] || data.state_code || site.ShortState || '';
+            const stateCode = stateMap[stateLower] || data.state_code || (site as any).ShortState || '';
 
             let countyQuery = `SELECT url as site_slug FROM live_sites WHERE counties ILIKE $1 AND status != 'offline'`;
             let queryParams = [`%${data.county}%`];
@@ -119,10 +119,10 @@ export default async function Page(props) {
             
             if (countyMatch && countyMatch.site_slug) {
                 const realDomain = countyMatch.site_slug.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-                const currentDomain = (site.domain || site.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]) || '';
+                const currentDomain = ((site.domain || (site as any).URL?.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]) || '') as string;
                 
                 if (realDomain && currentDomain && realDomain !== currentDomain) {
-                    if (process.env.LOCAL === 'true' && site.local_test === 'yes') {
+                    if (process.env.LOCAL === 'true' && (site as any).local_test === 'yes') {
                         logger.log(`[Local Test Mode] Bypassing Cross-Site Redirect for Business ${data.slug} (belongs to ${realDomain}, current ${currentDomain})`);
                     } else {
                         const targetSlug = data.slug;
@@ -169,13 +169,13 @@ export default async function Page(props) {
         isFeatured = featuredRes.rows.length > 0;
     } catch (_) {}
 
-    const domain = site?.domain || site?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
+    const domain = site?.domain || (site as any)?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
     const businessSchema = {
         '@context': 'https://schema.org',
         '@type': 'LocalBusiness',
         name: data.title,
         url: `https://${domain}/s/${data.slug || slug}`,
-        image: data.main_image || `${site.URL || `https://${domain}`}/api/og?title=${encodeURIComponent(data.title || 'Business')}`,
+        image: data.main_image || `${(site as any).URL || `https://${domain}`}/api/og?title=${encodeURIComponent(data.title || 'Business')}`,
         description: data.description || data.snippet || `${data.title} in ${data.city}, ${data.state}`,
         telephone: data.phone || undefined,
         address: {
@@ -191,7 +191,7 @@ export default async function Page(props) {
             latitude: data.latitude,
             longitude: data.longitude,
         } : undefined,
-        areaServed: data.county || site.State || undefined,
+        areaServed: data.county || (site as any).State || undefined,
     };
 
     return (

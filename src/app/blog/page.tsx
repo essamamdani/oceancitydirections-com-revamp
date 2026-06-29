@@ -20,7 +20,7 @@ export default async function Page(props) {
 	return (
 		<>
 		<Navbar />
-			<PageBanner pageTitle="Blog" pageName="Blog" />
+			<PageBanner pageTitle="Blog" pageName="Blog" parentPage={undefined} parentUrl={undefined} />
 
 			<BlogPostGrid3 posts={postsData.posts} currentPage={page} totalPages={postsData.totalPages} />
 		</>

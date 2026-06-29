@@ -112,7 +112,7 @@ export default function RemovalRequestPage({ business }) {
                                         <label className="form-label">Reason for Removal *</label>
                                         <textarea
                                             className="form-control"
-                                            rows="4"
+                                            rows={4}
                                             value={formData.reason}
                                             onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                                             required
@@ -127,6 +127,7 @@ export default function RemovalRequestPage({ business }) {
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </>
     );

@@ -33,8 +33,8 @@ const ProfilePage = () => {
             
             setUser(authUser);
             setFullName(authUser.name || "");
-            setPhone(authUser.phone || "");
-            setWebsite(authUser.website || "");
+            setPhone((authUser as any).phone || "");
+            setWebsite((authUser as any).website || "");
             setLoading(false);
         };
 
@@ -152,6 +152,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
         </>
     );

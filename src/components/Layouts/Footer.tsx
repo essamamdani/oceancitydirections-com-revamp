@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useSites } from '@/contexts/SitesContext';
 
 
-const Footer = ({ bgColor }) => {
+const Footer = ({ bgColor }: { bgColor?: string }) => {
   const { site, loading, error } = useSites();
 
   // ✅ Always call hooks first
@@ -13,7 +13,7 @@ const Footer = ({ bgColor }) => {
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
+    setCurrentYear(new Date().getFullYear().toString());
     setCurrentDate(new Date().toLocaleDateString());
   }, []);
 

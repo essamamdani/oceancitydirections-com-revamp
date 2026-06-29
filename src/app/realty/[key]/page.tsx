@@ -16,7 +16,7 @@ import { fetchSingleListing as fetchSingleListing,fetchSingleListingId,getVideo,
 export async function generateMetadata(props) {
     const params = await props.params;
     const site = await fetchSiteData();
-    const RealtyPage = site.IncludeRealty;
+    const RealtyPage = (site as any).IncludeRealty;
     if(!RealtyPage) return null;
     const [key, slug] = params.key.split("--");
     if(!slug){
@@ -32,7 +32,7 @@ export async function generateMetadata(props) {
     const { ListPicture3URL, ListingId, ListPrice,PropertyType,StandardStatus } = property;
     const displayAddress = getDisplayAddress(property);
     let title = `$${ListPrice}, ${displayAddress} MLS: ${ListingId} - ${getSiteName(site)}`;
-    const url = `${site.URL || 'https://oceancitydirections.com'}/realty/${params.key}`;
+    const url = `${(site as any).URL || 'https://oceancitydirections.com'}/realty/${params.key}`;
     // logger.log(property)
     title = (StandardStatus === 'Active' ? `For ${PropertyType.includes('lease') ? 'Rent' : 'Sale'}` : StandardStatus) + ": " + title;
     const video = await getVideo(ListingId);
@@ -58,7 +58,7 @@ export default async function Page(props) {
     if (siteStatus === 'offline') {
         redirect('/offline');
     }
-    const RealtyPage = site.IncludeRealty;
+    const RealtyPage = (site as any).IncludeRealty;
     if(!RealtyPage) return null;
     const [key, slug] = params.key.split("--");
     const data = await fetchSingleListing(site,key);
@@ -73,13 +73,13 @@ export default async function Page(props) {
         try {
             const { query } = await import('@/lib/db');
             
-            const stateLower = (data.StateOrProvince || site.StateLowerCase || '').toLowerCase();
+            const stateLower = (data.StateOrProvince || (site as any).StateLowerCase || '').toLowerCase();
             const stateMap = {
                 'maryland': 'MD', 'florida': 'FL', 'pennsylvania': 'PA', 'virginia': 'VA',
                 'delaware': 'DE', 'new york': 'NY', 'new jersey': 'NJ', 'north carolina': 'NC',
                 'south carolina': 'SC', 'georgia': 'GA', 'texas': 'TX', 'california': 'CA'
             };
-            const stateCode = stateMap[stateLower] || data.StateOrProvince || site.ShortState || '';
+            const stateCode = stateMap[stateLower] || data.StateOrProvince || (site as any).ShortState || '';
 
             let countyQuery = `SELECT url as site_slug FROM live_sites WHERE counties ILIKE $1 AND status != 'offline'`;
             let queryParams = [`%${county}%`];
@@ -95,10 +95,10 @@ export default async function Page(props) {
             
             if (countyMatch && countyMatch.site_slug) {
                 const realDomain = countyMatch.site_slug.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-                const currentDomain = (site.domain || site.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]) || '';
+                const currentDomain = (((site as any).domain || (site as any).URL?.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]) || '') as string;
                 
                 if (realDomain && currentDomain && realDomain !== currentDomain) {
-                    if (process.env.LOCAL === 'true' && site.local_test === 'yes') {
+                    if (process.env.LOCAL === 'true' && (site as any).local_test === 'yes') {
                         logger.log(`[Local Test Mode] Bypassing Cross-Site Redirect for Realty ${params.key} (belongs to ${realDomain}, current ${currentDomain})`);
                     } else {
                         crossSiteRedirectUrl = `https://${realDomain}/realty/${params.key}`;
@@ -130,7 +130,7 @@ export default async function Page(props) {
     })
 
     const displayAddress = getDisplayAddress(data);
-    const domain = site?.domain || site?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
+    const domain = (site as any)?.domain || (site as any)?.URL?.replace(/^https?:\/\//, '').replace(/^www\./, '') || 'oceancitydirections.com';
     const listingSchema = {
         '@context': 'https://schema.org',
         '@type': 'RealEstateListing',
@@ -142,7 +142,7 @@ export default async function Page(props) {
             '@type': 'PostalAddress',
             streetAddress: data.FullStreetAddress,
             addressLocality: data.City,
-            addressRegion: data.StateOrProvince || site.ShortState?.toUpperCase(),
+            addressRegion: data.StateOrProvince || (site as any).ShortState?.toUpperCase(),
             postalCode: data.PostalCode,
             addressCountry: 'US',
         },

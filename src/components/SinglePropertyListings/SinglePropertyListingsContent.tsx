@@ -90,6 +90,7 @@ const SinglePropertyListingsContent = ({ property, breadcrumbs, video, nearbyPro
             lastname: "",
             email: "",
             phone: "",
+            site_name: "",
           });
         } else {
           setError(result.data || result.error || "Failed to submit form");
@@ -309,7 +310,7 @@ const SinglePropertyListingsContent = ({ property, breadcrumbs, video, nearbyPro
                   width="100%"
                   mode="place"
                   loading="lazy"
-                  zoom={16}
+                  zoom="16"
                   q={`${property?.Latitude || 0},${property?.Longitude || 0}`}
                 />
               </div>
