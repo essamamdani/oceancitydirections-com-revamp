@@ -58,11 +58,18 @@ export async function fetchSiteConfigByDomain(domain) {
     
     // Remove www. prefix for consistency
     let cleanDomain = domain.replace(/^www\./, '');
-    if (cleanDomain.includes('localhost') || cleanDomain.includes('127.0.0.1')) {
+
+    // ── Priority 1: Explicit env override (set this in Coolify per deployment) ──
+    // e.g.  SITE_DOMAIN=oceancitydirections.com
+    if (process.env.SITE_DOMAIN) {
+      cleanDomain = process.env.SITE_DOMAIN.replace(/^www\./, '').toLowerCase().trim();
+    }
+    // ── Priority 2: localhost / 127.0.0.1 → local dev only, won't affect live sites ──
+    else if (cleanDomain.includes('localhost') || cleanDomain.includes('127.0.0.1')) {
       cleanDomain = 'annapolisdirections.com';
     }
-    // Coolify staging preview domains → default to ocean city so the right config loads
-    if (cleanDomain.includes('.bk.videohomes.name')) {
+    // ── Priority 3: Coolify staging preview domains (.bk.videohomes.name) ──
+    else if (cleanDomain.includes('.bk.videohomes.name')) {
       cleanDomain = 'oceancitydirections.com';
     }
     
