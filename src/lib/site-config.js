@@ -11,7 +11,7 @@ import logger from '@/lib/logger';
  */
 export async function getCurrentDomain() {
   const headersList = await headers();
-  return headersList.get('host') || '';
+  return headersList.get('x-forwarded-host') || headersList.get('host') || '';
 }
 
 /**
@@ -57,7 +57,10 @@ export async function fetchSiteConfigByDomain(domain) {
     }
     
     // Remove www. prefix for consistency
-    const cleanDomain = domain.replace(/^www\./, '');
+    let cleanDomain = domain.replace(/^www\./, '');
+    if (cleanDomain.includes('localhost') || cleanDomain.includes('127.0.0.1')) {
+      cleanDomain = 'annapolisdirections.com';
+    }
     
     // DIRECT DB QUERY (Replaces API Call)
     let site = null;
@@ -244,8 +247,7 @@ export async function fetchSiteData() {
   if (typeof window === 'undefined') {
     try {
       const headersList = await headers();
-      const host = headersList.get('host');
-      if (host) domain = host;
+      domain = headersList.get('x-forwarded-host') || headersList.get('host') || "";
     } catch(e) {}
   } else {
     domain = window.location.hostname;

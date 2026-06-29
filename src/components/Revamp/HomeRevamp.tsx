@@ -3,10 +3,17 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import HomepageListings from "@/components/HomeFour/HomepageListings";
 import { getSiteName, ucwords } from "@/lib/helper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
+import mapDataJson from "@/domains/map.json";
+
+const USStateMap = dynamic(
+  () => import("./USStateMap"),
+  { ssr: false, loading: () => <div className="h-[300px] flex items-center justify-center text-xs font-bold text-slate-400">Loading map...</div> }
+);
 
 const quickCategories = [
   { label: "Homes", href: "/realty", icon: "bx-home", copy: "Find your next home" },
@@ -24,12 +31,53 @@ const businessFilterCategories = [
   { label: "Shopping", icon: "bx-shopping-bag", path: "shopping" },
 ];
 
-const networkLocations = [
-  { name: "AnnapolisDirections.com", desc: "Our charming capital city on the beautiful bay.", href: "https://annapolisdirections.com" },
-  { name: "BaltimoreDirections.com", desc: "Maryland's largest city with endless things to explore.", href: "https://baltimoredirections.com" },
-  { name: "FrederickDirections.com", desc: "Historic downtown, shopping, dining & outdoor site.", href: "https://frederickdirections.com" },
-  { name: "OceanCityDirections.com", desc: "Beach life, boardwalk fun & coastal getaways.", href: "https://oceancitydirections.com" },
-];
+const stateFipsMap: Record<string, string> = {
+  "AL": "01", "AK": "02", "AZ": "04", "AR": "05", "CA": "06",
+  "CO": "08", "CT": "09", "DE": "10", "FL": "12", "GA": "13",
+  "HI": "15", "ID": "16", "IL": "17", "IN": "18", "IA": "19",
+  "KS": "20", "KY": "21", "LA": "22", "ME": "23", "MD": "24",
+  "MA": "25", "MI": "26", "MN": "27", "MS": "28", "MO": "29",
+  "MT": "30", "NE": "31", "NV": "32", "NH": "33", "NJ": "34",
+  "NM": "35", "NY": "36", "NC": "37", "ND": "38", "OH": "39",
+  "OK": "40", "OR": "41", "PA": "42", "RI": "44", "SC": "45",
+  "SD": "46", "TN": "47", "TX": "48", "UT": "49", "VT": "50",
+  "VA": "51", "WA": "53", "WV": "54", "WI": "55", "WY": "56",
+  "DC": "11"
+};
+
+const siteDescriptions: Record<string, string> = {
+  "AnnapolisDirections.com": "Our charming capital city on the beautiful bay.",
+  "BaltimoreDirections.com": "Maryland's largest city with endless things to explore.",
+  "FrederickDirections.com": "Historic downtown, shopping, dining & outdoor activities.",
+  "OceanCityDirections.com": "Beach life, boardwalk fun & coastal getaways.",
+  "DaytonaDirections.com": "World famous beaches and high-speed racing history.",
+  "FortLauderdaleDirections.com": "Venice of America, beautiful canals and yachting.",
+  "FortMyersDirections.com": "Gorgeous beaches, fishing, and warm winter retreats.",
+  "JacksonvilleDirections.com": "Florida's river city by the sea with rich heritage.",
+  "MiamiDirections.com": "Vibrant nightlife, art deco culture, and tropical beaches.",
+  "NaplesDirections.com": "High-end shopping, white sand beaches, and golf courses.",
+  "OrlandoDirections.com": "Theme parks, family entertainment, and sunshine.",
+  "KeyWestDirections.com": "Island style, historic homes, and gorgeous sunsets.",
+  "TampaDirections.com": "Cigar history, theme parks, and waterfront views.",
+  "DCDirections.com": "Our nation's capital with monuments and museums.",
+};
+
+const siteTextColors: Record<string, string> = {
+  "AnnapolisDirections.com": "text-orange-550",
+  "BaltimoreDirections.com": "text-blue-500",
+  "OceanCityDirections.com": "text-emerald-500",
+  "FrederickDirections.com": "text-violet-500",
+  "KeyWestDirections.com": "text-pink-500",
+  "DaytonaDirections.com": "text-amber-500",
+  "TampaDirections.com": "text-red-500",
+  "OrlandoDirections.com": "text-indigo-500",
+  "MiamiDirections.com": "text-cyan-500",
+  "FortLauderdaleDirections.com": "text-fuchsia-500",
+  "FortMyersDirections.com": "text-teal-500",
+  "JacksonvilleDirections.com": "text-lime-500",
+  "NaplesDirections.com": "text-emerald-600",
+  "DCDirections.com": "text-slate-500",
+};
 
 function domainFromSite(site: any) {
   const configuredDomain = site?.URL?.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
@@ -56,6 +104,28 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
   const siteName = getSiteName(site);
   const domain = domainFromSite(site);
   const counties = countyNames(site);
+
+  const upperStateAbbr = site?.ShortState?.toUpperCase() || "MD";
+  const stateFips = stateFipsMap[upperStateAbbr] || "24";
+  const stateConfig = mapDataJson[stateFips as keyof typeof mapDataJson];
+  
+  // Extract unique active sites in this state dynamically
+  const stateSites = stateConfig
+    ? Object.values(stateConfig.counties)
+        .filter((c: any) => c.enabled && c.siteName)
+        .reduce((acc: any[], county: any) => {
+          if (!acc.some(x => x.name === county.siteName)) {
+            acc.push({
+              name: county.siteName,
+              url: county.url,
+              desc: siteDescriptions[county.siteName] || "Explore local businesses and property listings.",
+              colorClass: siteTextColors[county.siteName] || "text-orange-550"
+            });
+          }
+          return acc;
+        }, [])
+        .slice(0, 4) // Show top 4
+    : [];
   const featureImage = site?.slides?.swiper?.[0]?.img || "/img/photo/ocean-city-md-boardwalk.jpg";
 
   // Fallbacks for videos to match the premium Annapolis directions layout
@@ -352,7 +422,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* H04: Watch Section */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between gap-6">
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-start gap-6">
           <div className="flex justify-between items-end border-b border-slate-100 pb-4">
             <div>
               <h2 className="text-xl font-bold text-slate-950 font-serif">Watch {siteName.replace("Directions", "")}</h2>
@@ -446,120 +516,31 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between gap-6">
           <div className="flex justify-between items-end border-b border-slate-100 pb-4">
             <div>
-              <h2 className="text-xl font-bold text-slate-950 font-serif">Explore Maryland Locations</h2>
+              <h2 className="text-xl font-bold text-slate-950 font-serif">Explore {site?.State || "Maryland"} Locations</h2>
               <p className="text-xs text-slate-400 font-medium mt-1">Locations Map</p>
             </div>
           </div>
 
-          {/* SVG Maryland Map */}
-          <div className="w-full relative bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center justify-center min-h-[220px]">
-            <svg viewBox="0 0 400 200" className="w-full h-auto max-h-[220px]">
-              {/* Green Region (Frederick/West) */}
-              <path
-                d="M 10 90 L 130 90 L 130 60 L 200 60 L 200 120 L 150 120 L 140 105 L 10 105 Z"
-                className="fill-[#A7F3D0] stroke-[#059669] stroke-2 hover:fill-[#34D399] transition-all duration-200 cursor-pointer"
-                onClick={() => window.open("https://frederickdirections.com", "_blank")}
-              />
-              {/* Blue Region (Baltimore/North-Central) */}
-              <path
-                d="M 200 60 L 260 60 L 260 100 L 230 115 L 200 115 Z"
-                className="fill-[#BFDBFE] stroke-[#2563EB] stroke-2 hover:fill-[#60A5FA] transition-all duration-200 cursor-pointer"
-                onClick={() => window.open("https://baltimoredirections.com", "_blank")}
-              />
-              {/* Red Region (Annapolis/Central-South) */}
-              <path
-                d="M 200 115 L 230 115 L 240 145 L 215 165 L 195 135 Z"
-                className="fill-[#FECACA] stroke-[#DC2626] stroke-2 hover:fill-[#F87171] transition-all duration-200 cursor-pointer"
-                onClick={() => window.open("https://annapolisdirections.com", "_blank")}
-              />
-              {/* Purple Region (Ocean City/Eastern Shore) */}
-              <path
-                d="M 268 70 L 320 70 L 330 175 L 290 175 L 275 120 L 260 105 Z"
-                className="fill-[#E9D5FF] stroke-[#7C3AED] stroke-2 hover:fill-[#C084FC] transition-all duration-200 cursor-pointer"
-                onClick={() => window.open("https://oceancitydirections.com", "_blank")}
-              />
+          <USStateMap 
+            stateAbbr={site?.ShortState || "MD"} 
+            currentDomain={domain} 
+          />
 
-              {/* Connecting Lines for Labels */}
-              {/* Frederick */}
-              <line x1="160" y1="85" x2="110" y2="45" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
-              {/* Baltimore */}
-              <line x1="230" y1="80" x2="280" y2="45" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
-              {/* Annapolis */}
-              <line x1="215" y1="135" x2="280" y2="125" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
-              {/* Ocean City */}
-              <line x1="305" y1="140" x2="305" y2="175" className="stroke-slate-400 stroke-1 stroke-dasharray-[2]" strokeDasharray="3,3" />
-
-              {/* Region Pins (Dots) */}
-              {/* Frederick Dot */}
-              <circle cx="160" cy="85" r="5" className="fill-[#059669] stroke-white stroke-2" />
-              {/* Baltimore Dot */}
-              <circle cx="230" cy="80" r="5" className="fill-[#2563EB] stroke-white stroke-2" />
-              {/* Annapolis Dot */}
-              <circle cx="215" cy="135" r="5" className="fill-[#DC2626] stroke-white stroke-2" />
-              {/* Ocean City Dot */}
-              <circle cx="305" cy="140" r="5" className="fill-[#7C3AED] stroke-white stroke-2" />
-
-              {/* Label Texts */}
-              <text x="105" y="40" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="end">FrederickDirections.com</text>
-              <text x="285" y="40" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="start">BaltimoreDirections.com</text>
-              <text x="285" y="122" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="start">AnnapolisDirections.com</text>
-              <text x="305" y="187" className="text-[9px] font-extrabold fill-slate-700 font-sans" textAnchor="middle">OceanCityDirections.com</text>
-            </svg>
-          </div>
-
-          {/* 2x2 Locations List */}
+          {/* Dynamic 2x2 Locations List */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-            {/* Baltimore */}
-            <div className="flex items-start gap-2.5">
-              <i className="bx bxs-map text-[#2563EB] text-base shrink-0 mt-0.5"></i>
-              <div>
-                <a href="https://baltimoredirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
-                  BaltimoreDirections.com
-                </a>
-                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
-                  Maryland's largest city with endless things to explore.
-                </span>
+            {stateSites.map((loc: any) => (
+              <div className="flex items-start gap-2.5" key={loc.name}>
+                <i className={`bx bxs-map ${loc.colorClass} text-base shrink-0 mt-0.5`}></i>
+                <div>
+                  <a href={loc.url} target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
+                    {loc.name}
+                  </a>
+                  <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
+                    {loc.desc}
+                  </span>
+                </div>
               </div>
-            </div>
-
-            {/* Frederick */}
-            <div className="flex items-start gap-2.5">
-              <i className="bx bxs-map text-[#059669] text-base shrink-0 mt-0.5"></i>
-              <div>
-                <a href="https://frederickdirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
-                  FrederickDirections.com
-                </a>
-                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
-                  Historic downtown, shopping, dining & outdoor site.
-                </span>
-              </div>
-            </div>
-
-            {/* Annapolis */}
-            <div className="flex items-start gap-2.5">
-              <i className="bx bxs-map text-[#DC2626] text-base shrink-0 mt-0.5"></i>
-              <div>
-                <a href="https://annapolisdirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
-                  AnnapolisDirections.com
-                </a>
-                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
-                  Our charming capital city on the beautiful bay.
-                </span>
-              </div>
-            </div>
-
-            {/* Ocean City */}
-            <div className="flex items-start gap-2.5">
-              <i className="bx bxs-map text-[#7C3AED] text-base shrink-0 mt-0.5"></i>
-              <div>
-                <a href="https://oceancitydirections.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
-                  OceanCityDirections.com
-                </a>
-                <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
-                  Beach life, boardwalk fun & coastal getaways.
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="flex justify-center border-t border-slate-100 pt-3">

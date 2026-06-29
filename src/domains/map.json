@@ -1,0 +1,88 @@
+{
+  "11": {
+    "enabled": true,
+    "name": "District of Columbia",
+    "type": "realty_business",
+    "url": "https://www.realtydirections.com/district-of-columbia",
+    "counties": {
+      "11001": {
+        "enabled": true,
+        "name": "District of Columbia",
+        "url": "https://www.dcdirections.com",
+        "siteName": "DCDirections.com"
+      }
+    }
+  },
+  "24": {
+    "enabled": true,
+    "name": "Maryland",
+    "type": "realty_business",
+    "url": "https://www.realtydirections.com/maryland",
+    "counties": {
+      "24003": { "enabled": true, "name": "Anne Arundel County", "url": "https://www.annapolisdirections.com", "siteName": "AnnapolisDirections.com" },
+      "24009": { "enabled": true, "name": "Calvert County", "url": "https://www.annapolisdirections.com" , "siteName": "AnnapolisDirections.com" },
+      "24017": { "enabled": true, "name": "Charles County", "url": "https://www.annapolisdirections.com", "siteName": "AnnapolisDirections.com" },
+      "24029": { "enabled": true, "name": "Kent County", "url": "https://www.annapolisdirections.com", "siteName": "AnnapolisDirections.com" },
+      "24035": { "enabled": true, "name": "Queen Annes County", "url": "https://www.annapolisdirections.com", "siteName": "AnnapolisDirections.com" },
+      "24037": { "enabled": true, "name": "Saint Marys County", "url": "https://www.annapolisdirections.com", "siteName": "AnnapolisDirections.com" },
+      "24005": { "enabled": true, "name": "Baltimore County", "url": "https://www.baltimoredirections.com", "siteName": "BaltimoreDirections.com" },
+      "24510": { "enabled": true, "name": "Baltimore City", "url": "https://www.baltimoredirections.com", "siteName": "BaltimoreDirections.com" },
+      "24015": { "enabled": true, "name": "Cecil County", "url": "https://www.baltimoredirections.com", "siteName": "BaltimoreDirections.com" },
+      "24025": { "enabled": true, "name": "Harford County", "url": "https://www.baltimoredirections.com", "siteName": "BaltimoreDirections.com" },
+      "24027": { "enabled": true, "name": "Howard County", "url": "https://www.baltimoredirections.com", "siteName": "BaltimoreDirections.com" },
+      "24045": { "enabled": true, "name": "Wicomico County", "url": "https://www.oceancitydirections.com", "siteName": "OceanCityDirections.com" },
+      "24047": { "enabled": true, "name": "Worcester County", "url": "https://www.oceancitydirections.com", "siteName": "OceanCityDirections.com" },
+      "24039": { "enabled": true, "name": "Somerset County", "url": "https://www.oceancitydirections.com", "siteName": "OceanCityDirections.com" },
+      "24019": { "enabled": true, "name": "Dorchester County", "url": "https://www.oceancitydirections.com", "siteName": "OceanCityDirections.com" },
+      "24041": { "enabled": true, "name": "Talbot County", "url": "https://www.oceancitydirections.com", "siteName": "OceanCityDirections.com" },
+      "24011": { "enabled": true, "name": "Caroline County", "url": "https://www.oceancitydirections.com", "siteName": "OceanCityDirections.com" },
+      "24021": { "enabled": true, "name": "Frederick County", "url": "https://www.frederickdirections.com", "siteName": "FrederickDirections.com" },
+      "24031": { "enabled": true, "name": "Montgomery County", "url": "https://www.frederickdirections.com", "siteName": "FrederickDirections.com" },
+      "24013": { "enabled": true, "name": "Carroll County", "url": "https://www.frederickdirections.com", "siteName": "FrederickDirections.com" },
+      "24043": { "enabled": true, "name": "Washington County", "url": "https://www.frederickdirections.com", "siteName": "FrederickDirections.com" },
+      "24001": { "enabled": true, "name": "Allegany County", "url": "https://www.frederickdirections.com", "siteName": "FrederickDirections.com" },
+      "24023": { "enabled": true, "name": "Garrett County", "url": "https://www.frederickdirections.com", "siteName": "FrederickDirections.com" },
+      "24033": {
+        "enabled": true,
+        "name": "Prince Georges",
+        "url": "https://www.annapolisdirections.com"
+      }
+    }
+  },
+  "12": {
+    "enabled": true,
+    "name": "Florida",
+    "type": "business_only",
+    "url": "https://www.realtydirections.com/florida",
+    "counties": {
+      "12035": { "enabled": true, "name": "Flagler County", "url": "https://www.daytonadirections.com", "siteName": "DaytonaDirections.com" },
+      "12127": { "enabled": true, "name": "Volusia County", "url": "https://www.daytonadirections.com", "siteName": "DaytonaDirections.com" },
+      "12011": { "enabled": true, "name": "Broward County", "url": "https://www.fortlauderdaledirections.com", "siteName": "FortLauderdaleDirections.com" },
+      "12015": { "enabled": true, "name": "Charlotte County", "url": "https://www.fortmyersdirections.com", "siteName": "FortMyersDirections.com" },
+      "12071": { "enabled": true, "name": "Lee County", "url": "https://www.fortmyersdirections.com", "siteName": "FortMyersDirections.com" },
+      "12003": { "enabled": true, "name": "Baker County", "url": "https://www.jacksonvilledirections.com", "siteName": "JacksonvilleDirections.com" },
+      "12019": { "enabled": true, "name": "Clay County", "url": "https://www.jacksonvilledirections.com", "siteName": "JacksonvilleDirections.com" },
+      "12031": { "enabled": true, "name": "Duval County", "url": "https://www.jacksonvilledirections.com", "siteName": "JacksonvilleDirections.com" },
+      "12089": { "enabled": true, "name": "Nassau County", "url": "https://www.jacksonvilledirections.com", "siteName": "JacksonvilleDirections.com" },
+      "12107": { "enabled": true, "name": "Putnam County", "url": "https://www.jacksonvilledirections.com", "siteName": "JacksonvilleDirections.com" },
+      "12086": { "enabled": true, "name": "Miami-Dade County", "url": "https://www.miamidirections.com", "siteName": "MiamiDirections.com" },
+      "12021": { "enabled": true, "name": "Collier County", "url": "https://www.naplesdirections.com", "siteName": "NaplesDirections.com" },
+      "12055": { "enabled": true, "name": "Highlands County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12069": { "enabled": true, "name": "Lake County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12083": { "enabled": true, "name": "Marion County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12093": { "enabled": true, "name": "Okeechobee County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12095": { "enabled": true, "name": "Orange County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12097": { "enabled": true, "name": "Osceola County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12105": { "enabled": true, "name": "Polk County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12117": { "enabled": true, "name": "Seminole County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12109": { "enabled": true, "name": "St. Johns County", "url": "https://www.jacksonvilledirections.com", "siteName": "JacksonvilleDirections.com" },
+      "12119": { "enabled": true, "name": "Sumter County", "url": "https://www.orlandodirections.com", "siteName": "OrlandoDirections.com" },
+      "12087": { "enabled": true, "name": "Monroe County", "url": "https://www.keywestdirections.com", "siteName": "KeyWestDirections.com" },
+      "12017": { "enabled": true, "name": "Citrus County", "url": "https://www.tampadirections.com", "siteName": "TampaDirections.com" },
+      "12053": { "enabled": true, "name": "Hernando County", "url": "https://www.tampadirections.com", "siteName": "TampaDirections.com" },
+      "12057": { "enabled": true, "name": "Hillsborough County", "url": "https://www.tampadirections.com", "siteName": "TampaDirections.com" },
+      "12101": { "enabled": true, "name": "Pasco County", "url": "https://www.tampadirections.com", "siteName": "TampaDirections.com" },
+      "12103": { "enabled": true, "name": "Pinellas County", "url": "https://www.tampadirections.com", "siteName": "TampaDirections.com" }
+    }
+  }
+}
