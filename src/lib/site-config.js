@@ -61,6 +61,10 @@ export async function fetchSiteConfigByDomain(domain) {
     if (cleanDomain.includes('localhost') || cleanDomain.includes('127.0.0.1')) {
       cleanDomain = 'annapolisdirections.com';
     }
+    // Coolify staging preview domains → default to ocean city so the right config loads
+    if (cleanDomain.includes('.bk.videohomes.name')) {
+      cleanDomain = 'oceancitydirections.com';
+    }
     
     // DIRECT DB QUERY (Replaces API Call)
     let site = null;
