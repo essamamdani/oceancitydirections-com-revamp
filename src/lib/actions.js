@@ -330,7 +330,7 @@ export const getBusiness = async (site, slug) => {
     return data;
 };
 
-export const getVerifiedBusinesses = async (site, limit = 6) => {
+export const getVerifiedBusinesses = async (site, limit = 100) => {
     try {
         const { query } = await import('@/lib/db');
         const claimRes = await query(`
@@ -367,6 +367,15 @@ export const getVerifiedBusinesses = async (site, limit = 6) => {
             b.is_claimed = true;
             b.claimed_approval = true;
         });
+
+        // Filter: ONLY claimed businesses with CDN uploaded main images
+        formattedData = formattedData.filter(b => 
+            b.main_image && (
+                b.main_image.startsWith('https://cdn.') ||
+                b.main_image.startsWith('https://cdnlogos.') ||
+                b.main_image.includes('cdn.')
+            )
+        );
 
         logger.log('getVerifiedBusinesses Executed at:', new Date().toISOString());
         return formattedData;
