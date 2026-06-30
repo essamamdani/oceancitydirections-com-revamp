@@ -320,18 +320,50 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-slate-800 pb-20">
       
-      {/* H02: Premium Light Hero Section */}
-      <section className="relative min-h-[640px] w-full bg-[#FAF9F6] flex flex-col items-center justify-center overflow-hidden pt-28 pb-20 border-b border-slate-200/60">
+      {/* H02: Premium Light Hero Section with Background Slider */}
+      <section className="relative min-h-[640px] w-full bg-slate-900 flex flex-col items-center justify-center overflow-hidden pt-28 pb-20 border-b border-slate-200/60">
         
-        {/* Skyline overlay representation at bottom */}
-        <div className="absolute bottom-0 inset-x-0 h-44 z-0 pointer-events-none opacity-[0.06] select-none">
-          <Image
-            src={featureImage}
-            alt="Skyline Backdrop"
-            fill
-            style={{ objectFit: "cover", objectPosition: "bottom" }}
-          />
+        {/* Background Swiper Slider */}
+        <div className="absolute inset-0 w-full h-full z-0 select-none">
+          <Swiper
+            spaceBetween={0}
+            centeredSlides={true}
+            autoplay={{
+              delay: 6000,
+              disableOnInteraction: false,
+            }}
+            modules={[Autoplay]}
+            className="w-full h-full"
+          >
+            {site.slides?.swiper?.map((slide: any, index: number) => (
+              <SwiperSlide key={index} className="w-full h-full relative">
+                <Image
+                  src={slide.img}
+                  alt={`${siteName} banner ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  sizes="100vw"
+                  style={{ objectFit: "cover", opacity: 0.35 }}
+                />
+              </SwiperSlide>
+            ))}
+            {(!site.slides?.swiper || site.slides.swiper.length === 0) && (
+              <SwiperSlide className="w-full h-full relative">
+                <Image
+                  src={featureImage}
+                  alt={`${siteName} hero background`}
+                  fill
+                  priority
+                  sizes="100vw"
+                  style={{ objectFit: "cover", opacity: 0.35 }}
+                />
+              </SwiperSlide>
+            )}
+          </Swiper>
         </div>
+
+        {/* Light radial/linear gradient overlay to ensure readable typography */}
+        <div className="absolute inset-0 bg-[#FAF9F6]/90 backdrop-blur-[2px] z-1 pointer-events-none"></div>
 
         <div className="max-w-5xl mx-auto text-center px-4 relative z-10 space-y-6 w-full">
           <span className="text-[10px] font-bold text-orange-600 uppercase tracking-[0.25em] block mb-2">
@@ -638,35 +670,17 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         </section>
       )}
 
-      {/* H07: Featured Businesses */}
+      {/* H07: Recent Claimed Businesses */}
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 space-y-8">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6 border-b border-slate-200 pb-4">
+        <div className="flex justify-between items-end border-b border-slate-200 pb-4">
           <div>
             <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block font-sans">Local Directories</span>
-            <h2 className="text-3xl font-bold text-slate-950 font-serif">Featured Businesses</h2>
-          </div>
-          
-          {/* Category tabs */}
-          <div className="flex flex-wrap gap-2">
-            {businessFilterCategories.map((cat) => (
-              <button
-                key={cat.path}
-                onClick={() => setSelectedBizCategory(cat.path)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition duration-200 ${
-                  selectedBizCategory === cat.path
-                    ? "bg-slate-950 text-white border-slate-950 shadow-xs"
-                    : "bg-white text-slate-600 border-slate-200 hover:border-slate-355"
-                }`}
-              >
-                <i className={`bx ${cat.icon} text-sm`}></i>
-                {cat.label}
-              </button>
-            ))}
+            <h2 className="text-3xl font-bold text-slate-950 font-serif">Recent Claimed Businesses</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {activeGridBusinesses.map((biz, idx) => (
+          {topBusinesses.slice(0, 3).map((biz, idx) => (
             <Link
               href={`/s/${biz.update_slug || biz.slug}`}
               className="bg-white border border-slate-200 hover:border-slate-350 hover:shadow-lg rounded-2xl overflow-hidden shadow-xs transition duration-300 group flex flex-col justify-between"
@@ -682,7 +696,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 />
                 <div className="absolute top-3 left-3">
                   <span className="text-[10px] font-bold text-orange-700 bg-white px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-orange-100">
-                    {biz.categories?.name || biz.category || "Local"}
+                    {Array.isArray(biz.categories) ? biz.categories[0] : (biz.categories?.name || biz.category || "Local")}
                   </span>
                 </div>
               </div>
@@ -700,18 +714,18 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 <div className="pt-4 border-t border-slate-100 mt-5 flex items-center justify-between text-xs text-slate-550 font-semibold">
                   <div className="flex items-center gap-1">
                     <i className="bx bxs-star text-amber-400 text-sm"></i>
-                    <span>{biz.stars || 4.8}</span>
-                    <span className="text-slate-450 font-medium">({biz.reviews || 97} reviews)</span>
+                    <span>{biz.rating?.value || biz.stars || 4.8}</span>
+                    <span className="text-slate-450 font-medium">({biz.rating?.reviews || biz.reviews || 97} reviews)</span>
                   </div>
                   <span>{biz.city ? `${biz.city}, ${biz.state}` : domain}</span>
                 </div>
               </div>
             </Link>
           ))}
-          {!activeGridBusinesses.length && (
+          {!topBusinesses.length && (
             <div className="col-span-full bg-white border border-slate-200 rounded-3xl p-12 text-center text-slate-400 text-sm">
               <i className="bx bx-store-alt text-4xl mb-2 block"></i>
-              <span>No businesses listed under this category.</span>
+              <span>No claimed businesses listed.</span>
             </div>
           )}
         </div>

@@ -218,10 +218,20 @@ export function formatWorkHours(workTime) {
   };
 }
 
-export function renderStarRating(rating = 0) {
+export function renderStarRating(ratingInput = 0) {
+  let rating = 0;
+  if (ratingInput && typeof ratingInput === 'object') {
+    rating = Number(ratingInput.value || ratingInput.rating || ratingInput.stars || 0);
+  } else if (ratingInput) {
+    rating = Number(ratingInput);
+  }
+
+  if (isNaN(rating) || rating < 0) rating = 0;
+  if (rating > 5) rating = 5;
+
   const fullStars = Math.floor(rating);
   const halfStar = rating - fullStars >= 0.05;
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  const emptyStars = Math.max(0, 5 - fullStars - (halfStar ? 1 : 0));
 
   return (
     <>

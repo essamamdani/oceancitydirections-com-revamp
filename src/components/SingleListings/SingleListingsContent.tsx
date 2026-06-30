@@ -353,9 +353,9 @@ const SingleListingsContent = ({ business, breadcrumbs, video, isFeatured }: Sin
           {/* Rating + address + phone inline */}
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-600 mb-5">
             <span className="flex items-center gap-1.5">
-              {renderStarRating(business?.rating ?? 0)}
-              {business?.review_count ? (
-                <span className="text-slate-500 font-medium">({business.review_count} reviews)</span>
+              {renderStarRating(business?.rating)}
+              {(business?.rating?.reviews || business?.review_count || business?.reviews) ? (
+                <span className="text-slate-500 font-medium">({business?.rating?.reviews || business?.review_count || business?.reviews} reviews)</span>
               ) : null}
             </span>
             {business?.address && (

@@ -418,6 +418,78 @@ export const getVerifiedBusinesses = async (site, limit = 100) => {
     }
 };
 
+export const getRecentClaimedBusinesses = async (site, limit = 3) => {
+    try {
+        const { query } = await import('@/lib/db');
+        const claimRes = await query(`
+            SELECT business_id 
+            FROM claim_businesses 
+            WHERE status = 'approved'
+            ORDER BY id DESC
+            LIMIT $1
+        `, [limit]);
+        const approvedIds = claimRes.rows.map(r => r.business_id).filter(Boolean);
+        
+        const adminClient = await (await import('@/utils/supabase/admin')).getSupabaseAdmin();
+
+        let claimedBusinesses = [];
+        if (approvedIds.length > 0) {
+            const { data, error } = await adminClient
+                .from('businesses')
+                .select('*, categories(name)')
+                .eq('state_lower', site.StateLowerCase)
+                .in('county_lower', site.DefaultCounties)
+                .in('id', approvedIds);
+
+            if (!error && data) {
+                claimedBusinesses = data.map(item => ({
+                    ...item,
+                    categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : [],
+                    is_claimed: true,
+                    claimed_approval: true,
+                })).sort((a, b) => approvedIds.indexOf(a.id) - approvedIds.indexOf(b.id));
+            }
+        }
+
+        if (claimedBusinesses.length < limit) {
+            const needed = limit - claimedBusinesses.length;
+            const existingIds = claimedBusinesses.map(b => b.id);
+            
+            let builder = adminClient
+                .from('businesses')
+                .select('*, categories(name)')
+                .eq('state_lower', site.StateLowerCase)
+                .in('county_lower', site.DefaultCounties)
+                .not('main_image', 'is', null)
+                .neq('main_image', '');
+
+            if (existingIds.length > 0) {
+                builder = builder.not('id', 'in', `(${existingIds.join(',')})`);
+            }
+
+            const { data: fallbackData, error: fallbackErr } = await builder
+                .order('id', { ascending: false })
+                .limit(needed);
+
+            if (!fallbackErr && fallbackData) {
+                const formattedFallback = fallbackData.map(item => ({
+                    ...item,
+                    categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : [],
+                    is_claimed: false,
+                    claimed_approval: false,
+                }));
+                claimedBusinesses = [...claimedBusinesses, ...formattedFallback];
+            }
+        }
+
+        logger.log('getRecentClaimedBusinesses → count:', claimedBusinesses.length);
+        return claimedBusinesses.slice(0, limit);
+    } catch (err) {
+        console.error('Error in getRecentClaimedBusinesses:', err);
+        return [];
+    }
+};
+
 export const getBestRatedBusiness = async (site, cat_name = false, rating_value = "4.8") => {
     try {
         const adminClient = await (await import('@/utils/supabase/admin')).getSupabaseAdmin();

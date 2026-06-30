@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from 'next/image';
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useSites } from "@/contexts/SitesContext";
 import UserMenu from "./UserMenu";
 import LoginModal from "@/components/Auth/LoginModal";
@@ -22,6 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const showStickyMenu = useCallback(() => {
     setSticky(window.scrollY >= 80);
@@ -119,9 +120,9 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("buy")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold ${linkColorClass} bg-transparent border-0 outline-none`}>
+                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty' ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
                       Buy <i className="bx bx-chevron-down text-sm"></i>
-                    </button>
+                    </Link>
                     {activeDropdown === "buy" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
@@ -149,9 +150,9 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("rent")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold ${linkColorClass} bg-transparent border-0 outline-none`}>
+                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty/rent' ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
                       Rent <i className="bx bx-chevron-down text-sm"></i>
-                    </button>
+                    </Link>
                     {activeDropdown === "rent" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
@@ -176,9 +177,9 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("businesses")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold ${linkColorClass} bg-transparent border-0 outline-none`}>
+                    <Link href="/business" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/business') || pathname.startsWith('/s/') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
                       Businesses <i className="bx bx-chevron-down text-sm"></i>
-                    </button>
+                    </Link>
                     {activeDropdown === "businesses" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/business" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
@@ -200,9 +201,9 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("explore")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold ${linkColorClass} bg-transparent border-0 outline-none`}>
+                    <Link href="/blog" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/blog') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
                       Explore <i className="bx bx-chevron-down text-sm"></i>
-                    </button>
+                    </Link>
                     {activeDropdown === "explore" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/business" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
@@ -227,9 +228,9 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("resources")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold ${linkColorClass} bg-transparent border-0 outline-none`}>
+                    <Link href="/blog" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/resources') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
                       Resources <i className="bx bx-chevron-down text-sm"></i>
-                    </button>
+                    </Link>
                     {activeDropdown === "resources" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/blog" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
@@ -254,9 +255,9 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("about")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold ${linkColorClass} bg-transparent border-0 outline-none`}>
+                    <Link href="/about" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/about') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
                       About Us <i className="bx bx-chevron-down text-sm"></i>
-                    </button>
+                    </Link>
                     {activeDropdown === "about" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/about" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
