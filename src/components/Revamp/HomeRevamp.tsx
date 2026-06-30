@@ -178,43 +178,38 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
   const listVideos = mergedVideos.slice(1, 4);
 
   // Mock businesses for category tabs to populate listing nicely if DB is clean
+  // Use dynamic city/state from site config so any city site shows correct location
+  const mockCity = site?.City || site?.city || "Local";
+  const mockState = site?.ShortState?.toUpperCase() || "MD";
+
   const mockBusinesses: Record<string, any[]> = {
     restaurant: [
       {
         id: "mock-r1",
-        title: "Boatyard Bar & Grill",
+        title: `${mockCity} Waterfront Grill`,
         category: "Waterfront Dining",
-        description: "An Ocean City institution famous for crab cakes, fresh seafood, and sailor friendly atmosphere near the harbor.",
-        stars: 4.8,
-        reviews: 238,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/about-img.jpg",
-        slug: "boatyard-bar-grill"
+        description: `A beloved ${mockCity} institution famous for fresh local seafood and a sailor-friendly atmosphere near the harbor.`,
+        stars: 4.8, reviews: 238,
+        city: mockCity, state: mockState,
+        main_image: "/images/about-img.jpg", slug: "waterfront-grill"
       },
       {
         id: "mock-r2",
-        title: "Carrol's Creek Cafe",
+        title: "Bay View Cafe",
         category: "Waterfront Dining",
-        description: "Fine dining overlooking the bay, specializing in local seafood and premium steak options.",
-        stars: 4.7,
-        reviews: 184,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg2.jpg",
-        slug: "carrols-creek"
+        description: `Fine dining overlooking the bay, specializing in local seafood and premium steak options in ${mockCity}.`,
+        stars: 4.7, reviews: 184,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg2.jpg", slug: "bay-view-cafe"
       },
       {
         id: "mock-r3",
-        title: "O'Leary's Seafood",
+        title: "The Local Seafood Co.",
         category: "Seafood Dining",
-        description: "Cozy upscale venue offering creative, high-end seafood preparations in a historic neighborhood setting.",
-        stars: 4.9,
-        reviews: 142,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg3.jpg",
-        slug: "olearys"
+        description: `Cozy upscale venue offering creative, high-end seafood preparations in a historic ${mockCity} neighborhood.`,
+        stars: 4.9, reviews: 142,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg3.jpg", slug: "local-seafood"
       }
     ],
     "coffee-shop": [
@@ -223,52 +218,40 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         title: "Rise Up Coffee",
         category: "Coffee Shop",
         description: "Local craft coffee roaster offering organic, fair-trade coffee drinks, bakery treats, and breakfast items.",
-        stars: 4.8,
-        reviews: 124,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg4.jpg",
-        slug: "rise-up-coffee"
+        stars: 4.8, reviews: 124,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg4.jpg", slug: "rise-up-coffee"
       },
       {
         id: "mock-c2",
-        title: "Bitty & Beau's Coffee",
+        title: "Corner Cup Espresso",
         category: "Coffee Shop",
-        description: "A human-rights focused coffee shop serving high quality espresso drinks and standard bakery items.",
-        stars: 4.9,
-        reviews: 96,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg5.jpg",
-        slug: "bitty-beaus"
+        description: "A community-focused coffee shop serving high-quality espresso drinks and fresh bakery items.",
+        stars: 4.9, reviews: 96,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg5.jpg", slug: "corner-cup"
       }
     ],
     medical: [
       {
         id: "mock-m1",
-        title: "Ocean City Performance PT",
+        title: `${mockCity} Performance PT`,
         category: "Physical Therapy",
         description: "Specialized sports rehabilitation and physical therapy clinic helping local active individuals recover fully.",
-        stars: 4.9,
-        reviews: 97,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg6.jpg",
-        slug: "oceancity-pt"
+        stars: 4.9, reviews: 97,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg6.jpg", slug: "performance-pt"
       }
     ],
     fitness: [
       {
         id: "mock-f1",
-        title: "Downtown Ocean City Fitness",
+        title: `${mockCity} Fitness Center`,
         category: "Gym & Fitness",
         description: "Local community gym offering state-of-the-art machines, group classes, and personalized coaching.",
-        stars: 4.7,
-        reviews: 83,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/about-img.jpg",
-        slug: "oceancity-fitness"
+        stars: 4.7, reviews: 83,
+        city: mockCity, state: mockState,
+        main_image: "/images/about-img.jpg", slug: "fitness-center"
       }
     ],
     "home-services": [
@@ -277,12 +260,9 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         title: "Bay Plumbers & HVAC",
         category: "Home Plumbing",
         description: "Reliable, 24/7 residential plumbing and heating services for local communities around the bay.",
-        stars: 4.8,
-        reviews: 154,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg1.jpg",
-        slug: "bay-plumbers"
+        stars: 4.8, reviews: 154,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg1.jpg", slug: "bay-plumbers"
       }
     ],
     shopping: [
@@ -290,16 +270,14 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         id: "mock-s1",
         title: "Historic District Boutiques",
         category: "Local Shopping",
-        description: "Charming independent retail shops selling unique apparel, gifts, coastal art, and home decor items.",
-        stars: 4.6,
-        reviews: 112,
-        city: "Ocean City",
-        state: "MD",
-        main_image: "/images/main-banner-bg3.jpg",
-        slug: "historic-boutiques"
+        description: `Charming independent retail shops selling unique apparel, gifts, art, and home decor in ${mockCity}.`,
+        stars: 4.6, reviews: 112,
+        city: mockCity, state: mockState,
+        main_image: "/images/main-banner-bg3.jpg", slug: "historic-boutiques"
       }
     ]
   };
+
 
   const filteredBusinessesForGrid = topBusinesses.filter(b => {
     if (!selectedBizCategory) return true;

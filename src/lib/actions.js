@@ -341,44 +341,77 @@ export const getVerifiedBusinesses = async (site, limit = 100) => {
         const approvedIds = claimRes.rows.map(r => r.business_id).filter(Boolean);
         
         const adminClient = await (await import('@/utils/supabase/admin')).getSupabaseAdmin();
-        let queryBuilder = adminClient
+
+        // --- Attempt 1: Claimed businesses with CDN images ---
+        if (approvedIds.length > 0) {
+            let q = adminClient
+                .from('businesses')
+                .select('*, categories(name)')
+                .eq('state_lower', site.StateLowerCase)
+                .in('county_lower', site.DefaultCounties)
+                .in('id', approvedIds);
+
+            const { data: claimedData, error: claimedErr } = await q.limit(limit);
+
+            if (!claimedErr && claimedData) {
+                // Filter to CDN images only first
+                const cdnOnly = claimedData.filter(b =>
+                    b.main_image && (
+                        b.main_image.startsWith('https://cdn.') ||
+                        b.main_image.startsWith('https://cdnlogos.') ||
+                        b.main_image.includes('cdn.')
+                    )
+                );
+
+                if (cdnOnly.length > 0) {
+                    const formatted = cdnOnly.map(item => ({
+                        ...item,
+                        categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : [],
+                        is_claimed: true,
+                        claimed_approval: true,
+                    }));
+                    logger.log('getVerifiedBusinesses → CDN claimed results:', formatted.length);
+                    return formatted;
+                }
+
+                // CDN filter returned nothing — return all claimed businesses with any image
+                const anyImg = claimedData.filter(b => b.main_image);
+                if (anyImg.length > 0) {
+                    const formatted = anyImg.map(item => ({
+                        ...item,
+                        categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : [],
+                        is_claimed: true,
+                        claimed_approval: true,
+                    }));
+                    logger.log('getVerifiedBusinesses → Claimed (no CDN filter) results:', formatted.length);
+                    return formatted;
+                }
+            }
+        }
+
+        // --- Fallback: Top businesses in the area with any main_image ---
+        const { data: fallbackData, error: fallbackErr } = await adminClient
             .from('businesses')
             .select('*, categories(name)')
             .eq('state_lower', site.StateLowerCase)
-            .in('county_lower', site.DefaultCounties);
+            .in('county_lower', site.DefaultCounties)
+            .not('main_image', 'is', null)
+            .neq('main_image', '')
+            .order('id', { ascending: false })
+            .limit(limit);
 
-        if (approvedIds.length > 0) {
-            queryBuilder = queryBuilder.in('id', approvedIds);
-        } else {
-            // Force empty results if no verified businesses exist so backfill triggers
-            queryBuilder = queryBuilder.eq('id', -1);
-        }
+        if (fallbackErr) throw fallbackErr;
 
-        const { data, error } = await queryBuilder.limit(limit);
-
-        if (error) throw error;
-
-        let formattedData = data.map(item => ({
-             ...item,
-             categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : []
+        const formatted = (fallbackData || []).map(item => ({
+            ...item,
+            categories: item.categories ? (Array.isArray(item.categories) ? item.categories.map(c => c.name) : [item.categories.name]) : [],
+            is_claimed: false,
+            claimed_approval: false,
         }));
 
-        formattedData.forEach(b => {
-            b.is_claimed = true;
-            b.claimed_approval = true;
-        });
-
-        // Filter: ONLY claimed businesses with CDN uploaded main images
-        formattedData = formattedData.filter(b => 
-            b.main_image && (
-                b.main_image.startsWith('https://cdn.') ||
-                b.main_image.startsWith('https://cdnlogos.') ||
-                b.main_image.includes('cdn.')
-            )
-        );
-
+        logger.log('getVerifiedBusinesses → Area fallback results:', formatted.length);
         logger.log('getVerifiedBusinesses Executed at:', new Date().toISOString());
-        return formattedData;
+        return formatted;
     } catch (err) {
         console.error('Error fetching verified businesses:', err);
         return [];

@@ -125,8 +125,34 @@ const SingleListingsContent = ({ business, breadcrumbs, video, isFeatured }: Sin
 
   const defaultShortState = site.ShortState?.toUpperCase();
 
+  // ── Photo mosaic helpers ──────────────────────────────────────────────────
+  const heroImage =
+    (business?.claimed_approval && business?.main_image)
+      ? business.main_image
+      : `/api/og?title=${encodeURIComponent(business?.title || 'Business')}`;
+
+  const photos: string[] = Array.isArray(business?.photos)
+    ? business.photos.map((p: any) => (typeof p === 'string' ? p : p?.url)).filter(Boolean)
+    : [];
+
+  const mosaicLeft  = photos[0] || heroImage;
+  const mosaicTop   = photos[1] || heroImage;
+  const mosaicBot   = photos[2] || heroImage;
+
+  // Category name (may be object or string)
+  const categoryName =
+    typeof business?.categories === 'string'
+      ? business.categories
+      : business?.categories?.name ?? '';
+
+  // Work hours object keys
+  const workHoursEntries = business?.workHours
+    ? Object.entries(business.workHours as Record<string, any>)
+    : [];
+
   return (
     <>
+      {/* ── Modals (always rendered at top) ──────────────────────────────── */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
@@ -186,188 +212,283 @@ const SingleListingsContent = ({ business, breadcrumbs, video, isFeatured }: Sin
         businessTitle={business?.title}
       />
 
+      {/* ── Page shell ───────────────────────────────────────────────────── */}
       <div className="font-sans antialiased text-slate-800 bg-slate-50 min-h-screen">
-        
-        {/* Banner Image Hero */}
-        <div className="relative h-[320px] md:h-[450px] w-full bg-slate-950 overflow-hidden">
-          <Image
-            src={(business?.claimed_approval && business?.main_image)
-              ? business.main_image
-              : `/api/og?title=${encodeURIComponent(business?.title || 'Business')}`}
-            alt={business?.title || "Business banner"}
-            fill
-            priority
-            style={{ objectFit: 'cover', opacity: 0.85 }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/30 to-transparent"></div>
-          
-          {/* Logo overlay */}
-          {business?.claimed_approval && business?.logo && (
-            <div className="absolute bottom-8 left-8 z-25 bg-white rounded-2xl p-1.5 shadow-xl border border-slate-200 w-24 h-24 flex items-center justify-center">
+
+        {/* ── Photo Mosaic Header ──────────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-0">
+
+          {/* Top bar: Back link + Share/Save */}
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              href={breadcrumbs?.[breadcrumbs.length - 2]?.link ?? '/'}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-orange-600 transition-colors"
+            >
+              <i className="bx bx-chevron-left text-lg" />
+              Back to Directory
+            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  if (navigator?.share) {
+                    navigator.share({ title: business?.title, url: currentUrl });
+                  } else {
+                    navigator.clipboard.writeText(currentUrl);
+                    toast.success('Link copied!');
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-orange-600 border border-slate-200 bg-white hover:border-orange-300 rounded-xl px-3 py-2 transition-all shadow-sm"
+              >
+                <i className="bx bx-share-alt text-base" />
+                Share
+              </button>
+              <button
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-orange-600 border border-slate-200 bg-white hover:border-orange-300 rounded-xl px-3 py-2 transition-all shadow-sm"
+              >
+                <i className="bx bx-bookmark text-base" />
+                Save
+              </button>
+            </div>
+          </div>
+
+          {/* Mosaic grid: large left (2/3) + 2 stacked right (1/3) */}
+          <div className="grid grid-cols-3 gap-2 h-[380px] md:h-[460px] rounded-2xl overflow-hidden">
+            {/* Large left photo */}
+            <div className="col-span-2 relative bg-slate-200">
               <Image
-                src={business.logo}
-                alt={`${business.title} logo`}
-                width={80}
-                height={80}
-                style={{ objectFit: 'contain', borderRadius: '10px' }}
+                src={mosaicLeft}
+                alt={business?.title || 'Business photo'}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 66vw"
+                style={{ objectFit: 'cover' }}
+                className="transition-transform duration-500 hover:scale-[1.02]"
               />
-            </div>
-          )}
-
-          {/* Heading overlay */}
-          <div className="absolute bottom-8 left-8 right-8 z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pl-0 md:pl-28">
-            <div className="space-y-3">
-              <div className="flex flex-wrap gap-2 items-center">
-                <span className="text-xs font-bold text-orange-400 bg-slate-900/60 px-3 py-1 rounded-full uppercase tracking-wider border border-slate-800">
-                  {business?.categories?.name}
-                </span>
-                {business?.subcategories?.map((sub: any) => (
-                  <span key={sub?.name} className="text-xs font-semibold text-slate-300 bg-slate-900/40 px-3 py-1 rounded-full">
-                    {sub?.name}
-                  </span>
-                ))}
-              </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif drop-shadow-md flex flex-wrap items-center gap-3">
-                {business?.title}
-                {isFeatured && (
-                  <span className="text-xs font-bold text-slate-950 bg-amber-400 px-3 py-1 rounded-full align-middle font-sans">
-                    <i className="bx bxs-star mr-1"></i>Featured
-                  </span>
-                )}
-                {business?.claimed_approval ? (
-                  <span className="text-xs font-bold text-white bg-orange-600 px-3 py-1 rounded-full align-middle font-sans">
-                    <i className="bx bx-check-circle mr-1"></i>Verified
-                  </span>
-                ) : (
-                  !business?.claimed_by && (
-                    <span className="text-xs font-bold text-slate-300 bg-slate-800/80 px-3 py-1 rounded-full align-middle font-sans border border-slate-700">
-                      Unclaimed
-                    </span>
-                  )
-                )}
-              </h1>
-              
-              <div className="text-xs text-slate-300 flex flex-wrap items-center gap-4">
-                {business?.phone && (
-                  <a href={`tel:${business?.phone}`} className="flex items-center gap-1.5 hover:text-white transition">
-                    <i className="bx bx-phone text-lg"></i>
-                    <span>{business?.phone.replace("+1", "")}</span>
-                  </a>
-                )}
-                <div className="flex items-center gap-1.5">
-                  <i className="bx bx-map text-lg"></i>
-                  <span>{business.address}, {business.county}</span>
+              {/* Logo badge */}
+              {business?.claimed_approval && business?.logo && (
+                <div className="absolute bottom-4 left-4 z-10 bg-white rounded-2xl p-1.5 shadow-xl border border-slate-200 w-20 h-20 flex items-center justify-center">
+                  <Image
+                    src={business.logo}
+                    alt={`${business.title} logo`}
+                    width={68}
+                    height={68}
+                    style={{ objectFit: 'contain', borderRadius: '10px' }}
+                  />
                 </div>
-              </div>
+              )}
             </div>
-
-            <div className="flex flex-wrap gap-2 shrink-0">
-              {business?.claimed_approval ? (
-                <button
-                  onClick={() => setIsReportOpen(true)}
-                  className="bg-slate-900/60 hover:bg-slate-900 text-white font-bold px-4 py-2.5 rounded-xl border border-slate-750 backdrop-blur-xs text-sm transition"
-                >
-                  Report listing
-                </button>
-              ) : (
-                !business.claimed_by && (
-                  <button
-                    onClick={handleClaim}
-                    className="bg-orange-600 hover:bg-orange-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-md"
-                    disabled={isClaiming}
-                  >
-                    {isClaiming ? "Claiming..." : "Claim Business"}
-                  </button>
-                )
-              )}
-              {!business.deleted_at && (
-                <button
-                  onClick={() => setIsRequestInfoOpen(true)}
-                  className="bg-slate-900/60 hover:bg-slate-900 text-white font-bold px-4 py-2.5 rounded-xl border border-slate-750 backdrop-blur-xs text-sm transition"
-                >
-                  Request Suggestions
-                </button>
-              )}
+            {/* Right stack */}
+            <div className="col-span-1 flex flex-col gap-2">
+              <div className="relative flex-1 bg-slate-200 rounded-tr-2xl overflow-hidden">
+                <Image
+                  src={mosaicTop}
+                  alt={`${business?.title} photo 2`}
+                  fill
+                  sizes="33vw"
+                  style={{ objectFit: 'cover' }}
+                  className="transition-transform duration-500 hover:scale-[1.02]"
+                />
+              </div>
+              <div className="relative flex-1 bg-slate-200 rounded-br-2xl overflow-hidden">
+                <Image
+                  src={mosaicBot}
+                  alt={`${business?.title} photo 3`}
+                  fill
+                  sizes="33vw"
+                  style={{ objectFit: 'cover' }}
+                  className="transition-transform duration-500 hover:scale-[1.02]"
+                />
+                {/* "View all photos" overlay */}
+                {photos.length > 3 && (
+                  <div className="absolute inset-0 bg-slate-950/55 flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">
+                      +{photos.length - 3} photos
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          
-          {/* Breadcrumbs */}
-          <nav className="mb-8" aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
-              <li>
-                <Link href="/" className="hover:text-orange-655 transition">Home</Link>
-              </li>
-              {breadcrumbs?.map((crumb: any, idx: number) => (
-                <React.Fragment key={idx}>
-                  <li className="text-slate-400">/</li>
-                  <li>
-                    {crumb.link ? (
-                      <Link href={crumb.link} className="hover:text-orange-655 transition">{crumb.name}</Link>
-                    ) : (
-                      <span className="text-slate-700 font-bold">{crumb.name}</span>
-                    )}
-                  </li>
-                </React.Fragment>
-              ))}
-            </ol>
-          </nav>
+        {/* ── Business identity block ──────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
 
-          {/* Grid Columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            {/* Left Main Pane */}
-            <div className="lg:col-span-2 space-y-8">
-              
-              {/* Featured Video */}
-              {video?.thumbnail && (
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
-                  <h3 className="text-lg font-bold text-slate-900 font-serif">Featured Video Coverage</h3>
-                  <div className="overflow-hidden rounded-2xl border border-slate-100">
-                    <SingleFeaturedVideo video={video} />
-                  </div>
-                </div>
-              )}
+          {/* Badges row */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            {business?.claimed_approval && (
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-white bg-orange-600 px-3 py-1 rounded-full">
+                <i className="bx bx-check-circle" />
+                Verified Business
+              </span>
+            )}
+            {isFeatured && (
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-900 bg-amber-400 px-3 py-1 rounded-full">
+                <i className="bx bxs-star" />
+                Featured
+              </span>
+            )}
+            {categoryName && (
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-100 bg-slate-700 px-3 py-1 rounded-full">
+                {categoryName}
+              </span>
+            )}
+            {business?.subcategories?.map((sub: any) => (
+              <span key={sub?.name} className="text-xs font-medium text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full">
+                {sub?.name}
+              </span>
+            ))}
+            {!business?.claimed_approval && !business?.claimed_by && (
+              <span className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full">
+                Unclaimed
+              </span>
+            )}
+          </div>
 
-              {/* Description Card */}
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
-                <h3 className="text-lg font-bold text-slate-900 font-serif">About Business</h3>
-                <p className="text-sm text-slate-650 leading-relaxed whitespace-pre-line">
-                  {business?.description || `${business.title} provides quality services in ${business.city}, ${business.state}.`}
+          {/* Business name */}
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight font-serif mb-3 leading-tight">
+            {business?.title}
+          </h1>
+
+          {/* Rating + address + phone inline */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-600 mb-5">
+            <span className="flex items-center gap-1.5">
+              {renderStarRating(business?.rating ?? 0)}
+              {business?.review_count ? (
+                <span className="text-slate-500 font-medium">({business.review_count} reviews)</span>
+              ) : null}
+            </span>
+            {business?.address && (
+              <span className="flex items-center gap-1">
+                <i className="bx bx-map text-orange-500" />
+                {business.address}{business.city ? `, ${business.city}` : ''}{business.state ? `, ${business.state}` : ''}{business.zip ? ` ${business.zip}` : ''}
+              </span>
+            )}
+            {business?.phone && (
+              <a href={`tel:${business.phone}`} className="flex items-center gap-1 hover:text-orange-600 transition-colors font-medium">
+                <i className="bx bx-phone text-orange-500" />
+                {business.phone.replace("+1", "")}
+              </a>
+            )}
+          </div>
+
+          {/* Action buttons row */}
+          <div className="flex flex-wrap items-center gap-2 pb-6 border-b border-slate-200">
+            {business?.phone && (
+              <a
+                href={`tel:${business.phone}`}
+                className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm"
+              >
+                <i className="bx bx-phone text-base" />
+                Call
+              </a>
+            )}
+            {business?.url && (
+              <a
+                href={business.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-800 font-bold px-5 py-2.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 transition-all shadow-sm"
+              >
+                <i className="bx bx-globe text-base" />
+                Website
+              </a>
+            )}
+            <Link
+              href={business?.check_url ?? `https://maps.google.com/maps/dir//${business?.latitude},${business?.longitude}/@${business?.latitude},${business?.longitude},17z`}
+              target="_blank"
+              className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-800 font-bold px-5 py-2.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 transition-all shadow-sm"
+            >
+              <i className="bx bx-directions text-base" />
+              Directions
+            </Link>
+            {!business?.claimed_approval && !business?.claimed_by && (
+              <button
+                onClick={handleClaim}
+                disabled={isClaiming}
+                className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm disabled:opacity-60"
+              >
+                <i className="bx bx-badge-check text-base" />
+                {isClaiming ? "Claiming..." : "Claim Business"}
+              </button>
+            )}
+            {business?.claimed_approval && (
+              <button
+                onClick={() => setIsReportOpen(true)}
+                className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-800 font-semibold px-5 py-2.5 rounded-xl text-sm border border-slate-300 hover:border-slate-400 transition-all shadow-sm"
+              >
+                <i className="bx bx-flag text-base" />
+                Report
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Main 8/4 column layout ───────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            {/* ── LEFT: Main content (8 cols) ─────────────────────────── */}
+            <div className="lg:col-span-8 space-y-6">
+
+              {/* About section */}
+              <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="text-xl font-bold text-slate-900 font-serif flex items-center gap-2">
+                  <i className="bx bx-info-circle text-orange-500 text-2xl" />
+                  About {business?.title}
+                </h2>
+                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                  {business?.description ||
+                    `${business.title} provides quality services in ${business.city}, ${business.state}. Contact us to learn more about what we offer.`}
                 </p>
 
-                {/* Attributes checklist */}
-                {business?.attributes?.available_attributes && 
-                  Object.entries(business?.attributes?.available_attributes).map(([title, attributes]) => (
-                    attributes && (
-                      <div key={title} className="pt-4 border-t border-slate-100 mt-4 space-y-3">
-                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">{transformString(title)}</h4>
-                        <ul className="grid grid-cols-2 gap-2">
-                          {(attributes as any[]).map((attr, idx) => (
-                            attr && (
-                              <li key={idx} className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                                <i className="bx bx-check text-orange-600 text-lg"></i>
-                                <span>{transformString(attr)}</span>
+                {/* Attribute checklist */}
+                {business?.attributes?.available_attributes &&
+                  Object.entries(business.attributes.available_attributes).map(([title, attributes]) =>
+                    attributes ? (
+                      <div key={title} className="pt-4 border-t border-slate-100 space-y-3">
+                        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                          {transformString(title)}
+                        </h3>
+                        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {(attributes as any[]).map((attr, idx) =>
+                            attr ? (
+                              <li key={idx} className="flex items-center gap-2 text-xs font-medium text-slate-700 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+                                <i className="bx bx-check-circle text-orange-600 text-base shrink-0" />
+                                {transformString(attr)}
                               </li>
-                            )
-                          ))}
+                            ) : null
+                          )}
                         </ul>
                       </div>
-                    )
-                  ))
+                    ) : null
+                  )
                 }
-              </div>
+              </section>
+
+              {/* Featured Video (if exists) */}
+              {video?.thumbnail && (
+                <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+                  <h2 className="text-xl font-bold text-slate-900 font-serif flex items-center gap-2">
+                    <i className="bx bx-play-circle text-orange-500 text-2xl" />
+                    Featured Video
+                  </h2>
+                  <div className="overflow-hidden rounded-xl border border-slate-100">
+                    <SingleFeaturedVideo video={video} />
+                  </div>
+                </section>
+              )}
 
               {/* Map & Directions */}
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-6">
-                <h3 className="text-lg font-bold text-slate-900 font-serif">Location & Directions</h3>
-                <div className="overflow-hidden rounded-2xl border border-slate-200">
+              <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="text-xl font-bold text-slate-900 font-serif flex items-center gap-2">
+                  <i className="bx bx-map-alt text-orange-500 text-2xl" />
+                  Map &amp; Directions
+                </h2>
+                <div className="overflow-hidden rounded-xl border border-slate-200">
                   <GoogleMapsEmbed
                     apiKey={process.env.NEXT_PUBLIC_MAP_API}
-                    height="320px"
+                    height="340px"
                     width="100%"
                     mode="place"
                     loading="lazy"
@@ -375,136 +496,223 @@ const SingleListingsContent = ({ business, breadcrumbs, video, isFeatured }: Sin
                     q={`${business.latitude},${business.longitude}`}
                   />
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="text-sm font-semibold text-slate-650">
-                    <i className="bx bx-map text-orange-600 mr-1.5 align-middle text-lg"></i>
-                    <span>{business?.address}</span>
-                  </div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+                  <p className="text-sm text-slate-600 font-medium flex items-center gap-1.5">
+                    <i className="bx bx-map-pin text-orange-500 text-lg" />
+                    {business?.address}{business?.city ? `, ${business.city}` : ''}{business?.state ? `, ${business.state}` : ''}
+                  </p>
                   <Link
-                    href={business?.check_url ? business?.check_url : `https://maps.google.com/maps/dir//${business?.latitude},${business?.longitude}/@${business?.latitude},${business?.longitude},17z`}
+                    href={business?.check_url ?? `https://maps.google.com/maps/dir//${business?.latitude},${business?.longitude}/@${business?.latitude},${business?.longitude},17z`}
                     target="_blank"
-                    className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl transition duration-200 text-sm shadow-sm inline-flex items-center gap-1.5 text-center justify-center"
+                    className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl text-sm transition-all shadow-sm"
                   >
-                    Get Driving Directions &rarr;
+                    Get Driving Directions
+                    <i className="bx bx-right-arrow-alt text-lg" />
                   </Link>
                 </div>
-              </div>
+              </section>
 
+              {/* Nearby Real Estate */}
+              {property?.length > 0 && (
+                <section className="space-y-5">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block">
+                        Real Estate Nearby
+                      </span>
+                      <h2 className="text-2xl font-bold text-slate-900 font-serif mt-0.5">
+                        Properties near {business.title}
+                      </h2>
+                    </div>
+                    <Link
+                      href={`/realty/location/${business.county}/${business.city}/${business.zip}`.toLowerCase()}
+                      className="text-sm font-semibold text-orange-600 hover:text-orange-700 hover:underline inline-flex items-center gap-1 transition-colors"
+                    >
+                      View All
+                      <i className="bx bx-right-arrow-alt text-lg align-middle" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                    {property.slice(0, 3).map((prop) => (
+                      <Link
+                        href={`/realty/${prop.ListingKey}--${slug(prop.UnparsedAddress.replace(/,/g, ", ").trim())}-${prop.ListingId}`}
+                        className="bg-white border border-slate-200 hover:border-orange-300 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group"
+                        key={prop.ListingId}
+                      >
+                        <div className="relative h-44 w-full bg-slate-900">
+                          <Image
+                            src={prop?.ListPictureURL || "https://picsum.photos/seed/picsum/790/200"}
+                            alt="Property"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 360px"
+                            style={{ objectFit: "cover" }}
+                          />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-slate-950/80 text-white font-bold text-xs px-3 py-1 rounded-full">
+                              ${prop.ListPrice.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-4 space-y-2">
+                          <h3 className="font-bold text-slate-800 text-sm group-hover:text-orange-600 transition-colors leading-snug line-clamp-1">
+                            {prop.FullStreetAddress
+                              ? `${prop.FullStreetAddress}, ${prop.City}, ${defaultShortState}`
+                              : prop?.UnparsedAddress.replace(/,/g, ", ").trim()}
+                          </h3>
+                          <div className="text-[11px] text-slate-500 font-medium flex items-center justify-between gap-2 border-t border-slate-100 pt-2">
+                            <span>Beds {prop.BedroomsTotal} · Baths {prop.BathroomsFull} · {prop.AreaTotal} sqft</span>
+                            <span className="text-slate-400">IDX</span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
 
-            {/* Right Sidebar widgets */}
-            <div className="space-y-6 lg:sticky lg:top-24">
-              
-              {/* Contact Panel widget */}
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
-                <h3 className="text-md font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">Contact Details</h3>
-                <ul className="space-y-4 text-xs font-semibold text-slate-650">
-                  {business?.url && (
-                    <li className="flex items-start gap-2.5">
-                      <i className="bx bx-globe text-slate-400 text-lg shrink-0 mt-0.5"></i>
-                      <a href={business?.url} target="_blank" rel="noopener noreferrer" className="hover:text-orange-700 transition break-all leading-normal">
-                        {business?.url}
-                      </a>
-                    </li>
-                  )}
-                  {business?.phone && (
-                    <li className="flex items-center gap-2.5">
-                      <i className="bx bx-phone-call text-slate-400 text-lg shrink-0"></i>
-                      <a href={`tel:${business?.phone}`} className="hover:text-orange-705 transition">
-                        {business?.phone.replace("+1", "")}
-                      </a>
-                    </li>
-                  )}
-                  <li className="flex items-center gap-2.5">
-                    <i className="bx bx-map text-slate-400 text-lg shrink-0"></i>
-                    <span>{business?.city}, {business?.state}</span>
-                  </li>
-                </ul>
-              </div>
+            {/* ── RIGHT: Sticky sidebar (4 cols) ──────────────────────── */}
+            <div className="lg:col-span-4">
+              <div className="space-y-5 lg:sticky lg:top-24">
 
-              {/* Suggestions Panel widget */}
-              {!business.deleted_at && (
-                <div className="bg-slate-900 text-slate-100 border border-slate-800 rounded-3xl p-6 shadow-xs space-y-4">
-                  <h3 className="font-serif text-white text-lg font-bold">Incorrect Details?</h3>
-                  <p className="text-xs text-slate-400 leading-normal">
-                    Help us keep directory details accurate. Suggest corrections or claim this workspace listing to edit description, services, and photos.
-                  </p>
-                  <div className="flex flex-col gap-2 pt-2">
-                    <button
-                      onClick={() => setIsRequestInfoOpen(true)}
-                      className="bg-slate-850 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs border border-slate-700 transition text-center"
-                    >
-                      Suggest Edits
-                    </button>
-                    <button
-                      onClick={() => setIsRequestRemovalOpen(true)}
-                      className="bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition text-center shadow-xs"
-                    >
-                      Request Listing Removal
-                    </button>
-                  </div>
+                {/* Business Details card */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                  <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 pb-3">
+                    Business Details
+                  </h3>
+                  <ul className="space-y-3 text-sm text-slate-700">
+                    {business?.url && (
+                      <li className="flex items-start gap-3">
+                        <i className="bx bx-globe text-slate-400 text-lg shrink-0 mt-0.5" />
+                        <a
+                          href={business.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-orange-600 transition-colors break-all leading-normal font-medium"
+                        >
+                          {business.url.replace(/^https?:\/\//, '')}
+                        </a>
+                      </li>
+                    )}
+                    {business?.phone && (
+                      <li className="flex items-center gap-3">
+                        <i className="bx bx-phone-call text-slate-400 text-lg shrink-0" />
+                        <a href={`tel:${business.phone}`} className="hover:text-orange-600 transition-colors font-medium">
+                          {business.phone.replace("+1", "")}
+                        </a>
+                      </li>
+                    )}
+                    {(business?.address || business?.city) && (
+                      <li className="flex items-start gap-3">
+                        <i className="bx bx-map text-slate-400 text-lg shrink-0 mt-0.5" />
+                        <span className="leading-snug">
+                          {business?.address && <span className="block">{business.address}</span>}
+                          {business?.city && (
+                            <span className="block text-slate-500">
+                              {business.city}{business.state ? `, ${business.state}` : ''}{business.zip ? ` ${business.zip}` : ''}
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    )}
+                    {business?.county && (
+                      <li className="flex items-center gap-3">
+                        <i className="bx bx-building text-slate-400 text-lg shrink-0" />
+                        <span className="text-slate-500">{business.county} County</span>
+                      </li>
+                    )}
+                  </ul>
                 </div>
-              )}
 
+                {/* Hours card (if workHours exists) */}
+                {workHoursEntries.length > 0 && (
+                  <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 pb-3">
+                      Business Hours
+                    </h3>
+                    <ul className="space-y-2 text-sm">
+                      {workHoursEntries.map(([day, hours]) => {
+                        const formatted = formatWorkHours ? formatWorkHours(hours) : hours;
+                        return (
+                          <li key={day} className="flex items-center justify-between gap-3">
+                            <span className="font-semibold text-slate-700 capitalize w-24 shrink-0">{day}</span>
+                            <span className="text-slate-500 text-right">{formatted}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Corrections widget (dark bg) */}
+                {!business.deleted_at && (
+                  <div className="bg-slate-900 text-slate-100 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+                    <h3 className="font-serif text-white text-base font-bold">
+                      Incorrect Details?
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      Help us keep this directory accurate. Suggest corrections or claim this listing to manage photos, hours, and descriptions.
+                    </p>
+                    <div className="flex flex-col gap-2 pt-1">
+                      <button
+                        onClick={() => setIsRequestInfoOpen(true)}
+                        className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs border border-slate-700 transition-all text-center"
+                      >
+                        Suggest Edits
+                      </button>
+                      <button
+                        onClick={() => setIsRequestRemovalOpen(true)}
+                        className="w-full bg-orange-600 hover:bg-orange-500 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition-all text-center shadow-sm"
+                      >
+                        Request Listing Removal
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Breadcrumbs in sidebar */}
+                {breadcrumbs && breadcrumbs.length > 0 && (
+                  <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                      Directory Path
+                    </h3>
+                    <nav aria-label="Breadcrumb">
+                      <ol className="space-y-1.5">
+                        <li>
+                          <Link href="/" className="text-xs text-slate-500 hover:text-orange-600 transition-colors font-medium flex items-center gap-1">
+                            <i className="bx bx-home text-sm" />
+                            Home
+                          </Link>
+                        </li>
+                        {breadcrumbs.map((crumb: any, idx: number) => (
+                          <li key={idx} className="flex items-center gap-1.5 pl-3">
+                            <i className="bx bx-chevron-right text-slate-300 text-sm shrink-0" />
+                            {crumb.link ? (
+                              <Link
+                                href={crumb.link}
+                                className="text-xs text-slate-500 hover:text-orange-600 transition-colors font-medium leading-snug"
+                              >
+                                {crumb.name}
+                              </Link>
+                            ) : (
+                              <span className="text-xs text-slate-800 font-bold leading-snug">
+                                {crumb.name}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ol>
+                    </nav>
+                  </div>
+                )}
+
+              </div>
             </div>
 
           </div>
-
-          {/* Near Real Estate (MLS Integration) */}
-          {property?.length > 0 && (
-            <section className="mt-16 pt-8 border-t border-slate-200 space-y-6">
-              <div className="flex justify-between items-end">
-                <div>
-                  <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block font-sans">Real Estate Context</span>
-                  <h2 className="text-2xl font-bold text-slate-900 font-serif">Properties for sale near {business.title}</h2>
-                </div>
-                <Link
-                  href={`/realty/location/${business.county}/${business.city}/${business.zip}`.toLowerCase()}
-                  className="text-sm font-semibold text-orange-705 hover:underline inline-flex items-center gap-1"
-                >
-                  View All Homes <i className="bx bx-right-arrow-alt text-lg align-middle"></i>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {property.slice(0, 3).map((prop) => (
-                  <Link
-                    href={`/realty/${prop.ListingKey}--${slug(prop.UnparsedAddress.replace(/,/g, ", ").trim())}-${prop.ListingId}`}
-                    className="bg-white border border-slate-200 hover:border-slate-350 rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition duration-300 group"
-                    key={prop.ListingId}
-                  >
-                    <div className="relative h-48 w-full bg-slate-900">
-                      <Image
-                        src={prop?.ListPictureURL || "https://picsum.photos/seed/picsum/790/200"}
-                        alt="Property image"
-                        fill
-                        sizes="(max-width: 768px) 100vw, 360px"
-                        style={{ objectFit: "cover" }}
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="bg-slate-950/80 text-white font-bold text-xs px-3 py-1 rounded-full">
-                          ${prop.ListPrice.toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-5 space-y-3">
-                      <h3 className="font-bold text-slate-800 text-sm group-hover:text-orange-705 transition leading-snug line-clamp-1">
-                        {prop.FullStreetAddress ? `${prop.FullStreetAddress}, ${prop.City}, ${defaultShortState}` : prop?.UnparsedAddress.replace(/,/g, ", ").trim()}
-                      </h3>
-                      
-                      <div className="text-[11px] text-slate-500 font-semibold flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
-                        <span>Beds {prop.BedroomsTotal} | Baths {prop.BathroomsFull} | {prop.AreaTotal} sqft</span>
-                        <span className="text-slate-400 font-normal">IDX feed</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
         </div>
+
       </div>
     </>
   );
