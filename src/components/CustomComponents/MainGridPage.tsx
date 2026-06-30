@@ -77,7 +77,7 @@ const MainGridPage = ({ businesses, totalRecords, location, params, searchParams
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                 <GridBlock businesses={businesses} featured_videos={featured_videos} />
                 <div className="pt-6 border-t border-slate-150">
                     <Pagination totalRecords={totalRecords} searchParams={searchParams} />

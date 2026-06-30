@@ -58,12 +58,26 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
     return null;
   }
 
-  const linkColorClass = variant === "home" ? "text-lg-white text-dark" : "text-dark";
+  const navbarWrapperClass = sticky
+    ? "is-sticky navbar-area !bg-white/95 !backdrop-blur-md !shadow-md !border-b !border-slate-200/80 !transition-all !duration-300"
+    : variant === "home"
+      ? "navbar-area !bg-slate-950/20 !backdrop-blur-xs !border-transparent !shadow-none !transition-all !duration-300 absolute top-0 left-0 w-full z-50"
+      : "navbar-area !bg-white/95 !backdrop-blur-md !shadow-xs !border-b !border-slate-200/60";
+
+  const linkColorClass = sticky
+    ? "text-slate-800 hover:text-orange-605 transition-colors duration-200"
+    : variant === "home"
+      ? "text-white hover:text-orange-400 transition-colors duration-200"
+      : "text-slate-800 hover:text-orange-655 transition-colors duration-200";
+
+  const activeColorClass = (variant === "home" && !sticky)
+    ? "text-orange-450 font-extrabold"
+    : "text-orange-600 font-extrabold";
 
   return (
     <>
       <div className={displayAuth ? "body_overlay open" : "body_overlay"}></div>
-      <div className={sticky ? "is-sticky navbar-area text-slate-800" : "navbar-area text-slate-800"}>
+      <div className={navbarWrapperClass}>
         
         {/* Responsive Mobile Nav */}
         <div className="miran-responsive-nav">
@@ -103,16 +117,21 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     <Image
                       src={site.logo}
                       alt={site.Slug || "Logo"}
-                      width={320}
+                      width={280}
                       height={42}
                       priority
-                      style={{ height: 'auto', width: 'auto', maxWidth: '320px' }}
+                      style={{
+                        filter: (variant === "home" && !sticky) ? "brightness(0) invert(1)" : "none",
+                        height: 'auto',
+                        width: 'auto',
+                        maxWidth: '280px'
+                      }}
                     />
                   </Link>
                 )}
               </div>
 
-              <div className="custom-navbar-nav-container flex items-center justify-between flex-1 ml-8">
+              <div className="custom-navbar-nav-container flex items-center justify-between flex-1 ml-10">
                 <ul className="custom-navbar-nav flex items-center gap-6 list-none m-0 p-0">
                   {/* Buy Dropdown */}
                   <li 
@@ -120,7 +139,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("buy")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty' ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
+                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty' ? activeColorClass : linkColorClass}`}>
                       Buy <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "buy" && (
@@ -150,7 +169,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("rent")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty/rent' ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
+                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty/rent' ? activeColorClass : linkColorClass}`}>
                       Rent <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "rent" && (
@@ -177,7 +196,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("businesses")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link href="/business" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/business') || pathname.startsWith('/s/') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
+                    <Link href="/business" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/business') || pathname.startsWith('/s/') ? activeColorClass : linkColorClass}`}>
                       Businesses <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "businesses" && (
@@ -201,7 +220,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("explore")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link href="/blog" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/blog') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
+                    <Link href="/blog" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/blog') ? activeColorClass : linkColorClass}`}>
                       Explore <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "explore" && (
@@ -228,7 +247,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("resources")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link href="/blog" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/resources') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
+                    <Link href="/blog" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/resources') ? activeColorClass : linkColorClass}`}>
                       Resources <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "resources" && (
@@ -255,7 +274,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     onMouseEnter={() => setActiveDropdown("about")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link href="/about" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/about') ? 'text-orange-600 font-extrabold' : linkColorClass}`}>
+                    <Link href="/about" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/about') ? activeColorClass : linkColorClass}`}>
                       About Us <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "about" && (
@@ -278,7 +297,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                 </ul>
 
                 <div className="others-option d-lg-flex align-items-center">
-                  <ul className="flex items-center flex-nowrap gap-3 md:gap-4 list-none m-0 p-0 whitespace-nowrap">
+                  <ul className="flex items-center flex-nowrap gap-4 list-none m-0 p-0 whitespace-nowrap ml-6">
                     <li className="custom-nav-item">
                       <Link href="/realty" className={`custom-nav-link flex items-center gap-1.5 font-bold ${linkColorClass}`}>
                         <i className="bx bx-heart text-xl"></i>
@@ -288,7 +307,11 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     <li className="custom-nav-item" style={{ marginLeft: '4px' }}>
                       <Link 
                         href="/dashboard/add-business" 
-                        className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-4 py-2 font-bold transition text-[11px] md:text-xs tracking-wide shadow-sm"
+                        className={`rounded-xl px-5 py-2.5 font-bold transition text-[11px] md:text-xs tracking-wide shadow-sm ${
+                          (variant === "home" && !sticky)
+                            ? "bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-600/25"
+                            : "bg-slate-900 hover:bg-slate-800 text-white"
+                        }`}
                         style={{ display: 'inline-block' }}
                       >
                         List My Business

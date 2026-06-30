@@ -343,7 +343,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                   fill
                   priority={index === 0}
                   sizes="100vw"
-                  style={{ objectFit: "cover", opacity: 0.35 }}
+                  style={{ objectFit: "cover", opacity: 0.65 }}
                 />
               </SwiperSlide>
             ))}
@@ -355,49 +355,49 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                   fill
                   priority
                   sizes="100vw"
-                  style={{ objectFit: "cover", opacity: 0.35 }}
+                  style={{ objectFit: "cover", opacity: 0.65 }}
                 />
               </SwiperSlide>
             )}
           </Swiper>
         </div>
 
-        {/* Light radial/linear gradient overlay to ensure readable typography */}
-        <div className="absolute inset-0 bg-[#FAF9F6]/90 backdrop-blur-[2px] z-1 pointer-events-none"></div>
+        {/* Premium dark gradient overlay to highlight typography and search bar */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/50 to-slate-950/80 backdrop-blur-[1px] z-1 pointer-events-none"></div>
 
-        <div className="max-w-5xl mx-auto text-center px-4 relative z-10 space-y-6 w-full">
-          <span className="text-[10px] font-bold text-orange-600 uppercase tracking-[0.25em] block mb-2">
+        <div className="max-w-5xl mx-auto text-center px-4 relative z-10 space-y-6 w-full pt-12">
+          <span className="text-[10px] font-bold text-orange-400 uppercase tracking-[0.3em] block mb-2 drop-shadow-sm">
             Hyperlocal · Human · Helpful
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-none font-serif max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight font-serif max-w-3xl mx-auto drop-shadow-lg">
             Discover {siteName.replace("Directions", "")}
-            <span className="block text-orange-600 mt-2 font-serif italic font-normal">Support Local.</span>
+            <span className="block text-orange-550 mt-2 font-serif italic font-normal">Support Local.</span>
           </h1>
-          <p className="text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="text-sm md:text-base text-slate-200 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-md">
             Find the best local businesses, trusted services, and properties that make our community special.
           </p>
 
-          {/* Unified Side-by-Side Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2.5 flex flex-col md:flex-row items-center gap-2 mt-8 w-full">
-            <div className="flex-1 flex items-center px-3 gap-3 w-full">
+          {/* Unified Glassmorphic Side-by-Side Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 p-3 flex flex-col md:flex-row items-center gap-3 mt-10 w-full">
+            <div className="flex-1 flex items-center px-4 gap-3 w-full border-b md:border-b-0 border-slate-100 md:pb-0 pb-2">
               <i className="bx bx-search text-slate-400 text-xl"></i>
               <input
                 type="text"
                 placeholder="What are you looking for?"
-                className="w-full bg-transparent outline-none text-slate-800 text-sm py-2"
+                className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             
-            <div className="hidden md:block h-8 w-px bg-slate-200 mx-1"></div>
+            <div className="hidden md:block h-10 w-px bg-slate-200 mx-2"></div>
             
-            <div className="flex-1 flex items-center px-3 gap-3 w-full">
+            <div className="flex-1 flex items-center px-4 gap-3 w-full md:pt-0 pt-2">
               <i className="bx bx-map text-slate-400 text-xl"></i>
               <input
                 type="text"
                 placeholder="Near me (city, ZIP, or address)"
-                className="w-full bg-transparent outline-none text-slate-800 text-sm py-2"
+                className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
                 value={locationQuery}
                 onChange={(e) => setLocationQuery(e.target.value)}
               />
@@ -418,24 +418,24 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
               </button>
             </div>
             
-            <button type="submit" className="w-full md:w-auto bg-slate-950 hover:bg-slate-900 text-white rounded-xl px-7 py-3 font-semibold transition text-sm flex items-center justify-center gap-2 shrink-0">
+            <button type="submit" className="w-full md:w-auto bg-orange-600 hover:bg-orange-700 text-white rounded-2xl px-9 py-4 font-bold transition text-sm flex items-center justify-center gap-2 shrink-0 shadow-lg shadow-orange-600/30 transform hover:-translate-y-0.5 duration-200">
               <i className="bx bx-search text-base"></i>
               Search
             </button>
           </form>
 
-          {/* Quick Categories list grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 max-w-5xl mx-auto mt-10 w-full">
+          {/* Quick Categories Glassmorphic grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 max-w-5xl mx-auto mt-12 w-full">
             {heroCategories.filter(cat => showRealty || cat.label !== "Real Estate").map((cat) => (
               <Link
                 href={cat.href}
                 key={cat.label}
-                className="bg-white border border-slate-200/80 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition duration-300 group shadow-xs cursor-pointer"
+                className="bg-slate-950/40 backdrop-blur-md border border-white/10 hover:border-orange-500 hover:bg-slate-900/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2.5 transition duration-300 group shadow-lg cursor-pointer hover:-translate-y-1 text-white"
               >
-                <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-slate-950 group-hover:text-white transition duration-300">
+                <span className="w-9 h-9 rounded-lg bg-orange-600/10 text-orange-400 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition duration-300">
                   <i className={`bx ${cat.icon} text-lg`}></i>
                 </span>
-                <span className="text-[11px] text-slate-700 font-bold group-hover:text-orange-600 transition">
+                <span className="text-[11px] text-slate-300 font-bold group-hover:text-white transition">
                   {cat.label}
                 </span>
               </Link>
