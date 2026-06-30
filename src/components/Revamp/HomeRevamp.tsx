@@ -9,6 +9,7 @@ import { getSiteName, ucwords } from "@/lib/helper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import mapDataJson from "@/domains/map.json";
+import toast from "react-hot-toast";
 
 const USStateMap = dynamic(
   () => import("./USStateMap"),
@@ -99,6 +100,7 @@ interface HomeRevampProps {
 
 export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = [], showRealty }: HomeRevampProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
   const [selectedBizCategory, setSelectedBizCategory] = useState("restaurant");
 
   const siteName = getSiteName(site);
@@ -291,244 +293,331 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const queryParams = [];
+    if (searchQuery) queryParams.push(`q=${encodeURIComponent(searchQuery)}`);
+    if (locationQuery) queryParams.push(`l=${encodeURIComponent(locationQuery)}`);
+    
+    const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
     if (showRealty) {
-      window.location.href = `/realty?q=${encodeURIComponent(searchQuery)}`;
+      window.location.href = `/realty${queryString}`;
     } else {
-      window.location.href = `/business?q=${encodeURIComponent(searchQuery)}`;
+      window.location.href = `/business${queryString}`;
     }
   };
+
+  // 8 Quick Categories matching the new design layout
+  const heroCategories = [
+    { label: "Restaurants", icon: "bx-restaurant", href: "/business?category=restaurant" },
+    { label: "Cafes", icon: "bx-coffee", href: "/business?category=coffee-shop" },
+    { label: "Health", icon: "bx-plus-medical", href: "/business?category=medical" },
+    { label: "Home Services", icon: "bx-wrench", href: "/business?category=home-services" },
+    { label: "Real Estate", icon: "bx-home", href: "/realty" },
+    { label: "Retail", icon: "bx-shopping-bag", href: "/business?category=shopping" },
+    { label: "Fitness", icon: "bx-dumbbell", href: "/business?category=fitness" },
+    { label: "More", icon: "bx-dots-horizontal-rounded", href: "/business" },
+  ];
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-slate-800 pb-20">
       
-      {/* H02: Hero Search Banner */}
-      <section className="relative h-[520px] w-full bg-slate-950 flex items-center justify-center overflow-hidden">
+      {/* H02: Premium Light Hero Section */}
+      <section className="relative min-h-[640px] w-full bg-[#FAF9F6] flex flex-col items-center justify-center overflow-hidden pt-28 pb-20 border-b border-slate-200/60">
         
-        {/* Background Image Swiper Slider */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <Swiper
-            spaceBetween={0}
-            centeredSlides={true}
-            autoplay={{
-              delay: 6000,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            modules={[Autoplay, Pagination]}
-            className="w-full h-full"
-          >
-            {site.slides?.swiper?.map((slide: any, index: number) => (
-              <SwiperSlide key={index} className="w-full h-full relative">
-                <Image
-                  src={slide.img}
-                  alt={`${siteName} banner ${index + 1}`}
-                  fill
-                  priority={index === 0}
-                  sizes="100vw"
-                  style={{ objectFit: "cover", opacity: 0.55 }}
-                />
-              </SwiperSlide>
-            ))}
-            {(!site.slides?.swiper || site.slides.swiper.length === 0) && (
-              <SwiperSlide className="w-full h-full relative">
-                <Image
-                  src={featureImage}
-                  alt={`${siteName} hero background`}
-                  fill
-                  priority
-                  sizes="100vw"
-                  style={{ objectFit: "cover", opacity: 0.55 }}
-                />
-              </SwiperSlide>
-            )}
-          </Swiper>
+        {/* Skyline overlay representation at bottom */}
+        <div className="absolute bottom-0 inset-x-0 h-44 z-0 pointer-events-none opacity-[0.06] select-none">
+          <Image
+            src={featureImage}
+            alt="Skyline Backdrop"
+            fill
+            style={{ objectFit: "cover", objectPosition: "bottom" }}
+          />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-900/30 to-slate-950/80 z-1 pointer-events-none"></div>
-        
-        <div className="max-w-4xl mx-auto text-center px-4 relative z-10 space-y-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-none font-serif drop-shadow-lg">
+
+        <div className="max-w-5xl mx-auto text-center px-4 relative z-10 space-y-6 w-full">
+          <span className="text-[10px] font-bold text-orange-600 uppercase tracking-[0.25em] block mb-2">
+            Hyperlocal · Human · Helpful
+          </span>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-none font-serif max-w-3xl mx-auto">
             Discover {siteName.replace("Directions", "")}
-            <span className="block text-[#A3E635] mt-2" style={{ fontFamily: "'Playpen Sans', 'Caveat', 'Great Vibes', 'Brush Script MT', 'Snell Roundhand', cursive", fontStyle: 'italic', fontWeight: 'normal', fontSize: '0.85em' }}>Like a Local</span>
+            <span className="block text-orange-600 mt-2 font-serif italic font-normal">Support Local.</span>
           </h1>
-          <p className="text-md md:text-lg text-slate-200 max-w-2xl mx-auto font-medium drop-shadow-sm">
-            Explore homes, neighborhoods, local businesses and the insider tips that make our community unique.
+          <p className="text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+            Find the best local businesses, trusted services, and properties that make our community special.
           </p>
 
-          {/* Unified Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex items-center bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 gap-2 mt-8">
-            <div className="flex-1 flex items-center px-3 gap-3">
+          {/* Unified Side-by-Side Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200/80 p-2.5 flex flex-col md:flex-row items-center gap-2 mt-8 w-full">
+            <div className="flex-1 flex items-center px-3 gap-3 w-full">
               <i className="bx bx-search text-slate-400 text-xl"></i>
               <input
                 type="text"
-                placeholder="Search homes, businesses, neighborhoods or ZIP codes..."
+                placeholder="What are you looking for?"
                 className="w-full bg-transparent outline-none text-slate-800 text-sm py-2"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button type="submit" className="bg-slate-950 hover:bg-slate-900 text-white rounded-xl px-6 py-3 font-semibold transition text-sm">
-              <i className="bx bx-search text-lg align-middle"></i>
+            
+            <div className="hidden md:block h-8 w-px bg-slate-200 mx-1"></div>
+            
+            <div className="flex-1 flex items-center px-3 gap-3 w-full">
+              <i className="bx bx-map text-slate-400 text-xl"></i>
+              <input
+                type="text"
+                placeholder="Near me (city, ZIP, or address)"
+                className="w-full bg-transparent outline-none text-slate-800 text-sm py-2"
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                      setLocationQuery(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+                      toast.success("Location set from browser gps");
+                    });
+                  }
+                }}
+                className="text-slate-400 hover:text-orange-600 transition"
+                title="Use current location"
+              >
+                <i className="bx bx-target-lock text-lg"></i>
+              </button>
+            </div>
+            
+            <button type="submit" className="w-full md:w-auto bg-slate-950 hover:bg-slate-900 text-white rounded-xl px-7 py-3 font-semibold transition text-sm flex items-center justify-center gap-2 shrink-0">
+              <i className="bx bx-search text-base"></i>
+              Search
             </button>
           </form>
-        </div>
-      </section>
 
-      {/* H03: Quick Search Categories */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 -mt-10 relative z-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {quickCategories.filter(cat => showRealty || cat.label !== "Homes").map((cat) => (
-            <Link
-              href={cat.href}
-              key={cat.label}
-              className="bg-white border border-slate-200 hover:border-orange-550 hover:shadow-lg rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 group"
-            >
-              <span className="w-12 h-12 rounded-xl bg-orange-50 text-orange-700 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition duration-300">
-                <i className={`bx ${cat.icon} text-2xl`}></i>
-              </span>
-              <div>
-                <strong className="text-slate-950 text-sm font-bold block">{cat.label}</strong>
-                <span className="text-xs text-slate-455 font-medium">{cat.copy}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* H04 & H05 Split: Watch Section & Locations Map */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* H04: Watch Section */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-start gap-6">
-          <div className="flex justify-between items-end border-b border-slate-100 pb-4">
-            <div>
-              <h2 className="text-xl font-bold text-slate-950 font-serif">Watch {siteName.replace("Directions", "")}</h2>
-              <p className="text-xs text-slate-400 font-medium mt-1">Local stories, expert tips and community highlights.</p>
-            </div>
-            <Link href="/blog" className="text-xs font-bold text-orange-605 hover:underline">
-              View All Videos &rarr;
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            {/* Left big spotlight video */}
-            <div className="md:col-span-7 space-y-3">
-              {mainSpotlightVideo ? (
-                <Link
-                  href={mainSpotlightVideo.embeded_for === "property" ? `/realty/${mainSpotlightVideo.p_id_b_slug}` : `/s/${mainSpotlightVideo.p_id_b_slug || ""}`}
-                  className="block relative h-64 w-full rounded-2xl bg-slate-950 overflow-hidden group shadow-sm"
-                >
-                  <Image
-                    src={mainSpotlightVideo.thumbnail || "/images/about-img.jpg"}
-                    alt={mainSpotlightVideo.title}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                  
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/30 transition flex items-center justify-center">
-                    <span className="w-14 h-14 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-lg transform group-hover:scale-105 transition duration-300">
-                      <i className="bx bx-play text-3xl pl-1"></i>
-                    </span>
-                  </div>
-
-                  {/* Text Overlay at bottom */}
-                  <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent text-white flex justify-between items-end">
-                    <div>
-                      <span className="text-[9px] uppercase tracking-widest text-orange-400 font-bold block mb-1">
-                        {mainSpotlightVideo.category || "Community Spotlight"}
-                      </span>
-                      <h3 className="font-bold text-white text-sm leading-snug line-clamp-2">
-                        {mainSpotlightVideo.title}
-                      </h3>
-                    </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 bg-black/50 rounded text-slate-200 shrink-0 ml-3">
-                      {mainSpotlightVideo.duration || "2:48"}
-                    </span>
-                  </div>
-                </Link>
-              ) : (
-                <div className="h-64 w-full rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
-                  <i className="bx bx-video-off text-3xl"></i>
-                </div>
-              )}
-            </div>
-
-            {/* Right stack of smaller videos */}
-            <div className="md:col-span-5 flex flex-col justify-between gap-3">
-              {listVideos.map((video) => (
-                <Link
-                  href={video.embeded_for === "property" ? `/realty/${video.p_id_b_slug}` : `/s/${video.p_id_b_slug || ""}`}
-                  className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-150 hover:border-slate-350 hover:bg-slate-50 transition duration-200 group"
-                  key={video.video_id || video.title}
-                >
-                  <div className="relative h-14 w-20 rounded-lg bg-slate-900 overflow-hidden shrink-0">
-                    <Image
-                      src={video.thumbnail || "/images/about-img.jpg"}
-                      alt={video.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                    <div className="absolute inset-0 bg-slate-950/20 flex items-center justify-center">
-                      <span className="w-6 h-6 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-sm">
-                        <i className="bx bx-play text-sm pl-0.5"></i>
-                      </span>
-                    </div>
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-slate-800 text-xs line-clamp-1 group-hover:text-orange-605 transition">
-                      {video.title}
-                    </h4>
-                    <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider block mt-1">
-                      {video.category || "Neighborhood Tour"}
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* H05: Explore Locations Map */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between gap-6">
-          <div className="flex justify-between items-end border-b border-slate-100 pb-4">
-            <div>
-              <h2 className="text-xl font-bold text-slate-950 font-serif">Explore {site?.State || "Maryland"} Locations</h2>
-              <p className="text-xs text-slate-400 font-medium mt-1">Locations Map</p>
-            </div>
-          </div>
-
-          <USStateMap 
-            stateAbbr={site?.ShortState || "MD"} 
-            currentDomain={domain} 
-          />
-
-          {/* Dynamic 2x2 Locations List */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-            {stateSites.map((loc: any) => (
-              <div className="flex items-start gap-2.5" key={loc.name}>
-                <i className={`bx bxs-map ${loc.colorClass} text-base shrink-0 mt-0.5`}></i>
-                <div>
-                  <a href={loc.url} target="_blank" rel="noopener noreferrer" className="hover:text-orange-605 transition block font-bold text-slate-900 text-xs">
-                    {loc.name}
-                  </a>
-                  <span className="text-[10px] text-slate-500 font-medium leading-tight block mt-0.5">
-                    {loc.desc}
-                  </span>
-                </div>
-              </div>
+          {/* Quick Categories list grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 max-w-5xl mx-auto mt-10 w-full">
+            {heroCategories.filter(cat => showRealty || cat.label !== "Real Estate").map((cat) => (
+              <Link
+                href={cat.href}
+                key={cat.label}
+                className="bg-white border border-slate-200/80 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition duration-300 group shadow-xs cursor-pointer"
+              >
+                <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-slate-950 group-hover:text-white transition duration-300">
+                  <i className={`bx ${cat.icon} text-lg`}></i>
+                </span>
+                <span className="text-[11px] text-slate-700 font-bold group-hover:text-orange-600 transition">
+                  {cat.label}
+                </span>
+              </Link>
             ))}
           </div>
 
-          <div className="flex justify-center border-t border-slate-100 pt-3">
-            <Link href="/business" className="text-xs font-bold text-orange-605 hover:underline flex items-center gap-1">
-              View All Locations <i className="bx bx-right-arrow-alt text-sm"></i>
-            </Link>
+          {/* Platform features/pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mt-14 pt-8 border-t border-slate-200/60 w-full text-left">
+            <div className="flex items-start gap-3">
+              <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 shrink-0">
+                <i className="bx bx-award text-base"></i>
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Local First</h4>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
+                  We spotlight the best independent businesses.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 shrink-0">
+                <i className="bx bx-star text-base"></i>
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Trusted Reviews</h4>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
+                  Real experiences from real people in town.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 shrink-0">
+                <i className="bx bx-check-shield text-base"></i>
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Clear &amp; Simple</h4>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
+                  Everything you need, nothing you don't.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 shrink-0">
+                <i className="bx bx-group text-base"></i>
+              </span>
+              <div>
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Built for Community</h4>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
+                  Stronger connections, stronger neighborhoods.
+                </p>
+              </div>
+            </div>
           </div>
+
+        </div>
+      </section>
+
+      {/* H04: Watch Section (Full Width Layout) */}
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-14 space-y-6">
+        <div className="flex justify-between items-end border-b border-slate-200 pb-4">
+          <div>
+            <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block">Video Highlights</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-950 font-serif">Watch {siteName.replace("Directions", "")}</h2>
+            <p className="text-xs text-slate-400 font-medium mt-1">Local stories, expert tips and community highlights.</p>
+          </div>
+          <Link href="/blog" className="text-xs font-bold text-orange-605 hover:underline">
+            View All Videos &rarr;
+          </Link>
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left big spotlight video */}
+          <div className="lg:col-span-8">
+            {mainSpotlightVideo ? (
+              <Link
+                href={mainSpotlightVideo.embeded_for === "property" ? `/realty/${mainSpotlightVideo.p_id_b_slug}` : `/s/${mainSpotlightVideo.p_id_b_slug || ""}`}
+                className="block relative h-[380px] md:h-[480px] w-full rounded-2xl bg-slate-950 overflow-hidden group shadow-sm"
+              >
+                <Image
+                  src={mainSpotlightVideo.thumbnail || "/images/about-img.jpg"}
+                  alt={mainSpotlightVideo.title}
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
+                
+                {/* Play Button Overlay */}
+                <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/30 transition flex items-center justify-center">
+                  <span className="w-16 h-16 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-lg transform group-hover:scale-105 transition duration-300">
+                    <i className="bx bx-play text-4xl pl-1"></i>
+                  </span>
+                </div>
+
+                {/* Text Overlay at bottom */}
+                <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent text-white flex justify-between items-end">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-orange-400 font-bold block mb-1">
+                      {mainSpotlightVideo.category || "Community Spotlight"}
+                    </span>
+                    <h3 className="font-bold text-white text-lg md:text-xl leading-snug line-clamp-2 max-w-xl">
+                      {mainSpotlightVideo.title}
+                    </h3>
+                  </div>
+                  <span className="text-xs font-bold px-3 py-1 bg-black/50 rounded text-slate-200 shrink-0 ml-3">
+                    {mainSpotlightVideo.duration || "2:48"}
+                  </span>
+                </div>
+              </Link>
+            ) : (
+              <div className="h-[380px] md:h-[480px] w-full rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
+                <i className="bx bx-video-off text-4xl"></i>
+              </div>
+            )}
+          </div>
+
+          {/* Right stack of smaller videos */}
+          <div className="lg:col-span-4 flex flex-col justify-between gap-4">
+            {listVideos.map((video) => (
+              <Link
+                href={video.embeded_for === "property" ? `/realty/${video.p_id_b_slug}` : `/s/${video.p_id_b_slug || ""}`}
+                className="flex items-center gap-4 p-3 bg-white rounded-2xl border border-slate-200/80 hover:border-slate-350 hover:bg-slate-50 transition duration-200 group flex-1"
+                key={video.video_id || video.title}
+              >
+                <div className="relative h-20 w-28 rounded-xl bg-slate-900 overflow-hidden shrink-0">
+                  <Image
+                    src={video.thumbnail || "/images/about-img.jpg"}
+                    alt={video.title}
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="absolute inset-0 bg-slate-950/20 flex items-center justify-center">
+                    <span className="w-8 h-8 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-sm">
+                      <i className="bx bx-play text-base pl-0.5"></i>
+                    </span>
+                  </div>
+                </div>
+                <div className="min-w-0 space-y-1">
+                  <h4 className="font-bold text-slate-800 text-sm line-clamp-2 group-hover:text-orange-605 transition">
+                    {video.title}
+                  </h4>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
+                    {video.category || "Neighborhood Tour"}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
+
+      {/* H05: Explore Locations Map (Dedicated Full-Width Section) */}
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-6">
+        <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xs">
+          
+          <div className="border-b border-slate-100 pb-5 mb-6">
+            <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block">Interactive Network</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-950 font-serif">Explore {site?.State || "Maryland"} Locations</h2>
+            <p className="text-xs text-slate-400 font-medium mt-1">Find great places in cities and towns near you.</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* SVG county map (7 cols) */}
+            <div className="lg:col-span-7 flex justify-center bg-slate-50 rounded-2xl p-4 border border-slate-100">
+              <div className="w-full max-w-[500px]">
+                <USStateMap 
+                  stateAbbr={site?.ShortState || "MD"} 
+                  currentDomain={domain} 
+                />
+              </div>
+            </div>
+
+            {/* Active Locations list panel (5 cols) */}
+            <div className="lg:col-span-5 space-y-5">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider block">Active City Portals</h3>
+              
+              <div className="divide-y divide-slate-100">
+                {stateSites.map((loc: any) => (
+                  <a
+                    href={loc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between py-3.5 group hover:px-2 rounded-xl transition-all duration-200 hover:bg-slate-50"
+                    key={loc.name}
+                  >
+                    <div className="flex items-start gap-3">
+                      <i className={`bx bxs-map ${loc.colorClass} text-lg mt-0.5`}></i>
+                      <div>
+                        <strong className="block font-bold text-slate-950 text-sm group-hover:text-orange-605 transition">
+                          {loc.name}
+                        </strong>
+                        <span className="text-xs text-slate-500 font-medium leading-tight block mt-0.5">
+                          {loc.desc}
+                        </span>
+                      </div>
+                    </div>
+                    <i className="bx bx-chevron-right text-slate-300 text-xl group-hover:text-orange-605 group-hover:translate-x-1 transition-all shrink-0"></i>
+                  </a>
+                ))}
+              </div>
+
+              <div className="pt-2 border-t border-slate-100">
+                <Link
+                  href="/business"
+                  className="w-full bg-slate-950 hover:bg-slate-900 text-white font-bold py-3.5 px-6 rounded-xl transition text-sm flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  View All Directory Locations
+                  <i className="bx bx-right-arrow-alt text-lg"></i>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
 
       {/* H06: Featured Homes */}
       {showRealty && (
