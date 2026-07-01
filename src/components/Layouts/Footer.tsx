@@ -154,10 +154,20 @@ const Footer = ({ bgColor }: { bgColor?: string }) => {
               <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-2 max-w-4xl mx-auto">
                 {site.sites.map(({ slug, Slug, url }, index) => {
                   const siteSlug = slug || Slug || `site-${index}`;
-                  const displayName = siteSlug
+                  let displayName = siteSlug
+                    .toLowerCase()
                     .replace('directions.com', ' Directions')
-                    .replace('-', ' ')
+                    .replace(/[-_]/g, ' ')
                     .replace(/\b\w/g, (c) => c.toUpperCase());
+                  
+                  // Apply specific corrections for known compound or uppercase names
+                  displayName = displayName
+                    .replace(/\bKeywest\b/g, 'Key West')
+                    .replace(/\bOceancity\b/g, 'Ocean City')
+                    .replace(/\bDc\b/g, 'DC')
+                    .replace(/\bMls\b/g, 'MLS')
+                    .replace(/\bUs\b/g, 'US');
+
                   return (
                     <React.Fragment key={siteSlug}>
                       {index > 0 && <span className="text-slate-200 text-xs">|</span>}
