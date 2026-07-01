@@ -58,21 +58,11 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
     return null;
   }
 
-  const navbarWrapperClass = sticky
-    ? "is-sticky navbar-area !bg-white/95 !backdrop-blur-md !shadow-md !border-b !border-slate-200/80 !transition-all !duration-300"
-    : variant === "home"
-      ? "navbar-area !bg-slate-950/20 !backdrop-blur-xs !border-transparent !shadow-none !transition-all !duration-300 absolute top-0 left-0 w-full z-50"
-      : "navbar-area !bg-white/95 !backdrop-blur-md !shadow-xs !border-b !border-slate-200/60";
+  const navbarWrapperClass = "navbar-area !bg-white/95 !backdrop-blur-md !shadow-xs !border-b !border-slate-200/60";
 
-  const linkColorClass = sticky
-    ? "text-slate-800 hover:text-orange-605 transition-colors duration-200"
-    : variant === "home"
-      ? "text-white hover:text-orange-400 transition-colors duration-200"
-      : "text-slate-800 hover:text-orange-655 transition-colors duration-200";
+  const linkColorClass = "text-slate-700 hover:text-orange-600 transition-colors duration-200";
 
-  const activeColorClass = (variant === "home" && !sticky)
-    ? "text-orange-450 font-extrabold"
-    : "text-orange-600 font-extrabold";
+  const activeColorClass = "text-orange-600 font-extrabold";
 
   return (
     <>
@@ -121,7 +111,6 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                       height={42}
                       priority
                       style={{
-                        filter: (variant === "home" && !sticky) ? "brightness(0) invert(1)" : "none",
                         height: 'auto',
                         width: 'auto',
                         maxWidth: '280px'
@@ -133,14 +122,14 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
 
               <div className="custom-navbar-nav-container flex items-center justify-between flex-1 ml-10">
                 <ul className="custom-navbar-nav flex items-center gap-6 list-none m-0 p-0">
-                  {/* Buy Dropdown */}
+                  {/* Find a Home */}
                   <li 
                     className="relative group custom-nav-item py-4"
                     onMouseEnter={() => setActiveDropdown("buy")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty' ? activeColorClass : linkColorClass}`}>
-                      Buy <i className="bx bx-chevron-down text-sm"></i>
+                      Find a Home <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "buy" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
@@ -156,48 +145,18 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                         <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Find Realtors
                         </Link>
-                        <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Mortgage Center
-                        </Link>
                       </div>
                     )}
                   </li>
 
-                  {/* Rent Dropdown */}
-                  <li 
-                    className="relative group custom-nav-item py-4"
-                    onMouseEnter={() => setActiveDropdown("rent")}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <Link href="/realty" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname === '/realty/rent' ? activeColorClass : linkColorClass}`}>
-                      Rent <i className="bx bx-chevron-down text-sm"></i>
-                    </Link>
-                    {activeDropdown === "rent" && (
-                      <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
-                        <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Homes for Rent
-                        </Link>
-                        <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Apartments
-                        </Link>
-                        <Link href="/realty" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Rentals Near Me
-                        </Link>
-                        <Link href="/sell" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Landlord Info
-                        </Link>
-                      </div>
-                    )}
-                  </li>
-
-                  {/* Businesses Dropdown */}
+                  {/* Find a Business */}
                   <li 
                     className="relative group custom-nav-item py-4"
                     onMouseEnter={() => setActiveDropdown("businesses")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <Link href="/business" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/business') || pathname.startsWith('/s/') ? activeColorClass : linkColorClass}`}>
-                      Businesses <i className="bx bx-chevron-down text-sm"></i>
+                      Find a Business <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "businesses" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
@@ -207,14 +166,11 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                         <Link href="/dashboard/add-business" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Claim Your Listing
                         </Link>
-                        <Link href="/business" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Advertising Options
-                        </Link>
                       </div>
                     )}
                   </li>
 
-                  {/* Explore Dropdown */}
+                  {/* Explore */}
                   <li 
                     className="relative group custom-nav-item py-4"
                     onMouseEnter={() => setActiveDropdown("explore")}
@@ -228,9 +184,6 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                         <Link href="/business" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Communities
                         </Link>
-                        <Link href="/business" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Things To Do
-                        </Link>
                         <Link href="/blog" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Local News
                         </Link>
@@ -241,7 +194,7 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                     )}
                   </li>
 
-                  {/* Resources Dropdown */}
+                  {/* Resources */}
                   <li 
                     className="relative group custom-nav-item py-4"
                     onMouseEnter={() => setActiveDropdown("resources")}
@@ -258,35 +211,23 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
                         <Link href="/sell" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Selling Guide
                         </Link>
-                        <Link href="/blog" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Local School Info
-                        </Link>
-                        <Link href="/blog" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Moving Guide
-                        </Link>
                       </div>
                     )}
                   </li>
 
-                  {/* About Us Dropdown */}
+                  {/* About */}
                   <li 
                     className="relative group custom-nav-item py-4"
                     onMouseEnter={() => setActiveDropdown("about")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <Link href="/about" className={`custom-nav-link flex items-center gap-1 cursor-pointer font-bold bg-transparent border-0 outline-none ${pathname.startsWith('/about') ? activeColorClass : linkColorClass}`}>
-                      About Us <i className="bx bx-chevron-down text-sm"></i>
+                      About <i className="bx bx-chevron-down text-sm"></i>
                     </Link>
                     {activeDropdown === "about" && (
                       <div className="absolute top-full left-0 mt-0 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-2 transition-all duration-200">
                         <Link href="/about" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Our Story
-                        </Link>
-                        <Link href="/about" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Meet the Team
-                        </Link>
-                        <Link href="/about" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
-                          Careers
                         </Link>
                         <Link href="/about" className="block px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-orange-600">
                           Contact Us
@@ -298,20 +239,10 @@ const Navbar: React.FC<NavbarProps> = ({ variant = "inner" }) => {
 
                 <div className="others-option d-lg-flex align-items-center">
                   <ul className="flex items-center flex-nowrap gap-4 list-none m-0 p-0 whitespace-nowrap ml-6">
-                    <li className="custom-nav-item">
-                      <Link href="/realty" className={`custom-nav-link flex items-center gap-1.5 font-bold ${linkColorClass}`}>
-                        <i className="bx bx-heart text-xl"></i>
-                        <span>Saved</span>
-                      </Link>
-                    </li>
                     <li className="custom-nav-item" style={{ marginLeft: '4px' }}>
                       <Link 
                         href="/dashboard/add-business" 
-                        className={`rounded-xl px-5 py-2.5 font-bold transition text-[11px] md:text-xs tracking-wide shadow-sm ${
-                          (variant === "home" && !sticky)
-                            ? "bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-600/25"
-                            : "bg-slate-900 hover:bg-slate-800 text-white"
-                        }`}
+                        className="rounded-xl px-5 py-2.5 font-bold transition text-[11px] md:text-xs tracking-wide shadow-md bg-orange-600 hover:bg-orange-700 text-white shadow-orange-600/25"
                         style={{ display: 'inline-block' }}
                       >
                         List My Business
