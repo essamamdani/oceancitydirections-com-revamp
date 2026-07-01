@@ -330,8 +330,7 @@ h3,
   padding-bottom: 64px !important;
 }
 
-.w-100,
-.w-full {
+.w-100 {
   width: 100% !important;
 }
 

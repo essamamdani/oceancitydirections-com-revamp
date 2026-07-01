@@ -410,7 +410,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 {/* Search Button */}
                 <button 
                   type="submit" 
-                  className="w-full md:w-auto md:flex-none bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 py-3 font-bold transition text-sm flex items-center justify-center gap-2 shrink-0 shadow-md shadow-orange-600/20 transform hover:-translate-y-0.5 duration-200"
+                  className="w-full md:!w-auto md:flex-none bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 py-3 font-bold transition text-sm flex items-center justify-center gap-2 shrink-0 shadow-md shadow-orange-600/20 transform hover:-translate-y-0.5 duration-200"
                 >
                   <i className="bx bx-search text-base"></i>
                   Search
