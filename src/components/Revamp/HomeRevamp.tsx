@@ -361,8 +361,8 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
               </div>
 
               {/* Mockup Search Form */}
-              <form onSubmit={handleSearchSubmit} className="bg-white rounded-2xl shadow-xl border border-slate-200 p-2.5 flex flex-col md:flex-row items-center gap-3 w-full">
-                <div className="flex-1 flex items-center px-3 gap-3 w-full border-b md:border-b-0 border-slate-100 md:pb-0 pb-2">
+              <form onSubmit={handleSearchSubmit} className="max-w-3xl bg-white rounded-2xl shadow-xl border border-slate-200 p-2.5 flex flex-col md:flex-row items-center gap-3 w-full">
+                <div className="flex-1 flex items-center px-3 gap-3 w-full md:w-auto border-b md:border-b-0 border-slate-100 md:pb-0 pb-2 min-w-0">
                   <i className="bx bx-search text-slate-400 text-xl"></i>
                   <input
                     type="text"
@@ -371,7 +371,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                         ? "Search by address, subdivision, or MLS ID..."
                         : "What are you looking for?"
                     }
-                    className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
+                    className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -379,12 +379,12 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                 
                 <div className="hidden md:block h-8 w-px bg-slate-200 mx-1"></div>
                 
-                <div className="flex-1 flex items-center px-3 gap-3 w-full md:pt-0 pt-2">
+                <div className="flex-1 flex items-center px-3 gap-3 w-full md:w-auto md:pt-0 pt-2 min-w-0">
                   <i className="bx bx-map text-slate-400 text-xl"></i>
                   <input
                     type="text"
                     placeholder="Location (city, ZIP, or state)"
-                    className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
+                    className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
                     value={locationQuery || `${mockCity}, ${mockState}`}
                     onChange={(e) => setLocationQuery(e.target.value)}
                   />
