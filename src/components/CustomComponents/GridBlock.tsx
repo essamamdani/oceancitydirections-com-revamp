@@ -216,15 +216,12 @@ function BusinessInfo({ business }) {
   );
 }
 
-function BusinessImageFallback({ business }) {
+function BusinessImageFallback({ business, index }) {
   const title = business?.title || 'Local Business';
-  const category = business?.categories?.name || business?.category || 'Local Business';
 
   return (
-    <div className="rd-business-photo-fallback" aria-hidden="true">
-      <span>{title.slice(0, 1).toUpperCase()}</span>
-      <strong>{category}</strong>
-      <small>{business?.city ? ucwords(business.city) : 'Local listing'}</small>
+    <div className={`biz-logo logo-${(index ?? 0) % 4}`} style={{ height: '200px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0' }}>
+      {title}
     </div>
   );
 }
@@ -275,11 +272,16 @@ const GridBlock = ({ businesses, featured_videos }) => {
       ))}
 
       {businesses?.filter((b) => !b?.deleted_at).map((business, index) => {
-        const listingImg = business.claimed_approval && business.main_image ? business.main_image : null;
+        const listingImg = business.main_image;
+        const isCdn = listingImg && 
+          (listingImg.startsWith('http') || listingImg.includes('cdn')) && 
+          !listingImg.startsWith('/api/og') && 
+          !listingImg.includes('placeholder') &&
+          listingImg !== '/images/about-img.jpg';
         return (
         <div className="single-listings-box rd-business-card" key={business.id}>
             <div className="listings-image">
-              {listingImg ? (
+              {isCdn ? (
                 <Image
                   src={listingImg}
                   alt={business?.title || "image"}
@@ -289,7 +291,7 @@ const GridBlock = ({ businesses, featured_videos }) => {
                   style={{ objectFit: "cover", height: "200px" }}
                 />
               ) : (
-                <BusinessImageFallback business={business} />
+                <BusinessImageFallback business={business} index={index} />
               )}
               <Link
                 href={`/s/${business.update_slug || business.slug}`}

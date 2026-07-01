@@ -106,7 +106,14 @@ export default async function NoRecordFound({ params, site }) {
           </div>
 
           <div className="row">
-            {nearestBusinesses.map((business) => (
+            {nearestBusinesses.map((business, index) => {
+              const listingImg = business.main_image;
+              const isCdn = listingImg && 
+                (listingImg.startsWith('http') || listingImg.includes('cdn')) && 
+                !listingImg.startsWith('/api/og') && 
+                !listingImg.includes('placeholder') &&
+                listingImg !== '/images/about-img.jpg';
+              return (
               <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={business.id}>
                 <div 
                   className="business-card h-100"
@@ -125,13 +132,19 @@ export default async function NoRecordFound({ params, site }) {
                   >
                     {/* Image */}
                     <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
-                      <Image
-                        src={business.main_image || `/api/og?title=${encodeURIComponent(business.title || 'Business')}`}
-                        alt={business.title}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
+                      {isCdn ? (
+                        <Image
+                          src={listingImg}
+                          alt={business.title}
+                          fill
+                          style={{ objectFit: "cover" }}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div className={`biz-logo logo-${index % 4}`} style={{ height: '200px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {business.title}
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}
@@ -178,7 +191,8 @@ export default async function NoRecordFound({ params, site }) {
                   </Link>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
