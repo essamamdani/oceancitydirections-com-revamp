@@ -248,19 +248,25 @@ const AuthForm = ({ initialMode = "login", onSuccess, role = "consumer", default
     };
 
     return (
-        <div className="auth-form-container">
-            <h3 className="mb-4 text-center">
-                {mode === "login" && "Login"}
-                {mode === "register" && "Create Account"}
-            </h3>
+        <div className="w-full max-w-md mx-auto bg-white/95 backdrop-blur-md rounded-3xl border border-slate-200/80 shadow-2xl p-8 space-y-6">
+            <div className="text-center space-y-2">
+                <h3 className="text-2xl font-extrabold text-slate-900 font-serif">
+                    {mode === "login" && "Welcome Back"}
+                    {mode === "register" && "Create Account"}
+                </h3>
+                <p className="text-xs font-semibold text-slate-400">
+                    {mode === "login" && "Login to access your local directory dashboard"}
+                    {mode === "register" && "Join our local discovery and property network"}
+                </p>
+            </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="space-y-4 pt-2">
                 {mode === "register" && (
-                    <div className="mb-3">
-                        <label className="form-label">Full Name</label>
+                    <div className="space-y-1.5">
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200 placeholder-slate-400"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
                             required
@@ -269,24 +275,24 @@ const AuthForm = ({ initialMode = "login", onSuccess, role = "consumer", default
                     </div>
                 )}
 
-                <div className="mb-3">
-                    <label className="form-label">Email address</label>
+                <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Email address</label>
                     <input
                         type="email"
-                        className="form-control"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200 placeholder-slate-400"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        placeholder="Email address"
+                        placeholder="your@email.com"
                     />
                 </div>
 
                 {mode === "register" && (
-                    <div className="mb-3">
-                        <label className="form-label">Phone Number</label>
+                    <div className="space-y-1.5">
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Phone Number</label>
                         <input
                             type="tel"
-                            className="form-control"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200 placeholder-slate-400"
                             value={phone}
                             onChange={(e) => {
                                 const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
@@ -302,25 +308,25 @@ const AuthForm = ({ initialMode = "login", onSuccess, role = "consumer", default
                     </div>
                 )}
 
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
+                <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
                     <input
                         type="password"
-                        className="form-control"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200 placeholder-slate-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        placeholder="Password"
+                        placeholder="••••••••"
                         minLength={8}
                     />
                 </div>
 
                 {mode === "register" && (
-                    <>
-                        <div className="mb-3">
-                            <label className="form-label">Profession</label>
+                    <div className="space-y-4">
+                        <div className="space-y-1.5">
+                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Profession</label>
                             <select 
-                                className="form-select"
+                                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200"
                                 value={profession}
                                 onChange={(e) => setProfession(e.target.value)}
                                 required
@@ -339,10 +345,10 @@ const AuthForm = ({ initialMode = "login", onSuccess, role = "consumer", default
                         </div>
 
                         {subCategories.length > 0 && (
-                            <div className="mb-3">
-                                <label className="form-label">Sub Profession</label>
+                            <div className="space-y-1.5">
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Sub Profession</label>
                                 <select 
-                                    className="form-select"
+                                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200"
                                     value={subProfession}
                                     onChange={(e) => setSubProfession(e.target.value)}
                                     required
@@ -354,58 +360,63 @@ const AuthForm = ({ initialMode = "login", onSuccess, role = "consumer", default
                                 </select>
                             </div>
                         )}
-                    </>
+                    </div>
                 )}
 
                 {mode === "login" && (
-                    <div className="d-flex justify-content-between mb-3">
+                    <div className="flex items-center justify-between text-xs font-bold pt-1">
                         <button 
                             type="button" 
-                            className="btn btn-link p-0 text-decoration-none" 
-                            style={{ color: 'var(--mainColor)', fontSize: '14px' }}
+                            className="text-orange-600 hover:text-orange-700 transition" 
                             onClick={handleResendVerification}
                             disabled={loading}
                         >
-                            Resend Verification Email
+                            Resend Verification
                         </button>
-                        <Link href="/forgot-password" style={{ color: 'var(--mainColor)', fontSize: '14px' }}>
+                        <Link href="/forgot-password" className="text-slate-500 hover:text-orange-600 transition">
                             Forgot Password?
                         </Link>
                     </div>
                 )}
 
                 {mode === "register" && (
-                    <div className="mb-3 d-flex align-items-start gap-2">
+                    <div className="flex items-start gap-2 pt-1">
                         <input
                             type="checkbox"
                             id="tos-accept"
                             checked={tosAccepted}
                             onChange={(e) => setTosAccepted(e.target.checked)}
-                            style={{ marginTop: '3px', flexShrink: 0 }}
+                            className="mt-0.5 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
+                            style={{ flexShrink: 0 }}
                         />
-                        <label htmlFor="tos-accept" style={{ fontSize: '14px', lineHeight: 1.4, cursor: 'pointer' }}>
+                        <label htmlFor="tos-accept" className="text-xs font-semibold text-slate-500 leading-snug cursor-pointer select-none">
                             I agree to the{' '}
-                            <Link href="/terms" target="_blank" style={{ color: 'var(--mainColor)' }}>
+                            <Link href="/terms" target="_blank" className="text-orange-600 hover:underline">
                                 Terms of Service
                             </Link>
                         </label>
                     </div>
                 )}
 
-                <Turnstile onVerify={setCfToken} siteKey={site?.turnstile_site_key} />
+                <div className="pt-2">
+                    <Turnstile onVerify={setCfToken} siteKey={site?.turnstile_site_key} />
+                </div>
 
-                <button type="submit" className="default-btn w-100" disabled={loading}>
+                <button 
+                    type="submit" 
+                    className="w-full bg-[#08738a] hover:bg-[#075362] text-white rounded-xl py-3.5 font-bold transition text-xs uppercase tracking-wider shadow-md shadow-[#08738a]/20 transform hover:-translate-y-0.5 duration-200 flex items-center justify-center gap-2"
+                    disabled={loading}
+                >
                     {loading ? "Processing..." : mode === "login" ? "Login" : "Create Account"}
                 </button>
             </form>
 
-            <div className="mt-4 text-center">
+            <div className="text-center text-xs font-semibold text-slate-400 border-t border-slate-100 pt-4">
                 {mode === "login" ? (
                     <div>
                         Don't have an account?{" "}
                         <button 
-                            className="btn btn-link p-0 text-decoration-none" 
-                            style={{ color: 'var(--mainColor)', fontWeight: 'bold' }} 
+                            className="text-orange-600 hover:text-orange-700 font-bold ml-1 hover:underline" 
                             onClick={() => setMode("register")}
                         >
                             Register
@@ -415,8 +426,7 @@ const AuthForm = ({ initialMode = "login", onSuccess, role = "consumer", default
                     <div>
                         Already have an account?{" "}
                         <button 
-                            className="btn btn-link p-0 text-decoration-none" 
-                            style={{ color: 'var(--mainColor)', fontWeight: 'bold' }} 
+                            className="text-orange-600 hover:text-orange-700 font-bold ml-1 hover:underline" 
                             onClick={() => setMode("login")}
                         >
                             Login

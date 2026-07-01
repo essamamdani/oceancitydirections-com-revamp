@@ -62,45 +62,42 @@ function UpdatePasswordForm() {
       setLoading(false)
     }
   }
-
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-[#dfeee9] via-[#fbfaf7] to-[#dfeee9]/30 flex flex-col font-sans">
       <Navbar />
-      <div className="pt-100 pb-100">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-6">
-              <div className="card shadow-sm border-0">
-                <div className="card-body p-4">
-                  <h3 className="text-center mb-4">Update Password</h3>
-                  <form onSubmit={handleUpdatePassword}>
-                    <div className="mb-3">
-                      <label className="form-label">New Password</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={6}
-                        placeholder="Enter your new password"
-                      />
-                    </div>
-                    <button 
-                      type="submit" 
-                      className="default-btn w-100" 
-                      disabled={loading}
-                    >
-                      {loading ? 'Updating...' : 'Update Password'}
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
+      <div className="flex-1 flex items-center justify-center py-16 px-4">
+        <div className="w-full max-w-md mx-auto bg-white/95 backdrop-blur-md rounded-3xl border border-slate-200/80 shadow-2xl p-8 space-y-6">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl font-extrabold text-slate-900 font-serif">Update Password</h3>
+            <p className="text-xs font-semibold text-slate-400">
+              Enter your new password below to update your account
+            </p>
           </div>
+          
+          <form onSubmit={handleUpdatePassword} className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">New Password</label>
+              <input
+                type="password"
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition duration-200 placeholder-slate-400"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                placeholder="Enter your new password"
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="w-full bg-[#08738a] hover:bg-[#075362] text-white rounded-xl py-3.5 font-bold transition text-xs uppercase tracking-wider shadow-md shadow-[#08738a]/20 transform hover:-translate-y-0.5 duration-200" 
+              disabled={loading}
+            >
+              {loading ? 'Updating...' : 'Update Password'}
+            </button>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

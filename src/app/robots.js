@@ -8,6 +8,16 @@ export default async function robots() {
   const headersList = await headers();
   const domain = headersList.get('host') || '';
   
+  // If password protection is configured, block all crawlers
+  if (process.env.SITE_PASSWORD) {
+    return {
+      rules: {
+        userAgent: '*',
+        disallow: '/',
+      },
+    };
+  }
+
   // Fetch site config to check status
   const siteConfig = await fetchSiteConfigByDomain(domain);
   const status = getSiteStatus(siteConfig);

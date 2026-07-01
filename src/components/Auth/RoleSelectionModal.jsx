@@ -34,54 +34,61 @@ const RoleSelectionModal = ({ isOpen, onClose, onContinue, initialRole }) => {
   ];
 
   return (
-    <div className="modal fade show" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1055 }}>
-      <div className="modal-dialog modal-dialog-centered modal-lg">
-        <div className="modal-content">
-           <div className="modal-header border-0 pb-0">
-             <button type="button" className="btn-close" onClick={onClose}></button>
-           </div>
-          <div className="modal-body text-center pt-0 pb-5 px-5">
-            <h3 className="mb-2">Join as</h3>
-            <p className="text-muted mb-4">What's the Best Match? All have access to Property and Business Search</p>
-            
-            <div className="d-flex flex-column gap-3">
-              {roles.map((role) => (
-                <div 
-                  key={role.id} 
-                  className={`card p-3 text-start cursor-pointer`}
-                  style={{ 
-                    cursor: 'pointer', 
-                    border: selectedRole === role.id ? '2px solid var(--mainColor)' : '1px solid #dee2e6',
-                    transition: 'all 0.2s',
-                    backgroundColor: selectedRole === role.id ? '#f8f9fa' : 'white'
-                  }}
-                  onClick={() => setSelectedRole(role.id)}
-                >
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0 me-3">
-                      <i className={`${role.icon} fs-1`} style={{ color: selectedRole === role.id ? 'var(--mainColor)' : '#6c757d' }}></i>
-                    </div>
-                    <div>
-                      <h5 className="mb-1" style={{ color: selectedRole === role.id ? 'var(--mainColor)' : 'inherit' }}>{role.title}</h5>
-                      <p className="mb-0 text-muted small">{role.description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-2xl max-w-2xl w-full p-8 relative space-y-6 animate-in fade-in zoom-in-95 duration-200">
+        <button 
+          type="button" 
+          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition" 
+          onClick={onClose}
+          aria-label="Close modal"
+        >
+          <i className="bx bx-x text-2xl"></i>
+        </button>
 
-            <button 
-              className="default-btn w-100 mt-4" 
-              onClick={() => onContinue(selectedRole)}
-            >
-              Continue <i className="bx bx-right-arrow-alt"></i>
-            </button>
-            
-            <p className="mt-3 text-muted small">
-              Tip: click outside the modal or press Esc to close.
-            </p>
-          </div>
+        <div className="text-center space-y-2">
+          <h3 className="text-2xl font-extrabold text-slate-900 font-serif">Join as</h3>
+          <p className="text-xs font-semibold text-slate-400">
+            What's the Best Match? All have access to Property and Business Search
+          </p>
         </div>
+        
+        <div className="space-y-3">
+          {roles.map((role) => (
+            <div 
+              key={role.id} 
+              className={`p-4 rounded-2xl border-2 text-left cursor-pointer transition-all duration-200 flex items-start gap-4 ${
+                selectedRole === role.id 
+                  ? "border-orange-500 bg-orange-50/10" 
+                  : "border-slate-100 hover:border-slate-200 bg-white"
+              }`}
+              onClick={() => setSelectedRole(role.id)}
+            >
+              <div className={`p-3 rounded-xl shrink-0 ${selectedRole === role.id ? "bg-orange-100 text-orange-600" : "bg-slate-50 text-slate-400"}`}>
+                <i className={`${role.icon} text-2xl`}></i>
+              </div>
+              <div className="space-y-1">
+                <h4 className={`text-sm font-bold ${selectedRole === role.id ? "text-orange-600" : "text-slate-800"}`}>
+                  {role.title}
+                </h4>
+                <p className="text-xs text-slate-400 font-semibold leading-relaxed">
+                  {role.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button 
+          className="w-full bg-[#08738a] hover:bg-[#075362] text-white rounded-xl py-3.5 font-bold transition text-xs uppercase tracking-wider shadow-md shadow-[#08738a]/20 transform hover:-translate-y-0.5 duration-200 flex items-center justify-center gap-2" 
+          onClick={() => onContinue(selectedRole)}
+        >
+          Continue
+          <i className="bx bx-right-arrow-alt text-lg"></i>
+        </button>
+        
+        <p className="text-center text-[10px] text-slate-400 font-semibold">
+          Tip: click the X button or press outside to close this selection.
+        </p>
       </div>
     </div>
   );

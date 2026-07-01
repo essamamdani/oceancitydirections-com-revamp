@@ -349,7 +349,7 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                       setSelectedSearchTab(tab);
                       if (tab === "Homes") setSearchQuery("");
                     }}
-                    className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 border-b-2 -mb-[10px] ${
+                    className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 border-b-2 -mb-[10px] outline-none focus:outline-none focus:ring-0 ${
                       selectedSearchTab === tab
                         ? "border-orange-600 text-orange-600 font-extrabold"
                         : "border-transparent text-slate-400 hover:text-slate-700"
@@ -362,8 +362,9 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
 
               {/* Mockup Search Form */}
               <form onSubmit={handleSearchSubmit} className="max-w-3xl bg-white rounded-2xl shadow-xl border border-slate-200 p-2.5 flex flex-col md:flex-row items-center gap-3 w-full">
-                <div className="flex-1 flex items-center px-3 gap-3 w-full md:w-auto border-b md:border-b-0 border-slate-100 md:pb-0 pb-2 min-w-0">
-                  <i className="bx bx-search text-slate-400 text-xl"></i>
+                {/* Search input container */}
+                <div className="flex items-center px-3 gap-3 w-full md:flex-1 md:w-0 border-b md:border-b-0 border-slate-100 md:pb-0 pb-2 min-w-0">
+                  <i className="bx bx-search text-slate-400 text-xl shrink-0"></i>
                   <input
                     type="text"
                     placeholder={
@@ -371,20 +372,21 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                         ? "Search by address, subdivision, or MLS ID..."
                         : "What are you looking for?"
                     }
-                    className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
+                    className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400 min-w-0"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
                 
-                <div className="hidden md:block h-8 w-px bg-slate-200 mx-1"></div>
+                <div className="hidden md:block h-8 w-px bg-slate-200 mx-1 shrink-0"></div>
                 
-                <div className="flex-1 flex items-center px-3 gap-3 w-full md:w-auto md:pt-0 pt-2 min-w-0">
-                  <i className="bx bx-map text-slate-400 text-xl"></i>
+                {/* Location input container */}
+                <div className="flex items-center px-3 gap-3 w-full md:flex-1 md:w-0 md:pt-0 pt-2 min-w-0">
+                  <i className="bx bx-map text-slate-400 text-xl shrink-0"></i>
                   <input
                     type="text"
                     placeholder="Location (city, ZIP, or state)"
-                    className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400"
+                    className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400 min-w-0"
                     value={locationQuery || `${mockCity}, ${mockState}`}
                     onChange={(e) => setLocationQuery(e.target.value)}
                   />
@@ -398,14 +400,18 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
                         });
                       }
                     }}
-                    className="text-slate-400 hover:text-orange-600 transition"
+                    className="text-slate-400 hover:text-orange-600 transition shrink-0"
                     title="Use current location"
                   >
-                    <i className="bx bx-target-lock text-lg"></i>
+                    <i className="bx bx-target-lock text-lg text-slate-400"></i>
                   </button>
                 </div>
                 
-                <button type="submit" className="w-full md:w-auto bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 py-3 font-bold transition text-sm flex items-center justify-center gap-2 shrink-0 shadow-md shadow-orange-600/20 transform hover:-translate-y-0.5 duration-200">
+                {/* Search Button */}
+                <button 
+                  type="submit" 
+                  className="w-full md:w-auto md:flex-none bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 py-3 font-bold transition text-sm flex items-center justify-center gap-2 shrink-0 shadow-md shadow-orange-600/20 transform hover:-translate-y-0.5 duration-200"
+                >
                   <i className="bx bx-search text-base"></i>
                   Search
                 </button>

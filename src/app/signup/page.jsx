@@ -83,20 +83,13 @@ export default function SignupPage() {
       </>
     );
   }
-
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-[#dfeee9] via-[#fbfaf7] to-[#dfeee9]/30 flex flex-col font-sans">
       <Navbar />
-      <div className="pt-100 pb-100">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-6 col-md-12">
-              {!showRoleModal && (
-                <AuthForm initialMode="register" onSuccess={handleSuccess} role={selectedRole} defaultProfessionSlug={selectedProfessionSlug} />
-              )}
-            </div>
-          </div>
-        </div>
+      <div className="flex-1 flex items-center justify-center py-16 px-4">
+        {!showRoleModal && (
+          <AuthForm initialMode="register" onSuccess={handleSuccess} role={selectedRole} defaultProfessionSlug={selectedProfessionSlug} />
+        )}
       </div>
       
       <RoleSelectionModal 
@@ -105,6 +98,6 @@ export default function SignupPage() {
         onContinue={handleRoleContinue}
         initialRole={selectedRole}
       />
-    </>
+    </div>
   );
 }
