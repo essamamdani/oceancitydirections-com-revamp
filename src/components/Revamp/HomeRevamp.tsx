@@ -318,424 +318,246 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
     { label: "More", icon: "bx-dots-horizontal-rounded", href: "/business" },
   ];
 
+  const HeroMap = () => {
+    return (
+      <div className="hero-map" aria-hidden="true">
+        <span className="map-dot dot-1">
+          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Boutique Shops
+        </span>
+        <span className="map-dot dot-2">
+          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Waterfront Dining
+        </span>
+        <span className="map-dot dot-3">
+          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Top Rated Service
+        </span>
+        <span className="map-dot dot-4">
+          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Local Events
+        </span>
+        <span className="map-dot dot-5">
+          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Top Rated Sale
+        </span>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-white font-sans antialiased text-slate-800 pb-20">
-      
-      {/* 1. Hero Section (Mockup-matched 2-Column Layout) */}
-      <section className="relative w-full bg-[#FAF9F6] overflow-hidden pt-32 pb-24 border-b border-slate-200/50">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          {/* Left Column: Typography, Tabs & Search */}
-          <div className="lg:col-span-6 space-y-6 text-left">
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-[0.2em] block">
-              CONNECTING OUR COMMUNITY
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-none font-serif">
+    <div className="app-shell">
+      {/* 1. Hero Section */}
+      <section className="hero-section">
+        <HeroMap />
+        <div className="hero-content wrap">
+          <div className="hero-copy">
+            <span className="eyebrow">Local discovery hub</span>
+            <h1>
               Discover {mockCity}.
-              <span className="block text-orange-600 mt-2 font-serif italic font-normal">Support Local.</span>
+              <br />
+              <span>Support Local.</span>
             </h1>
-            <p className="text-sm md:text-base text-slate-600 max-w-xl leading-relaxed font-medium">
-              Find the best local businesses, trusted services, and properties that make our community special.
-            </p>
-
-            {/* Custom Tab Selectors */}
-            <div className="space-y-4 pt-4">
-              <div className="flex items-center gap-2 border-b border-slate-200/80 pb-2 overflow-x-auto whitespace-nowrap scrollbar-none">
-                {["All", "Homes", "Businesses", "Services", "Events"].map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => {
-                      setSelectedSearchTab(tab);
-                      if (tab === "Homes") setSearchQuery("");
-                    }}
-                    className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-200 border-b-2 -mb-[10px] outline-none focus:outline-none focus:ring-0 ${
-                      selectedSearchTab === tab
-                        ? "border-orange-600 text-orange-600 font-extrabold"
-                        : "border-transparent text-slate-400 hover:text-slate-700"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* Mockup Search Form */}
-              <form onSubmit={handleSearchSubmit} className="max-w-3xl bg-white rounded-2xl shadow-xl border border-slate-200 p-2.5 flex flex-col md:flex-row items-center gap-3 w-full">
-                {/* Search input container */}
-                <div className="flex items-center px-3 gap-3 w-full md:flex-1 md:w-0 border-b md:border-b-0 border-slate-100 md:pb-0 pb-2 min-w-0">
-                  <i className="bx bx-search text-slate-400 text-xl shrink-0"></i>
-                  <input
-                    type="text"
-                    placeholder={
-                      selectedSearchTab === "Homes"
-                        ? "Search by address, subdivision, or MLS ID..."
-                        : "What are you looking for?"
-                    }
-                    className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400 min-w-0"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                <div className="hidden md:block h-8 w-px bg-slate-200 mx-1 shrink-0"></div>
-                
-                {/* Location input container */}
-                <div className="flex items-center px-3 gap-3 w-full md:flex-1 md:w-0 md:pt-0 pt-2 min-w-0">
-                  <i className="bx bx-map text-slate-400 text-xl shrink-0"></i>
-                  <input
-                    type="text"
-                    placeholder="Location (city, ZIP, or state)"
-                    className="w-full bg-transparent outline-none text-slate-800 text-sm py-2 font-medium placeholder-slate-400 min-w-0"
-                    value={locationQuery || `${mockCity}, ${mockState}`}
-                    onChange={(e) => setLocationQuery(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition((pos) => {
-                          setLocationQuery(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
-                          toast.success("Location set from browser gps");
-                        });
-                      }
-                    }}
-                    className="text-slate-400 hover:text-orange-600 transition shrink-0"
-                    title="Use current location"
-                  >
-                    <i className="bx bx-target-lock text-lg text-slate-400"></i>
-                  </button>
-                </div>
-                
-                {/* Search Button */}
-                <button 
-                  type="submit" 
-                  className="w-full md:!w-auto md:flex-none bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 py-3 font-bold transition text-sm flex items-center justify-center gap-2 shrink-0 shadow-md shadow-orange-600/20 transform hover:-translate-y-0.5 duration-200"
-                >
-                  <i className="bx bx-search text-base"></i>
-                  Search
-                </button>
-              </form>
-
-              {/* Popular Searches */}
-              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 pt-2">
-                <span className="text-slate-400">Popular Searches:</span>
-                <Link href="/realty?q=waterfront" className="text-slate-600 hover:text-orange-600">Waterfront Homes</Link>
-                <span>·</span>
-                <Link href="/business?q=restaurant" className="text-slate-600 hover:text-orange-600">Restaurants</Link>
-                <span>·</span>
-                <Link href="/business?q=marina" className="text-slate-600 hover:text-orange-600">Marinas</Link>
-                <span>·</span>
-                <Link href="/business?q=contractor" className="text-slate-600 hover:text-orange-600">Contractors</Link>
-                <span>·</span>
-                <Link href="/business?q=boutique" className="text-slate-600 hover:text-orange-600">Boutique Shops</Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Premium map illustration with interactive pulsing hotspots */}
-          <div className="lg:col-span-6 relative flex justify-center items-center">
-            
-            {/* Soft shadow background decoration */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-orange-100/50 via-slate-100 to-orange-50/30 blur-3xl rounded-full transform -rotate-12 scale-90 -z-1"></div>
-
-            <div className="relative w-full max-w-[540px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white bg-white/50 p-2 group">
-              <Swiper
-                spaceBetween={0}
-                centeredSlides={true}
-                autoplay={{
-                  delay: 6000,
-                  disableOnInteraction: false,
-                }}
-                modules={[Autoplay]}
-                className="w-full h-full rounded-2xl"
-              >
-                {site.slides?.swiper?.map((slide: any, index: number) => (
-                  <SwiperSlide key={index} className="w-full h-full relative">
-                    <Image
-                      src={slide.img}
-                      alt={`${siteName} slide ${index + 1}`}
-                      fill
-                      priority={index === 0}
-                      sizes="(max-width: 768px) 100vw, 540px"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </SwiperSlide>
-                ))}
-                {(!site.slides?.swiper || site.slides.swiper.length === 0) && (
-                  <SwiperSlide className="w-full h-full relative">
-                    <Image
-                      src={featureImage}
-                      alt={`${siteName} illustration`}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, 540px"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </SwiperSlide>
-                )}
-              </Swiper>
-
-              {/* Graphic Hotspots Layer matching the mockup map overlay */}
-              <div className="absolute inset-0 z-10 pointer-events-none">
-                {/* 1. Waterfront Dining Hotspot */}
-                <div className="absolute top-[12%] right-[15%] pointer-events-auto flex items-center gap-1 bg-white/95 backdrop-blur-xs border border-orange-100 px-2.5 py-1 rounded-full shadow-md transform hover:scale-105 transition cursor-pointer">
-                  <span className="w-2 h-2 rounded-full bg-orange-600 animate-ping"></span>
-                  <span className="w-2 h-2 rounded-full bg-orange-600 absolute left-[10px]"></span>
-                  <span className="text-[10px] font-bold text-slate-800 pl-1.5">Waterfront Dining</span>
-                </div>
-
-                {/* 2. Boutique Shops Hotspot */}
-                <div className="absolute top-[20%] left-[25%] pointer-events-auto flex items-center gap-1 bg-white/95 backdrop-blur-xs border border-orange-100 px-2.5 py-1 rounded-full shadow-md transform hover:scale-105 transition cursor-pointer">
-                  <span className="w-2 h-2 rounded-full bg-orange-600 animate-ping"></span>
-                  <span className="w-2 h-2 rounded-full bg-orange-600 absolute left-[10px]"></span>
-                  <span className="text-[10px] font-bold text-slate-800 pl-1.5">Boutique Shops</span>
-                </div>
-
-                {/* 3. Top Rated Service Hotspot */}
-                <div className="absolute bottom-[28%] left-[45%] pointer-events-auto flex items-center gap-1 bg-white/95 backdrop-blur-xs border border-orange-100 px-2.5 py-1 rounded-full shadow-md transform hover:scale-105 transition cursor-pointer">
-                  <span className="w-2 h-2 rounded-full bg-orange-600 animate-ping"></span>
-                  <span className="w-2 h-2 rounded-full bg-orange-600 absolute left-[10px]"></span>
-                  <span className="text-[10px] font-bold text-slate-800 pl-1.5">Top Rated Service</span>
-                </div>
-
-                {/* 4. Local Events Hotspot */}
-                <div className="absolute bottom-[10%] right-[12%] pointer-events-auto flex items-center gap-1 bg-white/95 backdrop-blur-xs border border-orange-100 px-2.5 py-1 rounded-full shadow-md transform hover:scale-105 transition cursor-pointer">
-                  <span className="w-2 h-2 rounded-full bg-orange-600 animate-ping"></span>
-                  <span className="w-2 h-2 rounded-full bg-orange-600 absolute left-[10px]"></span>
-                  <span className="text-[10px] font-bold text-slate-800 pl-1.5">Local Events</span>
-                </div>
-
-                {/* 5. Top Rated Salon Hotspot */}
-                <div className="absolute top-[50%] right-[8%] pointer-events-auto flex items-center gap-1 bg-white/95 backdrop-blur-xs border border-orange-100 px-2.5 py-1 rounded-full shadow-md transform hover:scale-105 transition cursor-pointer">
-                  <span className="w-2 h-2 rounded-full bg-orange-600 animate-ping"></span>
-                  <span className="w-2 h-2 rounded-full bg-orange-600 absolute left-[10px]"></span>
-                  <span className="text-[10px] font-bold text-slate-800 pl-1.5">Top Rated Salon</span>
-                </div>
-              </div>
-            </div>
+            <p>Find the best local businesses, trusted services, and properties that make our community special.</p>
           </div>
           
-        </div>
-      </section>
-
-      {/* 2. Quick Categories Row */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-16">
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6 text-center">
-          {[
-            { label: "Top Rated Businesses", icon: "bx-award", href: "/business" },
-            { label: "Real Estate Listings", icon: "bx-home-alt", href: "/realty" },
-            { label: "Local Services", icon: "bx-wrench", href: "/business?category=home-services" },
-            { label: "Food & Drink", icon: "bx-restaurant", href: "/business?category=restaurant" },
-            { label: "Health & Wellness", icon: "bx-heart", href: "/business?category=medical" },
-            { label: "Home Services", icon: "bx-building-house", href: "/business?category=home-services" },
-            { label: "Events & Things To Do", icon: "bx-calendar-event", href: "/blog" },
-            { label: "Local Guides", icon: "bx-map-alt", href: "/blog" },
-          ].map((cat) => (
-            <Link
-              href={cat.href}
-              key={cat.label}
-              className="flex flex-col items-center gap-3.5 group cursor-pointer"
-            >
-              <span className="w-14 h-14 rounded-2xl bg-white border border-slate-200/80 group-hover:border-orange-500 text-slate-700 group-hover:text-orange-600 flex items-center justify-center shadow-xs transition duration-300 transform group-hover:-translate-y-1">
-                <i className={`bx ${cat.icon} text-2xl`}></i>
-              </span>
-              <span className="text-xs font-bold text-slate-800 group-hover:text-orange-600 transition leading-snug max-w-[100px] mx-auto">
-                {cat.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. Watch Section (Community Spotlight Videos) */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-14 space-y-8">
-        <div className="flex justify-between items-end border-b border-slate-200 pb-4">
-          <div>
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block">COMMUNITY SPOTLIGHT</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 font-serif">Why People Love Living in {mockCity}</h2>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left large video */}
-          <div className="lg:col-span-8">
-            {mainSpotlightVideo ? (
-              <Link
-                href={mainSpotlightVideo.embeded_for === "property" ? `/realty/${mainSpotlightVideo.p_id_b_slug}` : `/s/${mainSpotlightVideo.p_id_b_slug || ""}`}
-                className="block relative h-[380px] md:h-[480px] w-full rounded-3xl bg-slate-950 overflow-hidden group shadow-lg"
-              >
-                <Image
-                  src={mainSpotlightVideo.thumbnail || "/images/about-img.jpg"}
-                  alt={mainSpotlightVideo.title}
-                  fill
-                  style={{ objectFit: "cover" }}
+          {/* Search Dock */}
+          <div className="search-dock">
+            <div className="search-tabs" role="tablist" aria-label="Search categories">
+              {["All", "Homes", "Businesses", "Services", "Events"].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => {
+                    setSelectedSearchTab(tab);
+                    if (tab === "Homes") setSearchQuery("");
+                  }}
+                  className={selectedSearchTab === tab ? "active" : ""}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <form onSubmit={handleSearchSubmit} className="search-row">
+              <label className="search-input">
+                <i className="bx bx-search text-slate-400 text-lg mr-2 shrink-0"></i>
+                <input
+                  type="text"
+                  placeholder={
+                    selectedSearchTab === "Homes"
+                      ? "Search by address, subdivision, or MLS ID..."
+                      : "What are you looking for?"
+                  }
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ background: 'transparent', border: '0', outline: 'none', width: '100%' }}
                 />
-                <div className="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/20 transition flex items-center justify-center">
-                  <span className="w-16 h-16 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-lg transform group-hover:scale-105 transition duration-300">
-                    <i className="bx bx-play text-4xl pl-1"></i>
-                  </span>
-                </div>
-                <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent text-white flex justify-between items-end">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-widest text-orange-400 font-bold block mb-1">
-                      {mainSpotlightVideo.category || "Community Spotlight"}
-                    </span>
-                    <h3 className="font-bold text-white text-lg md:text-xl leading-snug line-clamp-2 max-w-xl">
-                      {mainSpotlightVideo.title}
-                    </h3>
-                  </div>
-                  <span className="text-xs font-bold px-3 py-1 bg-black/50 rounded text-slate-200 shrink-0 ml-3">
-                    {mainSpotlightVideo.duration || "2:48"}
-                  </span>
-                </div>
-              </Link>
-            ) : (
-              <div className="h-[380px] md:h-[480px] w-full rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
-                <i className="bx bx-video-off text-4xl"></i>
-              </div>
-            )}
+              </label>
+              <label className="search-input location-input">
+                <i className="bx bx-map text-slate-400 text-lg mr-2 shrink-0"></i>
+                <input
+                  type="text"
+                  placeholder="Location (city, ZIP, or state)"
+                  value={locationQuery || `${mockCity}, ${mockState}`}
+                  onChange={(e) => setLocationQuery(e.target.value)}
+                  style={{ background: 'transparent', border: '0', outline: 'none', width: '100%' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition((pos) => {
+                        setLocationQuery(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+                        toast.success("Location set from browser gps");
+                      });
+                    }
+                  }}
+                  className="text-slate-400 hover:text-orange-600 transition ml-1 shrink-0"
+                  style={{ background: 'transparent', border: '0' }}
+                  title="Use current location"
+                >
+                  <i className="bx bx-target-lock text-base"></i>
+                </button>
+              </label>
+              <button type="submit" className="search-btn">
+                <i className="bx bx-search text-white mr-1.5"></i>
+                Search
+              </button>
+            </form>
           </div>
 
-          {/* Right smaller list videos */}
-          <div className="lg:col-span-4 flex flex-col justify-between gap-4">
-            {listVideos.map((video) => (
+          {/* Popular searches row */}
+          <div className="popular-row">
+            <strong>Popular Searches:</strong>
+            <Link href="/realty?q=waterfront">Waterfront Homes</Link>
+            <Link href="/business?q=restaurant">Restaurants</Link>
+            <Link href="/business?q=marina">Marinas</Link>
+            <Link href="/business?q=contractor">Contractors</Link>
+            <Link href="/business?q=boutique">Boutique Shops</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Category Rail */}
+      <section className="category-rail wrap">
+        {[
+          { label: "Top Rated Businesses", icon: "bx-award", href: "/business" },
+          { label: "Real Estate Listings", icon: "bx-home-alt", href: "/realty" },
+          { label: "Local Services", icon: "bx-wrench", href: "/business?category=home-services" },
+          { label: "Food & Drink", icon: "bx-restaurant", href: "/business?category=restaurant" },
+          { label: "Health & Wellness", icon: "bx-heart", href: "/business?category=medical" },
+          { label: "Home Services", icon: "bx-building-house", href: "/business?category=home-services" },
+          { label: "Events & Things To Do", icon: "bx-calendar-event", href: "/blog" },
+          { label: "Local Guides", icon: "bx-map-alt", href: "/blog" },
+        ].map((cat) => (
+          <Link className="category-item" key={cat.label} href={cat.href}>
+            <span><i className={`bx ${cat.icon}`}></i></span>
+            <strong>{cat.label}</strong>
+          </Link>
+        ))}
+      </section>
+
+      {/* 3. Watch Section (Spotlight Videos) */}
+      {featuredVideos.length > 0 && (
+        <section className="video-section wrap split-grid">
+          <Link
+            href={featuredVideos[0].embeded_for === "property" ? `/realty/${featuredVideos[0].p_id_b_slug}` : `/s/${featuredVideos[0].p_id_b_slug || ""}`}
+            className="video-main scenic-card"
+            style={{
+              backgroundImage: `url(${featuredVideos[0].thumbnail || "/images/about-img.jpg"})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="play-circle">
+              <i className="bx bx-play text-slate-900 text-3xl pl-1"></i>
+            </div>
+            <div className="video-caption">
+              <span>Community Spotlight</span>
+              <h2>{featuredVideos[0].title}</h2>
+            </div>
+            <time>{featuredVideos[0].duration || "2:48"}</time>
+          </Link>
+          <div className="video-list">
+            {featuredVideos.slice(1, 4).map((video, index) => (
               <Link
                 href={video.embeded_for === "property" ? `/realty/${video.p_id_b_slug}` : `/s/${video.p_id_b_slug || ""}`}
-                className="flex items-center gap-4 p-3 bg-white rounded-2xl border border-slate-200 hover:border-slate-350 hover:bg-slate-50 transition duration-200 group flex-1"
-                key={video.video_id || video.title}
+                className="video-mini"
+                key={video.video_id || index}
               >
-                <div className="relative h-20 w-28 rounded-xl bg-slate-900 overflow-hidden shrink-0">
-                  <Image
-                    src={video.thumbnail || "/images/about-img.jpg"}
-                    alt={video.title}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                  <div className="absolute inset-0 bg-slate-950/20 flex items-center justify-center">
-                    <span className="w-8 h-8 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-sm">
-                      <i className="bx bx-play text-base pl-0.5"></i>
-                    </span>
-                  </div>
-                </div>
-                <div className="min-w-0 space-y-1">
-                  <h4 className="font-bold text-slate-800 text-sm line-clamp-2 group-hover:text-orange-600 transition">
-                    {video.title}
-                  </h4>
-                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
-                    {video.category || "Neighborhood Tour"}
-                  </span>
+                <span className="thumb">
+                  <i className="bx bx-play text-white text-base"></i>
+                </span>
+                <div>
+                  <h3>{video.title}</h3>
+                  <p>{video.category || "Neighborhood Tour"}</p>
                 </div>
               </Link>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* 4. Explore Location Portal & Maps Section (Map and filters widget) */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          
-          {/* Left panel: Info & Statistics */}
-          <div className="lg:col-span-4 flex flex-col justify-between space-y-6 bg-[#FAF9F6] border border-slate-200/60 p-8 rounded-3xl shadow-xs">
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block">
-                EXPLORE {mockCity.toUpperCase()}
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-950 font-serif">Explore {mockState === "MD" ? "Maryland" : mockState} Locations</h2>
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
-                Interactive map, local insights, and curated favorites—discover what {mockCity} has to offer.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/business"
-                  className="inline-block border border-orange-500 hover:bg-orange-500 text-orange-600 hover:text-white font-bold py-2.5 px-6 rounded-xl transition text-xs"
-                >
-                  View All Areas
-                </Link>
+      {/* 4. Explore Section with USStateMap and Filters */}
+      <section className="explore-section soft-section">
+        <div className="wrap explore-grid">
+          <div className="section-intro">
+            <span className="eyebrow orange">Explore {mockCity}</span>
+            <h2>
+              Explore {mockState === "MD" ? "Maryland" : mockState}
+              <br />
+              Locations
+            </h2>
+            <p>Interactive map, local insights, and curated favorites — discover what {mockCity} has to offer.</p>
+            <Link className="outline-btn" href="/business">
+              View All Areas
+            </Link>
+            <div className="stat-row mini">
+              <div className="stat-item">
+                <strong>12+</strong>
+                <small>Neighborhoods</small>
               </div>
-            </div>
-
-            {/* Mockup bottom counter statistics */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80">
-              <div>
-                <strong className="text-lg md:text-xl font-bold text-slate-900 block">12+</strong>
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Neighborhoods</span>
+              <div className="stat-item">
+                <strong>850+</strong>
+                <small>Local Businesses</small>
               </div>
-              <div>
-                <strong className="text-lg md:text-xl font-bold text-slate-900 block">850+</strong>
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Local Biz</span>
-              </div>
-              <div>
-                <strong className="text-lg md:text-xl font-bold text-slate-900 block">1.2K+</strong>
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Homes Listed</span>
+              <div className="stat-item">
+                <strong>1.2K+</strong>
+                <small>Homes For Sale</small>
               </div>
             </div>
           </div>
-
-          {/* Right panel: Leaflet Map with Floating Mockup Filter Widget */}
-          <div className="lg:col-span-8 relative rounded-3xl overflow-hidden min-h-[400px] border border-slate-200 shadow-sm bg-slate-50">
-            <USStateMap 
-              stateAbbr={site?.ShortState || "MD"} 
-              currentDomain={domain} 
-            />
-
-            {/* Floating Filter Widget matching the mockup design exactly */}
-            <div className="absolute right-4 top-4 z-10 w-52 bg-white/95 backdrop-blur-xs rounded-2xl shadow-xl border border-slate-100 p-4 space-y-3 pointer-events-auto">
-              <strong className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Map Filters</strong>
-              
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
-                  <span className="w-3 h-3 rounded-full bg-blue-500 block"></span>
-                  <input type="checkbox" defaultChecked className="hidden" />
-                  Homes for Sale
+          <div className="map-board">
+            <USStateMap stateAbbr={site?.ShortState || "MD"} currentDomain={domain} />
+            <div className="map-filter-card">
+              <h3>Map Filters</h3>
+              {[
+                { label: "Homes for Sale", color: "color-0" },
+                { label: "Businesses", color: "color-1" },
+                { label: "Services", color: "color-2" },
+                { label: "Restaurants", color: "color-3" },
+                { label: "Events", color: "color-4" },
+              ].map((filter) => (
+                <label key={filter.label}>
+                  <span className={`legend-dot ${filter.color}`}></span>
+                  {filter.label}
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500 block"></span>
-                  <input type="checkbox" defaultChecked className="hidden" />
-                  Businesses
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
-                  <span className="w-3 h-3 rounded-full bg-purple-500 block"></span>
-                  <input type="checkbox" defaultChecked className="hidden" />
-                  Services
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
-                  <span className="w-3 h-3 rounded-full bg-orange-500 block"></span>
-                  <input type="checkbox" defaultChecked className="hidden" />
-                  Restaurants
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
-                  <span className="w-3 h-3 rounded-full bg-amber-500 block"></span>
-                  <input type="checkbox" defaultChecked className="hidden" />
-                  Events
-                </label>
-              </div>
-
-              <div className="pt-2 border-t border-slate-100">
-                <button type="button" className="w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-xl transition text-[10px] uppercase tracking-wider block">
-                  Share Results
-                </button>
-              </div>
+              ))}
+              <button type="button">
+                Show Results <small>1,348 results</small>
+              </button>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* 5. Featured Listings Section */}
+      {/* 5. Featured Listings (Homes You'll Love) */}
       {showRealty && (
-        <section className="max-w-7xl mx-auto px-4 md:px-8 py-14 space-y-6">
-          <div className="flex justify-between items-end border-b border-slate-200 pb-4">
+        <section className="wrap listing-section">
+          <div className="section-header">
             <div>
-              <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block font-sans">FEATURED LISTINGS</span>
-              <h2 className="text-3xl font-bold text-slate-950 font-serif">Homes You'll Love</h2>
+              <span className="eyebrow">Featured Listings</span>
+              <h2>Homes You’ll Love</h2>
             </div>
-            <Link href="/realty" className="text-xs font-bold text-orange-605 hover:underline">
-              View All Homes &rarr;
+            <Link href="/realty">
+              View All Homes <i className="bx bx-right-arrow-alt align-middle ml-1"></i>
             </Link>
           </div>
-
           <div className="rd-home-listings">
             <HomepageListings />
           </div>
@@ -743,61 +565,31 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
       )}
 
       {/* 6. Trusted Local Businesses */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-14 space-y-8">
-        <div className="flex justify-between items-end border-b border-slate-200 pb-4">
+      <section className="wrap listing-section local-businesses">
+        <div className="section-header">
           <div>
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block font-sans">LOCAL BUSINESSES</span>
-            <h2 className="text-3xl font-bold text-slate-950 font-serif">Trusted Local Businesses</h2>
+            <span className="eyebrow">Local Businesses</span>
+            <h2>Trusted Local Businesses</h2>
           </div>
-          <Link href="/business" className="text-xs font-bold text-orange-605 hover:underline">
-            View All Businesses &rarr;
+          <Link href="/business">
+            View All Businesses <i className="bx bx-right-arrow-alt align-middle ml-1"></i>
           </Link>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {topBusinesses.slice(0, 4).map((biz, idx) => (
-            <Link
-              href={`/s/${biz.update_slug || biz.slug}`}
-              className="bg-white border border-slate-200 hover:border-slate-350 hover:shadow-lg rounded-2xl overflow-hidden shadow-xs transition duration-300 group flex flex-col justify-between"
-              key={biz.id || idx}
-            >
-              <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
-                <Image
-                  src={biz.main_image || `/api/og?title=${encodeURIComponent(biz.title)}`}
-                  alt={biz.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 280px"
-                  style={{ objectFit: "cover" }}
-                />
-                <div className="absolute top-3 left-3">
-                  <span className="text-[9px] font-bold text-orange-700 bg-white/95 px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-orange-100">
-                    {Array.isArray(biz.categories) ? biz.categories[0] : (biz.categories?.name || biz.category || "Local")}
-                  </span>
-                </div>
+        <div className="card-grid business-grid-small">
+          {topBusinesses.slice(0, 4).map((biz, index) => (
+            <Link href={`/s/${biz.update_slug || biz.slug}`} className="business-logo-card" key={biz.id || index}>
+              <div className={`biz-logo logo-${index % 4}`}>
+                {biz.title}
               </div>
-
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-1.5">
-                  <h3 className="font-bold text-slate-950 text-sm group-hover:text-orange-605 transition leading-snug line-clamp-1">
-                    {biz.title}
-                  </h3>
-                  <div className="flex items-center gap-1 text-xs text-amber-500 font-bold">
-                    <span className="text-slate-800 font-extrabold">{biz.rating?.value || biz.stars || 4.8}</span>
-                    <div className="flex text-[10px]">
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                      <i className="bx bxs-star"></i>
-                    </div>
-                    <span className="text-slate-400 font-medium text-[10px]">({biz.rating?.reviews || biz.reviews || 120})</span>
-                  </div>
+              <div>
+                <span>{Array.isArray(biz.categories) ? biz.categories[0] : (biz.categories?.name || biz.category || "Local")}</span>
+                <h3>{biz.title}</h3>
+                <div className="biz-rating" style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#f59e0b", fontWeight: "bold" }}>
+                  <span>{biz.rating?.value || biz.stars || 4.8}</span>
+                  <i className="bx bxs-star text-[10px]"></i>
+                  <span style={{ color: "#9aa3b3", fontWeight: "normal", fontSize: "10px" }}>({biz.rating?.reviews || biz.reviews || 120})</span>
                 </div>
-                
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-semibold">
-                  <span className="uppercase text-[9px] tracking-wider text-slate-400">Verified Partner</span>
-                  <span>{biz.city ? `${biz.city}, ${biz.state}` : domain}</span>
-                </div>
+                <p>{biz.city ? `${biz.city}, ${biz.state}` : domain}</p>
               </div>
             </Link>
           ))}
@@ -810,133 +602,108 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         </div>
       </section>
 
-      {/* 7. Call To Action section (mockup matched left & right) */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-slate-200 rounded-3xl p-8 shadow-xs">
-          
-          {/* Left panel: Info checklist list */}
-          <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-bold text-orange-600 uppercase tracking-widest block font-sans">WHAT ARE YOU LOOKING FOR?</span>
-            <h2 className="text-2xl md:text-3xl font-bold font-serif text-slate-950 leading-tight">We're Here to Help You Find It.</h2>
-            
-            <div className="space-y-4 pt-2">
-              <div className="flex items-start gap-3">
-                <i className="bx bx-check-circle text-orange-600 text-lg mt-0.5"></i>
-                <div>
-                  <strong className="text-sm font-bold text-slate-800 block">Find the Right Pro</strong>
-                  <p className="text-xs text-slate-500">Connect with top-rated local professionals and services near you.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <i className="bx bx-check-circle text-orange-600 text-lg mt-0.5"></i>
-                <div>
-                  <strong className="text-sm font-bold text-slate-800 block">Need Business Growth?</strong>
-                  <p className="text-xs text-slate-500">Get discovered by locals, claim listing and grow your business.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <i className="bx bx-check-circle text-orange-600 text-lg mt-0.5"></i>
-                <div>
-                  <strong className="text-sm font-bold text-slate-800 block">Are You a Media Pro?</strong>
-                  <p className="text-xs text-slate-500">Partner with us to feature businesses and tell local neighborhood stories.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <i className="bx bx-check-circle text-orange-600 text-lg mt-0.5"></i>
-                <div>
-                  <strong className="text-sm font-bold text-slate-800 block">List Your Property or Business</strong>
-                  <p className="text-xs text-slate-500">Reach more local customers, buyers, and active community members.</p>
-                </div>
+      {/* 7. Call To Action section (Help You Find It) */}
+      <section className="wrap help-panel">
+        <div className="help-copy">
+          <span className="eyebrow orange">What are you looking for?</span>
+          <h2>We’re Here to Help You<br />Find It.</h2>
+          <div className="help-list">
+            <div className="feature-mini">
+              <span><i className="bx bx-home-alt"></i></span>
+              <div>
+                <h3>Find the Right Pro</h3>
+                <p>Connect with top-rated local professionals and services.</p>
               </div>
             </div>
-
-            <div className="pt-4">
-              <Link href="/dashboard/add-business" className="inline-block bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-8 rounded-xl transition text-xs uppercase tracking-wider">
-                Get Started Today
-              </Link>
+            <div className="feature-mini">
+              <span><i className="bx bx-store-alt"></i></span>
+              <div>
+                <h3>Need Business Growth?</h3>
+                <p>Get discovered by locals and grow your business.</p>
+              </div>
+            </div>
+            <div className="feature-mini">
+              <span><i className="bx bx-slideshow"></i></span>
+              <div>
+                <h3>Are You a Media Pro?</h3>
+                <p>Partner with us to feature businesses and stories.</p>
+              </div>
+            </div>
+            <div className="feature-mini">
+              <span><i className="bx bx-plus"></i></span>
+              <div>
+                <h3>List Your Property or Business</h3>
+                <p>Reach more local customers and buyers.</p>
+              </div>
             </div>
           </div>
-
-          {/* Right panel: Graphic photo card with absolute search overlay widget inside */}
-          <div className="lg:col-span-6 relative rounded-3xl overflow-hidden min-h-[360px] border border-white shadow-xl bg-slate-900 group">
-            <Image
-              src="/images/media-pro-banner.jpg"
-              alt="Media Pro Section Image"
-              fill
-              style={{ objectFit: "cover", opacity: 0.90 }}
-            />
-            
-            {/* Absolute Search Widget inside right graphic matching mockup */}
-            <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-xs rounded-2xl p-5 shadow-2xl border border-slate-100 space-y-3 pointer-events-auto">
-              <strong className="text-xs font-bold text-slate-900 block">I'm looking for...</strong>
-              
-              <div className="flex gap-2 border-b border-slate-100 pb-1.5 overflow-x-auto whitespace-nowrap scrollbar-none">
-                {["Homes", "Businesses", "Services", "Events"].map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    className="text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-orange-600"
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              <form onSubmit={handleSearchSubmit} className="flex gap-2">
+          <Link className="dark-btn" href="/dashboard/add-business">
+            Get Started Today
+          </Link>
+        </div>
+        <div className="media-cta scenic-side">
+          <div className="search-dock compact">
+            <div className="search-tabs" role="tablist" aria-label="Search categories">
+              {["Homes", "Businesses", "Services", "Events"].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => {
+                    setSelectedSearchTab(tab === "Homes" ? "Homes" : tab === "Businesses" ? "Businesses" : tab === "Services" ? "Services" : "Events");
+                  }}
+                  className={selectedSearchTab === tab ? "active" : ""}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <form onSubmit={handleSearchSubmit} className="search-row" style={{ gridTemplateColumns: "1fr 80px" }}>
+              <label className="search-input" style={{ minHeight: "48px", padding: "0 12px" }}>
+                <i className="bx bx-search text-slate-400 text-sm mr-1.5 shrink-0"></i>
                 <input
                   type="text"
                   placeholder={`Search ${mockCity}...`}
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 outline-none"
+                  style={{ fontSize: "12px", background: 'transparent', border: '0', outline: 'none', width: '100%' }}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent border-0 outline-none w-full text-slate-800 font-medium placeholder-slate-400"
                 />
-                <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-4 py-2 font-bold transition text-xs shadow-sm">
-                  Search
-                </button>
-              </form>
-            </div>
+              </label>
+              <button type="submit" className="search-btn" style={{ minHeight: "48px", fontSize: "12px" }}>
+                Search
+              </button>
+            </form>
           </div>
-
         </div>
       </section>
 
       {/* 8. Newsletter Section ("Stay in the Know.") */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-        <div className="bg-[#FAF9F6] border border-slate-200/80 rounded-3xl p-8 shadow-xs flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="space-y-1 text-left lg:max-w-md w-full">
-            <h3 className="text-xl font-bold text-slate-900 font-serif">Stay in the Know.</h3>
-            <p className="text-xs text-slate-400 font-medium">Local tips, new listings, and community highlights.</p>
-            
-            <form onSubmit={(e) => { e.preventDefault(); toast.success("Subscribed successfully!"); }} className="flex gap-2 pt-3">
-              <input
-                type="email"
-                required
-                placeholder="Your email address"
-                className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium text-slate-800 outline-none"
-              />
-              <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-2.5 font-bold transition text-xs">
-                Subscribe
-              </button>
+      <section className="newsletter-band">
+        <div className="wrap newsletter-grid">
+          <div>
+            <h2>Stay in the Know.</h2>
+            <p>Local tips, new listings, and community highlights.</p>
+            <form onSubmit={(e) => { e.preventDefault(); toast.success("Subscribed successfully!"); }} className="subscribe-form">
+              <input placeholder="Your email address" type="email" required />
+              <button type="submit">Subscribe</button>
             </form>
           </div>
-
-          <div className="grid grid-cols-3 gap-8 text-center border-t lg:border-t-0 lg:border-l border-slate-200 pt-6 lg:pt-0 lg:pl-12 w-full lg:w-auto">
-            <div>
-              <strong className="text-2xl font-bold text-slate-900 block">12+</strong>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Neighborhoods</span>
+          <div className="stat-row big">
+            <div className="stat-item">
+              <strong>12+</strong>
+              <small>Neighborhoods</small>
             </div>
-            <div>
-              <strong className="text-2xl font-bold text-slate-900 block">850+</strong>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Businesses</span>
+            <div className="stat-item">
+              <strong>850+</strong>
+              <small>Businesses</small>
             </div>
-            <div>
-              <strong className="text-2xl font-bold text-slate-900 block">2.5K+</strong>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Members</span>
+            <div className="stat-item">
+              <strong>2.5K+</strong>
+              <small>Community Members</small>
             </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
