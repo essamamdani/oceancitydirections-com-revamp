@@ -1942,14 +1942,16 @@ textarea.form-control {
 }
 
 .rd-business-card {
-  display: grid;
-  grid-template-columns: 232px minmax(0, 1fr);
-  gap: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   margin-bottom: 18px;
 }
 
 .rd-business-card .listings-image {
-  min-height: 214px;
+  position: relative;
+  height: 200px;
+  overflow: hidden;
 }
 
 .rd-business-card .listings-image img {
