@@ -108,6 +108,22 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
   const domain = domainFromSite(site);
   const counties = countyNames(site);
 
+  const displayCountiesList = (site.DisplayCounties?.length ? site.DisplayCounties : (site.DefaultCounties || []))
+    .map((name: string) => ucwords(name));
+  const cities = site.popular_cities;
+
+  const getCountyImage = (county: string) => {
+    if (!Array.isArray(cities)) return "/images/destinations/destinations9.jpg";
+    const cityData = cities.find(
+      (c: any) => c.name?.toLowerCase() === county.trim().toLowerCase() ||
+           Object.keys(c)[0] === county.trim().toLowerCase()
+    );
+    const imagePath = cityData ? (cityData.image || cityData[county.toLowerCase()]) : null;
+    if (!imagePath) return "/images/destinations/destinations9.jpg";
+    if (imagePath.startsWith("http")) return imagePath;
+    return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+  };
+
   const upperStateAbbr = site?.ShortState?.toUpperCase() || "MD";
   const stateFips = stateFipsMap[upperStateAbbr] || "24";
   const stateConfig = mapDataJson[stateFips as keyof typeof mapDataJson];
@@ -320,21 +336,61 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
 
   const HeroMap = () => {
     return (
-      <div className="hero-map" aria-hidden="true">
+      <div className="hero-map" aria-hidden="true" style={{ pointerEvents: 'auto' }}>
+        <div className="hero-map-slider-wrapper">
+          <Swiper
+            spaceBetween={0}
+            centeredSlides={true}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            modules={[Autoplay, Pagination]}
+            pagination={{ clickable: true }}
+            className="hero-map-swiper"
+          >
+            {site.slides?.swiper?.map((slide: any, index: number) => (
+              <SwiperSlide key={index} className="w-full h-full relative">
+                <Image
+                  src={slide.img}
+                  alt={`${siteName} slide ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 100vw, 760px"
+                  style={{ objectFit: "cover" }}
+                />
+              </SwiperSlide>
+            ))}
+            {(!site.slides?.swiper || site.slides.swiper.length === 0) && (
+              <SwiperSlide className="w-full h-full relative">
+                <Image
+                  src="/images/about-img.jpg"
+                  alt={`${siteName} banner fallback`}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 760px"
+                  style={{ objectFit: "cover" }}
+                />
+              </SwiperSlide>
+            )}
+          </Swiper>
+        </div>
+
+        {/* Hotspots overlay on top of the image slider */}
         <span className="map-dot dot-1">
-          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Boutique Shops
+          <i className="bx bx-map text-white bg-orange-605 rounded-full p-0.5 text-xs mr-1"></i> Boutique Shops
         </span>
         <span className="map-dot dot-2">
-          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Waterfront Dining
+          <i className="bx bx-map text-white bg-orange-605 rounded-full p-0.5 text-xs mr-1"></i> Waterfront Dining
         </span>
         <span className="map-dot dot-3">
-          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Top Rated Service
+          <i className="bx bx-map text-white bg-orange-605 rounded-full p-0.5 text-xs mr-1"></i> Top Rated Service
         </span>
         <span className="map-dot dot-4">
-          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Local Events
+          <i className="bx bx-map text-white bg-orange-605 rounded-full p-0.5 text-xs mr-1"></i> Local Events
         </span>
         <span className="map-dot dot-5">
-          <i className="bx bx-map text-white bg-orange-600 rounded-full p-0.5 text-xs mr-1"></i> Top Rated Sale
+          <i className="bx bx-map text-white bg-orange-605 rounded-full p-0.5 text-xs mr-1"></i> Top Rated Sale
         </span>
       </div>
     );
@@ -546,6 +602,52 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
         </div>
       </section>
 
+      {/* 4.5. Explore Counties Bento Grid */}
+      {displayCountiesList.length > 0 && (
+        <section className="wrap counties-section py-14 space-y-8">
+          <div className="section-header">
+            <div>
+              <span className="eyebrow orange">Explore by Region</span>
+              <h2 className="font-serif">Explore Local Counties</h2>
+            </div>
+            <Link href="/realty">
+              Show All Areas <i className="bx bx-right-arrow-alt align-middle ml-1"></i>
+            </Link>
+          </div>
+
+          <div className="counties-grid">
+            {displayCountiesList.map((county: string, index: number) => {
+              const isLarge = index === 0 || index === 3 || index === 6;
+              return (
+                <div
+                  key={county}
+                  className={`county-card ${isLarge ? 'county-large' : 'county-normal'}`}
+                >
+                  <Image
+                    src={getCountyImage(county)}
+                    alt={county}
+                    fill
+                    sizes={isLarge ? "(max-width: 768px) 100vw, 600px" : "(max-width: 768px) 100vw, 300px"}
+                    className="county-card-img"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div className="county-card-overlay" />
+                  <div className="county-card-content">
+                    <span className="county-eyebrow">{siteName}</span>
+                    <h3 className="county-title">{county}</h3>
+                  </div>
+                  <Link
+                    href={`/realty/location/${encodeURIComponent(county.toLowerCase())}`}
+                    aria-label={`View real estate in ${county}`}
+                    className="absolute inset-0 z-10"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* 5. Featured Listings (Homes You'll Love) */}
       {showRealty && (
         <section className="wrap listing-section">
@@ -576,23 +678,43 @@ export default function HomeRevamp({ site, topBusinesses = [], featuredVideos = 
           </Link>
         </div>
         <div className="card-grid business-grid-small">
-          {topBusinesses.slice(0, 4).map((biz, index) => (
-            <Link href={`/s/${biz.update_slug || biz.slug}`} className="business-logo-card" key={biz.id || index}>
-              <div className={`biz-logo logo-${index % 4}`}>
-                {biz.title}
-              </div>
-              <div>
-                <span>{Array.isArray(biz.categories) ? biz.categories[0] : (biz.categories?.name || biz.category || "Local")}</span>
-                <h3>{biz.title}</h3>
-                <div className="biz-rating" style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#f59e0b", fontWeight: "bold" }}>
-                  <span>{biz.rating?.value || biz.stars || 4.8}</span>
-                  <i className="bx bxs-star text-[10px]"></i>
-                  <span style={{ color: "#9aa3b3", fontWeight: "normal", fontSize: "10px" }}>({biz.rating?.reviews || biz.reviews || 120})</span>
+          {topBusinesses.slice(0, 4).map((biz, index) => {
+            const listingImg = biz.main_image;
+            const isCdn = listingImg && 
+              (listingImg.startsWith('http') || listingImg.includes('cdn')) && 
+              !listingImg.startsWith('/api/og') && 
+              !listingImg.includes('placeholder') &&
+              listingImg !== '/images/about-img.jpg';
+            return (
+              <Link href={`/s/${biz.update_slug || biz.slug}`} className="business-logo-card" key={biz.id || index}>
+                {isCdn ? (
+                  <div className="relative h-[138px] w-full overflow-hidden" style={{ borderRadius: '18px 18px 0 0' }}>
+                    <Image
+                      src={listingImg}
+                      alt={biz.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, 280px"
+                    />
+                  </div>
+                ) : (
+                  <div className={`biz-logo logo-${index % 4}`}>
+                    {biz.title}
+                  </div>
+                )}
+                <div>
+                  <span>{Array.isArray(biz.categories) ? biz.categories[0] : (biz.categories?.name || biz.category || "Local")}</span>
+                  <h3>{biz.title}</h3>
+                  <div className="biz-rating" style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#f59e0b", fontWeight: "bold" }}>
+                    <span>{biz.rating?.value || biz.stars || 4.8}</span>
+                    <i className="bx bxs-star text-[10px]"></i>
+                    <span style={{ color: "#9aa3b3", fontWeight: "normal", fontSize: "10px" }}>({biz.rating?.reviews || biz.reviews || 120})</span>
+                  </div>
+                  <p>{biz.city ? `${biz.city}, ${biz.state}` : domain}</p>
                 </div>
-                <p>{biz.city ? `${biz.city}, ${biz.state}` : domain}</p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
           {!topBusinesses.length && (
             <div className="col-span-full bg-white border border-slate-200 rounded-3xl p-12 text-center text-slate-400 text-sm">
               <i className="bx bx-store-alt text-4xl mb-2 block"></i>
